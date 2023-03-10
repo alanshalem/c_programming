@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Beej's Guide to C Programming</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Mono&display=swap" rel="stylesheet"> 
+
+  <!-- BG custom styling -->
+  <style type="text/css">
+  /* Fix for line numbers not visible */
+  pre.numberSource code > span {
+      left: -1em;
+  }
+  pre.numberSource {
+      margin-left: initial;
+  }
+
+  /* Put some space after the section numbers */
+  span.toc-section-number::after {
+      content: "\a0\a0\a0";  /* non-breaking whitespace */
+  }
+
+  /* Hide underlines on code number links */
+  pre > code.sourceCode > span > a:first-child::before {
+      text-decoration: none;
+  }
+
+  /* Color the source blocks */
+  div.sourceCode {
+      background-color: #f0f0f0;
+  }
+
+  /* Fix iOS big text rendering issue */
+  pre > code.sourceCode > span {
+      display: initial;
+  }
+
+
+  /* Color the inline code */
+  code:not(.sourceCode) {
+      background: #f0f0f0;
+      padding-left: 0.2em;
+      padding-right: 0.2em;
+      border-radius: 0.2em;
+  }
+
+  /* Keep code tags from wrapping in tables */
+  tbody code {
+      white-space: nowrap;
+  }
+
+  td {
+      vertical-align: top;
+  }
+
+  body {
+      font-size: 12pt;
+      max-width: 43em;
+  }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<div style="text-align:center"><span><a href="the-c-preprocessor.html">Prev</a> | </span><a href="index.html">Contents</a><span> | <a href="characters-and-strings-ii.html">Next</a></span></div><hr>
+<h1 data-number="20" id="structs-ii-more-fun-with-structs"><span class="header-section-number">20</span> <code>struct</code>s II: More Fun with <code>struct</code>s</h1>
+<p></p>
+<p>Turns out there’s a lot more you can do with <code>struct</code>s than we’ve talked about, but it’s just a big pile of miscellaneous things. So we’ll throw them in this chapter.</p>
+<p>If you’re good with <code>struct</code> basics, you can round out your knowledge here.</p>
+<h2 data-number="20.1" id="initializers-of-nested-structs-and-arrays"><span class="header-section-number">20.1</span> Initializers of Nested <code>struct</code>s and Arrays</h2>
+<p></p>
+<p>Remember how you could <a href="structs.html#struct-initializers">initialize structure members along these lines</a>?</p>
+<div class="sourceCode" id="cb402"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb402-1"><a href="structs-ii-more-fun-with-structs.html#cb402-1" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> foo x <span class="op">=</span> <span class="op">{.</span>a<span class="op">=</span><span class="dv">12</span><span class="op">,</span> <span class="op">.</span>b<span class="op">=</span><span class="fl">3.14</span><span class="op">};</span></span></code></pre></div>
+<p>Turns out we have more power in these initializers than we’d originally shared. Exciting!</p>
+<p>For one thing, if you have a nested substructure like the following, you can initialize members of that substructure by following the variable names down the line:</p>
+<div class="sourceCode" id="cb403"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb403-1"><a href="structs-ii-more-fun-with-structs.html#cb403-1" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> foo x <span class="op">=</span> <span class="op">{.</span>a<span class="op">.</span>b<span class="op">.</span>c<span class="op">=</span><span class="dv">12</span><span class="op">};</span></span></code></pre></div>
+<p>Let’s look at an example:</p>
+<div class="sourceCode" id="cb404"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb404-1"><a href="structs-ii-more-fun-with-structs.html#cb404-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb404-2"><a href="structs-ii-more-fun-with-structs.html#cb404-2"></a></span>
+<span id="cb404-3"><a href="structs-ii-more-fun-with-structs.html#cb404-3"></a><span class="kw">struct</span> cabin_information <span class="op">{</span></span>
+<span id="cb404-4"><a href="structs-ii-more-fun-with-structs.html#cb404-4"></a>    <span class="dt">int</span> window_count<span class="op">;</span></span>
+<span id="cb404-5"><a href="structs-ii-more-fun-with-structs.html#cb404-5"></a>    <span class="dt">int</span> o2level<span class="op">;</span></span>
+<span id="cb404-6"><a href="structs-ii-more-fun-with-structs.html#cb404-6"></a><span class="op">};</span></span>
+<span id="cb404-7"><a href="structs-ii-more-fun-with-structs.html#cb404-7"></a></span>
+<span id="cb404-8"><a href="structs-ii-more-fun-with-structs.html#cb404-8"></a><span class="kw">struct</span> spaceship <span class="op">{</span></span>
+<span id="cb404-9"><a href="structs-ii-more-fun-with-structs.html#cb404-9"></a>    <span class="dt">char</span> <span class="op">*</span>manufacturer<span class="op">;</span></span>
+<span id="cb404-10"><a href="structs-ii-more-fun-with-structs.html#cb404-10"></a>    <span class="kw">struct</span> cabin_information ci<span class="op">;</span></span>
+<span id="cb404-11"><a href="structs-ii-more-fun-with-structs.html#cb404-11"></a><span class="op">};</span></span>
+<span id="cb404-12"><a href="structs-ii-more-fun-with-structs.html#cb404-12"></a></span>
+<span id="cb404-13"><a href="structs-ii-more-fun-with-structs.html#cb404-13"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb404-14"><a href="structs-ii-more-fun-with-structs.html#cb404-14"></a><span class="op">{</span></span>
+<span id="cb404-15"><a href="structs-ii-more-fun-with-structs.html#cb404-15"></a>    <span class="kw">struct</span> spaceship s <span class="op">=</span> <span class="op">{</span></span>
+<span id="cb404-16"><a href="structs-ii-more-fun-with-structs.html#cb404-16"></a>        <span class="op">.</span>manufacturer<span class="op">=</span><span class="st">&quot;General Products&quot;</span><span class="op">,</span></span>
+<span id="cb404-17"><a href="structs-ii-more-fun-with-structs.html#cb404-17"></a>        <span class="op">.</span>ci<span class="op">.</span>window_count <span class="op">=</span> <span class="dv">8</span><span class="op">,</span>   <span class="co">// &lt;-- NESTED INITIALIZER!</span></span>
+<span id="cb404-18"><a href="structs-ii-more-fun-with-structs.html#cb404-18"></a>        <span class="op">.</span>ci<span class="op">.</span>o2level <span class="op">=</span> <span class="dv">21</span></span>
+<span id="cb404-19"><a href="structs-ii-more-fun-with-structs.html#cb404-19"></a>    <span class="op">};</span></span>
+<span id="cb404-20"><a href="structs-ii-more-fun-with-structs.html#cb404-20"></a></span>
+<span id="cb404-21"><a href="structs-ii-more-fun-with-structs.html#cb404-21"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%s</span><span class="st">: </span><span class="sc">%d</span><span class="st"> seats, </span><span class="sc">%d%%</span><span class="st"> oxygen</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">,</span></span>
+<span id="cb404-22"><a href="structs-ii-more-fun-with-structs.html#cb404-22"></a>        s<span class="op">.</span>manufacturer<span class="op">,</span> s<span class="op">.</span>ci<span class="op">.</span>window_count<span class="op">,</span> s<span class="op">.</span>ci<span class="op">.</span>o2level<span class="op">);</span></span>
+<span id="cb404-23"><a href="structs-ii-more-fun-with-structs.html#cb404-23"></a><span class="op">}</span></span></code></pre></div>
+<p>Check out lines 16-17! That’s where we’re initializing members of the <code>struct cabin_information</code> in the definition of <code>s</code>, our <code>struct spaceship</code>.</p>
+<p>And here is another option for that same initializer—this time we’ll do something more standard-looking, but either approach works:</p>
+<div class="sourceCode" id="cb405" data-startfrom="15"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c" style="counter-reset: source-line 14;"><span id="cb405-15"><a href="structs-ii-more-fun-with-structs.html#cb405-15"></a>    <span class="kw">struct</span> spaceship s <span class="op">=</span> <span class="op">{</span></span>
+<span id="cb405-16"><a href="structs-ii-more-fun-with-structs.html#cb405-16"></a>        <span class="op">.</span>manufacturer<span class="op">=</span><span class="st">&quot;General Products&quot;</span><span class="op">,</span></span>
+<span id="cb405-17"><a href="structs-ii-more-fun-with-structs.html#cb405-17"></a>        <span class="op">.</span>ci<span class="op">={</span></span>
+<span id="cb405-18"><a href="structs-ii-more-fun-with-structs.html#cb405-18"></a>            <span class="op">.</span>window_count <span class="op">=</span> <span class="dv">8</span><span class="op">,</span></span>
+<span id="cb405-19"><a href="structs-ii-more-fun-with-structs.html#cb405-19"></a>            <span class="op">.</span>o2level <span class="op">=</span> <span class="dv">21</span></span>
+<span id="cb405-20"><a href="structs-ii-more-fun-with-structs.html#cb405-20"></a>        <span class="op">}</span></span>
+<span id="cb405-21"><a href="structs-ii-more-fun-with-structs.html#cb405-21"></a>    <span class="op">};</span></span></code></pre></div>
+<p>Now, as if the above information isn’t spectacular enough, we can also mix in array initializers in there, too.</p>
+<p>Let’s change this up to get an array of passenger information in there, and we can check out how the initializers work in there, too.</p>
+<div class="sourceCode" id="cb406"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb406-1"><a href="structs-ii-more-fun-with-structs.html#cb406-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb406-2"><a href="structs-ii-more-fun-with-structs.html#cb406-2"></a></span>
+<span id="cb406-3"><a href="structs-ii-more-fun-with-structs.html#cb406-3"></a><span class="kw">struct</span> passenger <span class="op">{</span></span>
+<span id="cb406-4"><a href="structs-ii-more-fun-with-structs.html#cb406-4"></a>    <span class="dt">char</span> <span class="op">*</span>name<span class="op">;</span></span>
+<span id="cb406-5"><a href="structs-ii-more-fun-with-structs.html#cb406-5"></a>    <span class="dt">int</span> covid_vaccinated<span class="op">;</span> <span class="co">// Boolean</span></span>
+<span id="cb406-6"><a href="structs-ii-more-fun-with-structs.html#cb406-6"></a><span class="op">};</span></span>
+<span id="cb406-7"><a href="structs-ii-more-fun-with-structs.html#cb406-7"></a></span>
+<span id="cb406-8"><a href="structs-ii-more-fun-with-structs.html#cb406-8"></a><span class="pp">#define MAX_PASSENGERS </span><span class="dv">8</span></span>
+<span id="cb406-9"><a href="structs-ii-more-fun-with-structs.html#cb406-9"></a></span>
+<span id="cb406-10"><a href="structs-ii-more-fun-with-structs.html#cb406-10"></a><span class="kw">struct</span> spaceship <span class="op">{</span></span>
+<span id="cb406-11"><a href="structs-ii-more-fun-with-structs.html#cb406-11"></a>    <span class="dt">char</span> <span class="op">*</span>manufacturer<span class="op">;</span></span>
+<span id="cb406-12"><a href="structs-ii-more-fun-with-structs.html#cb406-12"></a>    <span class="kw">struct</span> passenger passenger<span class="op">[</span>MAX_PASSENGERS<span class="op">];</span></span>
+<span id="cb406-13"><a href="structs-ii-more-fun-with-structs.html#cb406-13"></a><span class="op">};</span></span>
+<span id="cb406-14"><a href="structs-ii-more-fun-with-structs.html#cb406-14"></a></span>
+<span id="cb406-15"><a href="structs-ii-more-fun-with-structs.html#cb406-15"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb406-16"><a href="structs-ii-more-fun-with-structs.html#cb406-16"></a><span class="op">{</span></span>
+<span id="cb406-17"><a href="structs-ii-more-fun-with-structs.html#cb406-17"></a>    <span class="kw">struct</span> spaceship s <span class="op">=</span> <span class="op">{</span></span>
+<span id="cb406-18"><a href="structs-ii-more-fun-with-structs.html#cb406-18"></a>        <span class="op">.</span>manufacturer<span class="op">=</span><span class="st">&quot;General Products&quot;</span><span class="op">,</span></span>
+<span id="cb406-19"><a href="structs-ii-more-fun-with-structs.html#cb406-19"></a>        <span class="op">.</span>passenger <span class="op">=</span> <span class="op">{</span></span>
+<span id="cb406-20"><a href="structs-ii-more-fun-with-structs.html#cb406-20"></a>            <span class="co">// Initialize a field at a time</span></span>
+<span id="cb406-21"><a href="structs-ii-more-fun-with-structs.html#cb406-21"></a>            <span class="op">[</span><span class="dv">0</span><span class="op">].</span>name <span class="op">=</span> <span class="st">&quot;Gridley, Lewis&quot;</span><span class="op">,</span></span>
+<span id="cb406-22"><a href="structs-ii-more-fun-with-structs.html#cb406-22"></a>            <span class="op">[</span><span class="dv">0</span><span class="op">].</span>covid_vaccinated <span class="op">=</span> <span class="dv">0</span><span class="op">,</span></span>
+<span id="cb406-23"><a href="structs-ii-more-fun-with-structs.html#cb406-23"></a></span>
+<span id="cb406-24"><a href="structs-ii-more-fun-with-structs.html#cb406-24"></a>            <span class="co">// Or all at once</span></span>
+<span id="cb406-25"><a href="structs-ii-more-fun-with-structs.html#cb406-25"></a>            <span class="op">[</span><span class="dv">7</span><span class="op">]</span> <span class="op">=</span> <span class="op">{.</span>name<span class="op">=</span><span class="st">&quot;Brown, Teela&quot;</span><span class="op">,</span> <span class="op">.</span>covid_vaccinated<span class="op">=</span><span class="dv">1</span><span class="op">},</span></span>
+<span id="cb406-26"><a href="structs-ii-more-fun-with-structs.html#cb406-26"></a>        <span class="op">}</span></span>
+<span id="cb406-27"><a href="structs-ii-more-fun-with-structs.html#cb406-27"></a>    <span class="op">};</span></span>
+<span id="cb406-28"><a href="structs-ii-more-fun-with-structs.html#cb406-28"></a></span>
+<span id="cb406-29"><a href="structs-ii-more-fun-with-structs.html#cb406-29"></a>    printf<span class="op">(</span><span class="st">&quot;Passengers for </span><span class="sc">%s</span><span class="st"> ship:</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">,</span> s<span class="op">.</span>manufacturer<span class="op">);</span></span>
+<span id="cb406-30"><a href="structs-ii-more-fun-with-structs.html#cb406-30"></a></span>
+<span id="cb406-31"><a href="structs-ii-more-fun-with-structs.html#cb406-31"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> MAX_PASSENGERS<span class="op">;</span> i<span class="op">++)</span></span>
+<span id="cb406-32"><a href="structs-ii-more-fun-with-structs.html#cb406-32"></a>        <span class="cf">if</span> <span class="op">(</span>s<span class="op">.</span>passenger<span class="op">[</span>i<span class="op">].</span>name <span class="op">!=</span> NULL<span class="op">)</span></span>
+<span id="cb406-33"><a href="structs-ii-more-fun-with-structs.html#cb406-33"></a>            printf<span class="op">(</span><span class="st">&quot;    </span><span class="sc">%s</span><span class="st"> (</span><span class="sc">%s</span><span class="st">vaccinated)</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">,</span></span>
+<span id="cb406-34"><a href="structs-ii-more-fun-with-structs.html#cb406-34"></a>                s<span class="op">.</span>passenger<span class="op">[</span>i<span class="op">].</span>name<span class="op">,</span></span>
+<span id="cb406-35"><a href="structs-ii-more-fun-with-structs.html#cb406-35"></a>                s<span class="op">.</span>passenger<span class="op">[</span>i<span class="op">].</span>covid_vaccinated<span class="op">?</span> <span class="st">&quot;&quot;</span><span class="op">:</span> <span class="st">&quot;not &quot;</span><span class="op">);</span></span>
+<span id="cb406-36"><a href="structs-ii-more-fun-with-structs.html#cb406-36"></a><span class="op">}</span></span></code></pre></div>
+<p></p>
+<h2 data-number="20.2" id="anonymous-structs"><span class="header-section-number">20.2</span> Anonymous <code>struct</code>s</h2>
+<p></p>
+<p>These are “the <code>struct</code> with no name”. We also mention these in the <a href="typedef-making-new-types.html#typedef-struct"><code>typedef</code></a> section, but we’ll refresh here.</p>
+<p>Here’s a regular <code>struct</code>:</p>
+<div class="sourceCode" id="cb407"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb407-1"><a href="structs-ii-more-fun-with-structs.html#cb407-1" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> animal <span class="op">{</span></span>
+<span id="cb407-2"><a href="structs-ii-more-fun-with-structs.html#cb407-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">char</span> <span class="op">*</span>name<span class="op">;</span></span>
+<span id="cb407-3"><a href="structs-ii-more-fun-with-structs.html#cb407-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> leg_count<span class="op">,</span> speed<span class="op">;</span></span>
+<span id="cb407-4"><a href="structs-ii-more-fun-with-structs.html#cb407-4" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span></code></pre></div>
+<p>And here’s the anonymous equivalent:</p>
+<div class="sourceCode" id="cb408"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb408-1"><a href="structs-ii-more-fun-with-structs.html#cb408-1" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> <span class="op">{</span>              <span class="co">// &lt;-- No name!</span></span>
+<span id="cb408-2"><a href="structs-ii-more-fun-with-structs.html#cb408-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">char</span> <span class="op">*</span>name<span class="op">;</span></span>
+<span id="cb408-3"><a href="structs-ii-more-fun-with-structs.html#cb408-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> leg_count<span class="op">,</span> speed<span class="op">;</span></span>
+<span id="cb408-4"><a href="structs-ii-more-fun-with-structs.html#cb408-4" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span></code></pre></div>
+<p>Okaaaaay. So we have a <code>struct</code>, but it has no name, so we have no way of using it later? Seems pretty pointless.</p>
+<p>Admittedly, in that example, it is. But we can still make use of it a couple ways.</p>
+<p>One is rare, but since the anonymous <code>struct</code> represents a type, we can just put some variable names after it and use them.</p>
+<div class="sourceCode" id="cb409"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb409-1"><a href="structs-ii-more-fun-with-structs.html#cb409-1" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> <span class="op">{</span>                   <span class="co">// &lt;-- No name!</span></span>
+<span id="cb409-2"><a href="structs-ii-more-fun-with-structs.html#cb409-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">char</span> <span class="op">*</span>name<span class="op">;</span></span>
+<span id="cb409-3"><a href="structs-ii-more-fun-with-structs.html#cb409-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> leg_count<span class="op">,</span> speed<span class="op">;</span></span>
+<span id="cb409-4"><a href="structs-ii-more-fun-with-structs.html#cb409-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> a<span class="op">,</span> b<span class="op">,</span> c<span class="op">;</span>                 <span class="co">// 3 variables of this struct type</span></span>
+<span id="cb409-5"><a href="structs-ii-more-fun-with-structs.html#cb409-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb409-6"><a href="structs-ii-more-fun-with-structs.html#cb409-6" aria-hidden="true" tabindex="-1"></a>a<span class="op">.</span>name <span class="op">=</span> <span class="st">&quot;antelope&quot;</span><span class="op">;</span></span>
+<span id="cb409-7"><a href="structs-ii-more-fun-with-structs.html#cb409-7" aria-hidden="true" tabindex="-1"></a>c<span class="op">.</span>leg_count <span class="op">=</span> <span class="dv">4</span><span class="op">;</span>           <span class="co">// for example</span></span></code></pre></div>
+<p>But that’s still not that useful.</p>
+<p>Far more common is use of anonymous <code>struct</code>s with a <code>typedef</code> so that we can use it later (e.g. to pass variables to functions).</p>
+<div class="sourceCode" id="cb410"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb410-1"><a href="structs-ii-more-fun-with-structs.html#cb410-1" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="kw">struct</span> <span class="op">{</span>                   <span class="co">// &lt;-- No name!</span></span>
+<span id="cb410-2"><a href="structs-ii-more-fun-with-structs.html#cb410-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">char</span> <span class="op">*</span>name<span class="op">;</span></span>
+<span id="cb410-3"><a href="structs-ii-more-fun-with-structs.html#cb410-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> leg_count<span class="op">,</span> speed<span class="op">;</span></span>
+<span id="cb410-4"><a href="structs-ii-more-fun-with-structs.html#cb410-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> animal<span class="op">;</span>                          <span class="co">// New type: animal</span></span>
+<span id="cb410-5"><a href="structs-ii-more-fun-with-structs.html#cb410-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb410-6"><a href="structs-ii-more-fun-with-structs.html#cb410-6" aria-hidden="true" tabindex="-1"></a>animal a<span class="op">,</span> b<span class="op">,</span> c<span class="op">;</span></span>
+<span id="cb410-7"><a href="structs-ii-more-fun-with-structs.html#cb410-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb410-8"><a href="structs-ii-more-fun-with-structs.html#cb410-8" aria-hidden="true" tabindex="-1"></a>a<span class="op">.</span>name <span class="op">=</span> <span class="st">&quot;antelope&quot;</span><span class="op">;</span></span>
+<span id="cb410-9"><a href="structs-ii-more-fun-with-structs.html#cb410-9" aria-hidden="true" tabindex="-1"></a>c<span class="op">.</span>leg_count <span class="op">=</span> <span class="dv">4</span><span class="op">;</span>           <span class="co">// for example</span></span></code></pre></div>
+<p>Personally, I don’t use many anonymous <code>struct</code>s. I think it’s more pleasant to see the entire <code>struct animal</code> before the variable name in a declaration.</p>
+<p>But that’s just, like, my opinion, man.</p>
+<p></p>
+<h2 data-number="20.3" id="self-referential-structs"><span class="header-section-number">20.3</span> Self-Referential <code>struct</code>s</h2>
+<p></p>
+<p>For any graph-like data structure, it’s useful to be able to have pointers to the connected nodes/vertices. But this means that in the definition of a node, you need to have a pointer to a node. It’s chicken and eggy!</p>
+<p>But it turns out you can do this in C with no problem whatsoever.</p>
+<p>For example, here’s a linked list node:</p>
+<div class="sourceCode" id="cb411"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb411-1"><a href="structs-ii-more-fun-with-structs.html#cb411-1" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> node <span class="op">{</span></span>
+<span id="cb411-2"><a href="structs-ii-more-fun-with-structs.html#cb411-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> data<span class="op">;</span></span>
+<span id="cb411-3"><a href="structs-ii-more-fun-with-structs.html#cb411-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">struct</span> node <span class="op">*</span>next<span class="op">;</span></span>
+<span id="cb411-4"><a href="structs-ii-more-fun-with-structs.html#cb411-4" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span></code></pre></div>
+<p>It’s important to note that <code>next</code> is a pointer. This is what allows the whole thing to even build. Even though the compiler doesn’t know what the entire <code>struct node</code> looks like yet, all pointers are the same size.</p>
+<p>Here’s a cheesy linked list program to test it out:</p>
+<div class="sourceCode" id="cb412"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb412-1"><a href="structs-ii-more-fun-with-structs.html#cb412-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb412-2"><a href="structs-ii-more-fun-with-structs.html#cb412-2"></a><span class="pp">#include </span><span class="im">&lt;stdlib.h&gt;</span></span>
+<span id="cb412-3"><a href="structs-ii-more-fun-with-structs.html#cb412-3"></a></span>
+<span id="cb412-4"><a href="structs-ii-more-fun-with-structs.html#cb412-4"></a><span class="kw">struct</span> node <span class="op">{</span></span>
+<span id="cb412-5"><a href="structs-ii-more-fun-with-structs.html#cb412-5"></a>    <span class="dt">int</span> data<span class="op">;</span></span>
+<span id="cb412-6"><a href="structs-ii-more-fun-with-structs.html#cb412-6"></a>    <span class="kw">struct</span> node <span class="op">*</span>next<span class="op">;</span></span>
+<span id="cb412-7"><a href="structs-ii-more-fun-with-structs.html#cb412-7"></a><span class="op">};</span></span>
+<span id="cb412-8"><a href="structs-ii-more-fun-with-structs.html#cb412-8"></a></span>
+<span id="cb412-9"><a href="structs-ii-more-fun-with-structs.html#cb412-9"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb412-10"><a href="structs-ii-more-fun-with-structs.html#cb412-10"></a><span class="op">{</span></span>
+<span id="cb412-11"><a href="structs-ii-more-fun-with-structs.html#cb412-11"></a>    <span class="kw">struct</span> node <span class="op">*</span>head<span class="op">;</span></span>
+<span id="cb412-12"><a href="structs-ii-more-fun-with-structs.html#cb412-12"></a></span>
+<span id="cb412-13"><a href="structs-ii-more-fun-with-structs.html#cb412-13"></a>    <span class="co">// Hackishly set up a linked list (11)-&gt;(22)-&gt;(33)</span></span>
+<span id="cb412-14"><a href="structs-ii-more-fun-with-structs.html#cb412-14"></a>    head <span class="op">=</span> malloc<span class="op">(</span><span class="kw">sizeof</span><span class="op">(</span><span class="kw">struct</span> node<span class="op">));</span></span>
+<span id="cb412-15"><a href="structs-ii-more-fun-with-structs.html#cb412-15"></a>    head<span class="op">-&gt;</span>data <span class="op">=</span> <span class="dv">11</span><span class="op">;</span></span>
+<span id="cb412-16"><a href="structs-ii-more-fun-with-structs.html#cb412-16"></a>    head<span class="op">-&gt;</span>next <span class="op">=</span> malloc<span class="op">(</span><span class="kw">sizeof</span><span class="op">(</span><span class="kw">struct</span> node<span class="op">));</span></span>
+<span id="cb412-17"><a href="structs-ii-more-fun-with-structs.html#cb412-17"></a>    head<span class="op">-&gt;</span>next<span class="op">-&gt;</span>data <span class="op">=</span> <span class="dv">22</span><span class="op">;</span></span>
+<span id="cb412-18"><a href="structs-ii-more-fun-with-structs.html#cb412-18"></a>    head<span class="op">-&gt;</span>next<span class="op">-&gt;</span>next <span class="op">=</span> malloc<span class="op">(</span><span class="kw">sizeof</span><span class="op">(</span><span class="kw">struct</span> node<span class="op">));</span></span>
+<span id="cb412-19"><a href="structs-ii-more-fun-with-structs.html#cb412-19"></a>    head<span class="op">-&gt;</span>next<span class="op">-&gt;</span>next<span class="op">-&gt;</span>data <span class="op">=</span> <span class="dv">33</span><span class="op">;</span></span>
+<span id="cb412-20"><a href="structs-ii-more-fun-with-structs.html#cb412-20"></a>    head<span class="op">-&gt;</span>next<span class="op">-&gt;</span>next<span class="op">-&gt;</span>next <span class="op">=</span> NULL<span class="op">;</span></span>
+<span id="cb412-21"><a href="structs-ii-more-fun-with-structs.html#cb412-21"></a></span>
+<span id="cb412-22"><a href="structs-ii-more-fun-with-structs.html#cb412-22"></a>    <span class="co">// Traverse it</span></span>
+<span id="cb412-23"><a href="structs-ii-more-fun-with-structs.html#cb412-23"></a>    <span class="cf">for</span> <span class="op">(</span><span class="kw">struct</span> node <span class="op">*</span>cur <span class="op">=</span> head<span class="op">;</span> cur <span class="op">!=</span> NULL<span class="op">;</span> cur <span class="op">=</span> cur<span class="op">-&gt;</span>next<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb412-24"><a href="structs-ii-more-fun-with-structs.html#cb412-24"></a>        printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> cur<span class="op">-&gt;</span>data<span class="op">);</span></span>
+<span id="cb412-25"><a href="structs-ii-more-fun-with-structs.html#cb412-25"></a>    <span class="op">}</span></span>
+<span id="cb412-26"><a href="structs-ii-more-fun-with-structs.html#cb412-26"></a><span class="op">}</span></span></code></pre></div>
+<p>Running that prints:</p>
+<div class="sourceCode" id="cb413"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb413-1"><a href="structs-ii-more-fun-with-structs.html#cb413-1" aria-hidden="true" tabindex="-1"></a>11</span>
+<span id="cb413-2"><a href="structs-ii-more-fun-with-structs.html#cb413-2" aria-hidden="true" tabindex="-1"></a>22</span>
+<span id="cb413-3"><a href="structs-ii-more-fun-with-structs.html#cb413-3" aria-hidden="true" tabindex="-1"></a>33</span></code></pre></div>
+<p></p>
+<h2 data-number="20.4" id="flexible-array-members"><span class="header-section-number">20.4</span> Flexible Array Members</h2>
+<p></p>
+<p>Back in the good old days, when people carved C code out of wood, some folks thought would be neat if they could allocate <code>struct</code>s that had variable length arrays at the end of them.</p>
+<p>I want to be clear that the first part of the section is the old way of doing things, and we’re going to do things the new way after that.</p>
+<p>For example, maybe you could define a <code>struct</code> for holding strings and the length of that string. It would have a length and an array to hold the data. Maybe something like this:</p>
+<div class="sourceCode" id="cb414"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb414-1"><a href="structs-ii-more-fun-with-structs.html#cb414-1" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> len_string <span class="op">{</span></span>
+<span id="cb414-2"><a href="structs-ii-more-fun-with-structs.html#cb414-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> length<span class="op">;</span></span>
+<span id="cb414-3"><a href="structs-ii-more-fun-with-structs.html#cb414-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">char</span> data<span class="op">[</span><span class="dv">8</span><span class="op">];</span></span>
+<span id="cb414-4"><a href="structs-ii-more-fun-with-structs.html#cb414-4" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span></code></pre></div>
+<p>But that has <code>8</code> hardcoded as the maximum length of a string, and that’s not much. What if we did something <em>clever</em> and just <code>malloc()</code>d some extra space at the end after the struct, and then let the data overflow into that space?</p>
+<p>Let’s do that, and then allocate another 40 bytes on top of it:</p>
+<div class="sourceCode" id="cb415"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb415-1"><a href="structs-ii-more-fun-with-structs.html#cb415-1" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> len_string <span class="op">*</span>s <span class="op">=</span> malloc<span class="op">(</span><span class="kw">sizeof</span> <span class="op">*</span>s <span class="op">+</span> <span class="dv">40</span><span class="op">);</span></span></code></pre></div>
+<p>Because <code>data</code> is the last field of the <code>struct</code>, if we overflow that field, it runs out into space that we already allocated! For this reason, this trick only works if the short array is the <em>last</em> field in the <code>struct</code>.</p>
+<div class="sourceCode" id="cb416"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb416-1"><a href="structs-ii-more-fun-with-structs.html#cb416-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Copy more than 8 bytes!</span></span>
+<span id="cb416-2"><a href="structs-ii-more-fun-with-structs.html#cb416-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb416-3"><a href="structs-ii-more-fun-with-structs.html#cb416-3" aria-hidden="true" tabindex="-1"></a>strcpy<span class="op">(</span>s<span class="op">-&gt;</span>data<span class="op">,</span> <span class="st">&quot;Hello, world!&quot;</span><span class="op">);</span>  <span class="co">// Won&#39;t crash. Probably.</span></span></code></pre></div>
+<p></p>
+<p>In fact, there was a common compiler workaround for doing this, where you’d allocate a zero length array at the end:</p>
+<div class="sourceCode" id="cb417"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb417-1"><a href="structs-ii-more-fun-with-structs.html#cb417-1" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> len_string <span class="op">{</span></span>
+<span id="cb417-2"><a href="structs-ii-more-fun-with-structs.html#cb417-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> length<span class="op">;</span></span>
+<span id="cb417-3"><a href="structs-ii-more-fun-with-structs.html#cb417-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">char</span> data<span class="op">[</span><span class="dv">0</span><span class="op">];</span></span>
+<span id="cb417-4"><a href="structs-ii-more-fun-with-structs.html#cb417-4" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span></code></pre></div>
+<p>And then every extra byte you allocated was ready for use in that string.</p>
+<p>Because <code>data</code> is the last field of the <code>struct</code>, if we overflow that field, it runs out into space that we already allocated!</p>
+<div class="sourceCode" id="cb418"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb418-1"><a href="structs-ii-more-fun-with-structs.html#cb418-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Copy more than 8 bytes!</span></span>
+<span id="cb418-2"><a href="structs-ii-more-fun-with-structs.html#cb418-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb418-3"><a href="structs-ii-more-fun-with-structs.html#cb418-3" aria-hidden="true" tabindex="-1"></a>strcpy<span class="op">(</span>s<span class="op">-&gt;</span>data<span class="op">,</span> <span class="st">&quot;Hello, world!&quot;</span><span class="op">);</span>  <span class="co">// Won&#39;t crash. Probably.</span></span></code></pre></div>
+<p>But, of course, actually accessing the data beyond the end of that array is undefined behavior! In these modern times, we no longer deign to resort to such savagery.</p>
+<p></p>
+<p>Luckily for us, we can still get the same effect with C99 and later, but now it’s legal.</p>
+<p>Let’s just change our above definition to have no size for the array<a href="footnotes.html#fn133" class="footnote-ref" id="fnref133" role="doc-noteref"><sup>133</sup></a>:</p>
+<div class="sourceCode" id="cb419"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb419-1"><a href="structs-ii-more-fun-with-structs.html#cb419-1" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> len_string <span class="op">{</span></span>
+<span id="cb419-2"><a href="structs-ii-more-fun-with-structs.html#cb419-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> length<span class="op">;</span></span>
+<span id="cb419-3"><a href="structs-ii-more-fun-with-structs.html#cb419-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">char</span> data<span class="op">[];</span></span>
+<span id="cb419-4"><a href="structs-ii-more-fun-with-structs.html#cb419-4" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span></code></pre></div>
+<p>Again, this only works if the flexible array member is the <em>last</em> field in the <code>struct</code>.</p>
+<p>And then we can allocate all the space we want for those strings by <code>malloc()</code>ing larger than the <code>struct len_string</code>, as we do in this example that makes a new <code>struct len_string</code> from a C string:</p>
+<div class="sourceCode" id="cb420"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb420-1"><a href="structs-ii-more-fun-with-structs.html#cb420-1" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> len_string <span class="op">*</span>len_string_from_c_string<span class="op">(</span><span class="dt">char</span> <span class="op">*</span>s<span class="op">)</span></span>
+<span id="cb420-2"><a href="structs-ii-more-fun-with-structs.html#cb420-2" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb420-3"><a href="structs-ii-more-fun-with-structs.html#cb420-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> len <span class="op">=</span> strlen<span class="op">(</span>s<span class="op">);</span></span>
+<span id="cb420-4"><a href="structs-ii-more-fun-with-structs.html#cb420-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb420-5"><a href="structs-ii-more-fun-with-structs.html#cb420-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Allocate &quot;len&quot; more bytes than we&#39;d normally need</span></span>
+<span id="cb420-6"><a href="structs-ii-more-fun-with-structs.html#cb420-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">struct</span> len_string <span class="op">*</span>ls <span class="op">=</span> malloc<span class="op">(</span><span class="kw">sizeof</span> <span class="op">*</span>ls <span class="op">+</span> len<span class="op">);</span></span>
+<span id="cb420-7"><a href="structs-ii-more-fun-with-structs.html#cb420-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb420-8"><a href="structs-ii-more-fun-with-structs.html#cb420-8" aria-hidden="true" tabindex="-1"></a>    ls<span class="op">-&gt;</span>length <span class="op">=</span> len<span class="op">;</span></span>
+<span id="cb420-9"><a href="structs-ii-more-fun-with-structs.html#cb420-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb420-10"><a href="structs-ii-more-fun-with-structs.html#cb420-10" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Copy the string into those extra bytes</span></span>
+<span id="cb420-11"><a href="structs-ii-more-fun-with-structs.html#cb420-11" aria-hidden="true" tabindex="-1"></a>    memcpy<span class="op">(</span>ls<span class="op">-&gt;</span>data<span class="op">,</span> s<span class="op">,</span> len<span class="op">);</span></span>
+<span id="cb420-12"><a href="structs-ii-more-fun-with-structs.html#cb420-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb420-13"><a href="structs-ii-more-fun-with-structs.html#cb420-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> ls<span class="op">;</span></span>
+<span id="cb420-14"><a href="structs-ii-more-fun-with-structs.html#cb420-14" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p></p>
+<h2 data-number="20.5" id="struct-padding-bytes"><span class="header-section-number">20.5</span> Padding Bytes</h2>
+<p></p>
+<p>Beware that C is allowed to add padding bytes within or after a <code>struct</code> as it sees fit. You can’t trust that they will be directly adjacent in memory<a href="footnotes.html#fn134" class="footnote-ref" id="fnref134" role="doc-noteref"><sup>134</sup></a>.</p>
+<p>Let’s take a look at this program. We output two numbers. One is the sum of the <code>sizeof</code>s the individual field types. The other is the <code>sizeof</code> the entire <code>struct</code>.</p>
+<p>One would expect them to be the same. The size of the total is the size of the sum of its parts, right?</p>
+<div class="sourceCode" id="cb421"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb421-1"><a href="structs-ii-more-fun-with-structs.html#cb421-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb421-2"><a href="structs-ii-more-fun-with-structs.html#cb421-2"></a></span>
+<span id="cb421-3"><a href="structs-ii-more-fun-with-structs.html#cb421-3"></a><span class="kw">struct</span> foo <span class="op">{</span></span>
+<span id="cb421-4"><a href="structs-ii-more-fun-with-structs.html#cb421-4"></a>    <span class="dt">int</span> a<span class="op">;</span></span>
+<span id="cb421-5"><a href="structs-ii-more-fun-with-structs.html#cb421-5"></a>    <span class="dt">char</span> b<span class="op">;</span></span>
+<span id="cb421-6"><a href="structs-ii-more-fun-with-structs.html#cb421-6"></a>    <span class="dt">int</span> c<span class="op">;</span></span>
+<span id="cb421-7"><a href="structs-ii-more-fun-with-structs.html#cb421-7"></a>    <span class="dt">char</span> d<span class="op">;</span></span>
+<span id="cb421-8"><a href="structs-ii-more-fun-with-structs.html#cb421-8"></a><span class="op">};</span></span>
+<span id="cb421-9"><a href="structs-ii-more-fun-with-structs.html#cb421-9"></a></span>
+<span id="cb421-10"><a href="structs-ii-more-fun-with-structs.html#cb421-10"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb421-11"><a href="structs-ii-more-fun-with-structs.html#cb421-11"></a><span class="op">{</span></span>
+<span id="cb421-12"><a href="structs-ii-more-fun-with-structs.html#cb421-12"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%zu\n</span><span class="st">&quot;</span><span class="op">,</span> <span class="kw">sizeof</span><span class="op">(</span><span class="dt">int</span><span class="op">)</span> <span class="op">+</span> <span class="kw">sizeof</span><span class="op">(</span><span class="dt">char</span><span class="op">)</span> <span class="op">+</span> <span class="kw">sizeof</span><span class="op">(</span><span class="dt">int</span><span class="op">)</span> <span class="op">+</span> <span class="kw">sizeof</span><span class="op">(</span><span class="dt">char</span><span class="op">));</span></span>
+<span id="cb421-13"><a href="structs-ii-more-fun-with-structs.html#cb421-13"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%zu\n</span><span class="st">&quot;</span><span class="op">,</span> <span class="kw">sizeof</span><span class="op">(</span><span class="kw">struct</span> foo<span class="op">));</span></span>
+<span id="cb421-14"><a href="structs-ii-more-fun-with-structs.html#cb421-14"></a><span class="op">}</span></span></code></pre></div>
+<p>But on my system, this outputs:</p>
+<div class="sourceCode" id="cb422"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb422-1"><a href="structs-ii-more-fun-with-structs.html#cb422-1" aria-hidden="true" tabindex="-1"></a>10</span>
+<span id="cb422-2"><a href="structs-ii-more-fun-with-structs.html#cb422-2" aria-hidden="true" tabindex="-1"></a>16</span></code></pre></div>
+<p>They’re not the same! The compiler has added 6 bytes of padding to help it be more performant. Maybe you got different output with your compiler, but unless you’re forcing it, you can’t be sure there’s no padding.</p>
+<p></p>
+<h2 data-number="20.6" id="offsetof"><span class="header-section-number">20.6</span> <code>offsetof</code></h2>
+<p></p>
+<p>In the previous section, we saw that the compiler could inject padding bytes at will inside a structure.</p>
+<p>What if we needed to know where those were? We can measure it with <code>offsetof</code>, defined in <code>&lt;stddef.h&gt;</code>.</p>
+<p>Let’s modify the code from above to print the offsets of the individual fields in the <code>struct</code>:</p>
+<div class="sourceCode" id="cb423"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb423-1"><a href="structs-ii-more-fun-with-structs.html#cb423-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb423-2"><a href="structs-ii-more-fun-with-structs.html#cb423-2"></a><span class="pp">#include </span><span class="im">&lt;stddef.h&gt;</span></span>
+<span id="cb423-3"><a href="structs-ii-more-fun-with-structs.html#cb423-3"></a></span>
+<span id="cb423-4"><a href="structs-ii-more-fun-with-structs.html#cb423-4"></a><span class="kw">struct</span> foo <span class="op">{</span></span>
+<span id="cb423-5"><a href="structs-ii-more-fun-with-structs.html#cb423-5"></a>    <span class="dt">int</span> a<span class="op">;</span></span>
+<span id="cb423-6"><a href="structs-ii-more-fun-with-structs.html#cb423-6"></a>    <span class="dt">char</span> b<span class="op">;</span></span>
+<span id="cb423-7"><a href="structs-ii-more-fun-with-structs.html#cb423-7"></a>    <span class="dt">int</span> c<span class="op">;</span></span>
+<span id="cb423-8"><a href="structs-ii-more-fun-with-structs.html#cb423-8"></a>    <span class="dt">char</span> d<span class="op">;</span></span>
+<span id="cb423-9"><a href="structs-ii-more-fun-with-structs.html#cb423-9"></a><span class="op">};</span></span>
+<span id="cb423-10"><a href="structs-ii-more-fun-with-structs.html#cb423-10"></a></span>
+<span id="cb423-11"><a href="structs-ii-more-fun-with-structs.html#cb423-11"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb423-12"><a href="structs-ii-more-fun-with-structs.html#cb423-12"></a><span class="op">{</span></span>
+<span id="cb423-13"><a href="structs-ii-more-fun-with-structs.html#cb423-13"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%zu\n</span><span class="st">&quot;</span><span class="op">,</span> offsetof<span class="op">(</span><span class="kw">struct</span> foo<span class="op">,</span> a<span class="op">));</span></span>
+<span id="cb423-14"><a href="structs-ii-more-fun-with-structs.html#cb423-14"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%zu\n</span><span class="st">&quot;</span><span class="op">,</span> offsetof<span class="op">(</span><span class="kw">struct</span> foo<span class="op">,</span> b<span class="op">));</span></span>
+<span id="cb423-15"><a href="structs-ii-more-fun-with-structs.html#cb423-15"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%zu\n</span><span class="st">&quot;</span><span class="op">,</span> offsetof<span class="op">(</span><span class="kw">struct</span> foo<span class="op">,</span> c<span class="op">));</span></span>
+<span id="cb423-16"><a href="structs-ii-more-fun-with-structs.html#cb423-16"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%zu\n</span><span class="st">&quot;</span><span class="op">,</span> offsetof<span class="op">(</span><span class="kw">struct</span> foo<span class="op">,</span> d<span class="op">));</span></span>
+<span id="cb423-17"><a href="structs-ii-more-fun-with-structs.html#cb423-17"></a><span class="op">}</span></span></code></pre></div>
+<p>For me, this outputs:</p>
+<div class="sourceCode" id="cb424"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb424-1"><a href="structs-ii-more-fun-with-structs.html#cb424-1" aria-hidden="true" tabindex="-1"></a>0</span>
+<span id="cb424-2"><a href="structs-ii-more-fun-with-structs.html#cb424-2" aria-hidden="true" tabindex="-1"></a>4</span>
+<span id="cb424-3"><a href="structs-ii-more-fun-with-structs.html#cb424-3" aria-hidden="true" tabindex="-1"></a>8</span>
+<span id="cb424-4"><a href="structs-ii-more-fun-with-structs.html#cb424-4" aria-hidden="true" tabindex="-1"></a>12</span></code></pre></div>
+<p>indicating that we’re using 4 bytes for each of the fields. It’s a little weird, because <code>char</code> is only 1 byte, right? The compiler is putting 3 padding bytes after each <code>char</code> so that all the fields are 4 bytes long. Presumably this will run faster on my CPU.</p>
+<p></p>
+<!--
+
+6.7.2.1
+
+15 Within a structure object, the non-bit-field members and the units in which bit-fields reside have addresses that increase in the order in which they are declared. A pointer to a structure object, suitably converted, points to its initial member (or if that member is a bit-field, then to the unit in which it resides), and vice versa. There may be unnamed padding within a structure object, but not at its beginning.
+
+6.2.7 Compatible type and composite type
+
+1 Two types have compatible type if their types are the same.
+
+6.5
+
+7 An object shall have its stored value accessed only by an lvalue expression that has one of the following types:
+
+- a type compatible with the effective type of the object
+
+-->
+<h2 data-number="20.7" id="fake-oop"><span class="header-section-number">20.7</span> Fake OOP</h2>
+<p>There’s a slightly abusive thing that’s sort of OOP-like that you can do with <code>struct</code>s.</p>
+<p>Since the pointer to the <code>struct</code> is the same as a pointer to the first element of the <code>struct</code>, you can freely cast a pointer to the <code>struct</code> to a pointer to the first element.</p>
+<p>What this means is that we can set up a situation like this:</p>
+<div class="sourceCode" id="cb425"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb425-1"><a href="structs-ii-more-fun-with-structs.html#cb425-1" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> parent <span class="op">{</span></span>
+<span id="cb425-2"><a href="structs-ii-more-fun-with-structs.html#cb425-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> a<span class="op">,</span> b<span class="op">;</span></span>
+<span id="cb425-3"><a href="structs-ii-more-fun-with-structs.html#cb425-3" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb425-4"><a href="structs-ii-more-fun-with-structs.html#cb425-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb425-5"><a href="structs-ii-more-fun-with-structs.html#cb425-5" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> child <span class="op">{</span></span>
+<span id="cb425-6"><a href="structs-ii-more-fun-with-structs.html#cb425-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">struct</span> parent super<span class="op">;</span>  <span class="co">// MUST be first</span></span>
+<span id="cb425-7"><a href="structs-ii-more-fun-with-structs.html#cb425-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> c<span class="op">,</span> d<span class="op">;</span></span>
+<span id="cb425-8"><a href="structs-ii-more-fun-with-structs.html#cb425-8" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span></code></pre></div>
+<p>Then we are able to pass a pointer to a <code>struct child</code> to a function that expects either that <em>or</em> a pointer to a <code>struct parent</code>!</p>
+<p>Because <code>struct parent super</code> is the first item in the <code>struct child</code>, a pointer to any <code>struct child</code> is the same as a pointer to that <code>super</code> field<a href="footnotes.html#fn135" class="footnote-ref" id="fnref135" role="doc-noteref"><sup>135</sup></a>.</p>
+<p>Let’s set up an example here. We’ll make <code>struct</code>s as above, but then we’ll pass a pointer to a <code>struct child</code> to a function that needs a pointer to a <code>struct parent</code>… and it’ll still work.</p>
+<div class="sourceCode" id="cb426"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb426-1"><a href="structs-ii-more-fun-with-structs.html#cb426-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb426-2"><a href="structs-ii-more-fun-with-structs.html#cb426-2"></a></span>
+<span id="cb426-3"><a href="structs-ii-more-fun-with-structs.html#cb426-3"></a><span class="kw">struct</span> parent <span class="op">{</span></span>
+<span id="cb426-4"><a href="structs-ii-more-fun-with-structs.html#cb426-4"></a>    <span class="dt">int</span> a<span class="op">,</span> b<span class="op">;</span></span>
+<span id="cb426-5"><a href="structs-ii-more-fun-with-structs.html#cb426-5"></a><span class="op">};</span></span>
+<span id="cb426-6"><a href="structs-ii-more-fun-with-structs.html#cb426-6"></a></span>
+<span id="cb426-7"><a href="structs-ii-more-fun-with-structs.html#cb426-7"></a><span class="kw">struct</span> child <span class="op">{</span></span>
+<span id="cb426-8"><a href="structs-ii-more-fun-with-structs.html#cb426-8"></a>    <span class="kw">struct</span> parent super<span class="op">;</span>  <span class="co">// MUST be first</span></span>
+<span id="cb426-9"><a href="structs-ii-more-fun-with-structs.html#cb426-9"></a>    <span class="dt">int</span> c<span class="op">,</span> d<span class="op">;</span></span>
+<span id="cb426-10"><a href="structs-ii-more-fun-with-structs.html#cb426-10"></a><span class="op">};</span></span>
+<span id="cb426-11"><a href="structs-ii-more-fun-with-structs.html#cb426-11"></a></span>
+<span id="cb426-12"><a href="structs-ii-more-fun-with-structs.html#cb426-12"></a><span class="co">// Making the argument `void*` so we can pass any type into it</span></span>
+<span id="cb426-13"><a href="structs-ii-more-fun-with-structs.html#cb426-13"></a><span class="co">// (namely a struct parent or struct child)</span></span>
+<span id="cb426-14"><a href="structs-ii-more-fun-with-structs.html#cb426-14"></a><span class="dt">void</span> print_parent<span class="op">(</span><span class="dt">void</span> <span class="op">*</span>p<span class="op">)</span></span>
+<span id="cb426-15"><a href="structs-ii-more-fun-with-structs.html#cb426-15"></a><span class="op">{</span></span>
+<span id="cb426-16"><a href="structs-ii-more-fun-with-structs.html#cb426-16"></a>    <span class="co">// Expects a struct parent--but a struct child will also work</span></span>
+<span id="cb426-17"><a href="structs-ii-more-fun-with-structs.html#cb426-17"></a>    <span class="co">// because the pointer points to the struct parent in the first</span></span>
+<span id="cb426-18"><a href="structs-ii-more-fun-with-structs.html#cb426-18"></a>    <span class="co">// field:</span></span>
+<span id="cb426-19"><a href="structs-ii-more-fun-with-structs.html#cb426-19"></a>    <span class="kw">struct</span> parent <span class="op">*</span>self <span class="op">=</span> p<span class="op">;</span></span>
+<span id="cb426-20"><a href="structs-ii-more-fun-with-structs.html#cb426-20"></a></span>
+<span id="cb426-21"><a href="structs-ii-more-fun-with-structs.html#cb426-21"></a>    printf<span class="op">(</span><span class="st">&quot;Parent: </span><span class="sc">%d</span><span class="st">, </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> self<span class="op">-&gt;</span>a<span class="op">,</span> self<span class="op">-&gt;</span>b<span class="op">);</span></span>
+<span id="cb426-22"><a href="structs-ii-more-fun-with-structs.html#cb426-22"></a><span class="op">}</span></span>
+<span id="cb426-23"><a href="structs-ii-more-fun-with-structs.html#cb426-23"></a></span>
+<span id="cb426-24"><a href="structs-ii-more-fun-with-structs.html#cb426-24"></a><span class="dt">void</span> print_child<span class="op">(</span><span class="kw">struct</span> child <span class="op">*</span>self<span class="op">)</span></span>
+<span id="cb426-25"><a href="structs-ii-more-fun-with-structs.html#cb426-25"></a><span class="op">{</span></span>
+<span id="cb426-26"><a href="structs-ii-more-fun-with-structs.html#cb426-26"></a>    printf<span class="op">(</span><span class="st">&quot;Child: </span><span class="sc">%d</span><span class="st">, </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> self<span class="op">-&gt;</span>c<span class="op">,</span> self<span class="op">-&gt;</span>d<span class="op">);</span></span>
+<span id="cb426-27"><a href="structs-ii-more-fun-with-structs.html#cb426-27"></a><span class="op">}</span></span>
+<span id="cb426-28"><a href="structs-ii-more-fun-with-structs.html#cb426-28"></a></span>
+<span id="cb426-29"><a href="structs-ii-more-fun-with-structs.html#cb426-29"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb426-30"><a href="structs-ii-more-fun-with-structs.html#cb426-30"></a><span class="op">{</span></span>
+<span id="cb426-31"><a href="structs-ii-more-fun-with-structs.html#cb426-31"></a>    <span class="kw">struct</span> child c <span class="op">=</span> <span class="op">{.</span>super<span class="op">.</span>a<span class="op">=</span><span class="dv">1</span><span class="op">,</span> <span class="op">.</span>super<span class="op">.</span>b<span class="op">=</span><span class="dv">2</span><span class="op">,</span> <span class="op">.</span>c<span class="op">=</span><span class="dv">3</span><span class="op">,</span> <span class="op">.</span>d<span class="op">=</span><span class="dv">4</span><span class="op">};</span></span>
+<span id="cb426-32"><a href="structs-ii-more-fun-with-structs.html#cb426-32"></a></span>
+<span id="cb426-33"><a href="structs-ii-more-fun-with-structs.html#cb426-33"></a>    print_child<span class="op">(&amp;</span>c<span class="op">);</span></span>
+<span id="cb426-34"><a href="structs-ii-more-fun-with-structs.html#cb426-34"></a>    print_parent<span class="op">(&amp;</span>c<span class="op">);</span>  <span class="co">// Also works even though it&#39;s a struct child!</span></span>
+<span id="cb426-35"><a href="structs-ii-more-fun-with-structs.html#cb426-35"></a><span class="op">}</span></span></code></pre></div>
+<p>See what we did on the last line of <code>main()</code>? We called <code>print_parent()</code> but passed a <code>struct child*</code> as the argument! Even though <code>print_parent()</code> needs the argument to point to a <code>struct parent</code>, we’re <em>getting away with it</em> because the first field in the <code>struct child</code> is a <code>struct parent</code>.</p>
+<p>Again, this works because a pointer to a <code>struct</code> has the same value as a pointer to the first field in that <code>struct</code>.</p>
+<p>This all hinges on this part of the spec:</p>
+<blockquote>
+<p><strong>§6.7.2.1¶15</strong> […] A pointer to a structure object, suitably converted, points to its initial member […], and vice versa.</p>
+</blockquote>
+<p>and</p>
+<blockquote>
+<p><strong>§6.5¶7</strong> An object shall have its stored value accessed only by an lvalue expression that has one of the following types:</p>
+<ul>
+<li>a type compatible with the effective type of the object</li>
+<li>[…]</li>
+</ul>
+</blockquote>
+<p>and my assumption that “suitably converted” means “cast to the effective type of the initial member”.</p>
+<h2 data-number="20.8" id="bit-fields"><span class="header-section-number">20.8</span> Bit-Fields</h2>
+<p></p>
+<p>In my experience, these are rarely used, but you might see them out there from time to time, especially in lower-level applications that pack bits together into larger spaces.</p>
+<p>Let’s take a look at some code to demonstrate a use case:</p>
+<div class="sourceCode" id="cb427"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb427-1"><a href="structs-ii-more-fun-with-structs.html#cb427-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb427-2"><a href="structs-ii-more-fun-with-structs.html#cb427-2"></a></span>
+<span id="cb427-3"><a href="structs-ii-more-fun-with-structs.html#cb427-3"></a><span class="kw">struct</span> foo <span class="op">{</span></span>
+<span id="cb427-4"><a href="structs-ii-more-fun-with-structs.html#cb427-4"></a>    <span class="dt">unsigned</span> <span class="dt">int</span> a<span class="op">;</span></span>
+<span id="cb427-5"><a href="structs-ii-more-fun-with-structs.html#cb427-5"></a>    <span class="dt">unsigned</span> <span class="dt">int</span> b<span class="op">;</span></span>
+<span id="cb427-6"><a href="structs-ii-more-fun-with-structs.html#cb427-6"></a>    <span class="dt">unsigned</span> <span class="dt">int</span> c<span class="op">;</span></span>
+<span id="cb427-7"><a href="structs-ii-more-fun-with-structs.html#cb427-7"></a>    <span class="dt">unsigned</span> <span class="dt">int</span> d<span class="op">;</span></span>
+<span id="cb427-8"><a href="structs-ii-more-fun-with-structs.html#cb427-8"></a><span class="op">};</span></span>
+<span id="cb427-9"><a href="structs-ii-more-fun-with-structs.html#cb427-9"></a></span>
+<span id="cb427-10"><a href="structs-ii-more-fun-with-structs.html#cb427-10"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb427-11"><a href="structs-ii-more-fun-with-structs.html#cb427-11"></a><span class="op">{</span></span>
+<span id="cb427-12"><a href="structs-ii-more-fun-with-structs.html#cb427-12"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%zu\n</span><span class="st">&quot;</span><span class="op">,</span> <span class="kw">sizeof</span><span class="op">(</span><span class="kw">struct</span> foo<span class="op">));</span></span>
+<span id="cb427-13"><a href="structs-ii-more-fun-with-structs.html#cb427-13"></a><span class="op">}</span></span></code></pre></div>
+<p>For me, this prints <code>16</code>. Which makes sense, since <code>unsigned</code>s are 4 bytes on my system.</p>
+<p>But what if we knew that all the values that were going to be stored in <code>a</code> and <code>b</code> could be stored in 5 bits, and the values in <code>c</code>, and <code>d</code> could be stored in 3 bits? That’s only a total 16 bits. Why have 128 bits reserved for them if we’re only going to use 16?</p>
+<p>Well, we can tell C to pretty-please try to pack these values in. We can specify the maximum number of bits that values can take (from 1 up the size of the containing type).</p>
+<p>We do this by putting a colon after the field name, followed by the field width in bits.</p>
+<div class="sourceCode" id="cb428" data-startfrom="3"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c" style="counter-reset: source-line 2;"><span id="cb428-3"><a href="structs-ii-more-fun-with-structs.html#cb428-3"></a><span class="kw">struct</span> foo <span class="op">{</span></span>
+<span id="cb428-4"><a href="structs-ii-more-fun-with-structs.html#cb428-4"></a>    <span class="dt">unsigned</span> <span class="dt">int</span> a<span class="op">:</span><span class="dv">5</span><span class="op">;</span></span>
+<span id="cb428-5"><a href="structs-ii-more-fun-with-structs.html#cb428-5"></a>    <span class="dt">unsigned</span> <span class="dt">int</span> b<span class="op">:</span><span class="dv">5</span><span class="op">;</span></span>
+<span id="cb428-6"><a href="structs-ii-more-fun-with-structs.html#cb428-6"></a>    <span class="dt">unsigned</span> <span class="dt">int</span> c<span class="op">:</span><span class="dv">3</span><span class="op">;</span></span>
+<span id="cb428-7"><a href="structs-ii-more-fun-with-structs.html#cb428-7"></a>    <span class="dt">unsigned</span> <span class="dt">int</span> d<span class="op">:</span><span class="dv">3</span><span class="op">;</span></span>
+<span id="cb428-8"><a href="structs-ii-more-fun-with-structs.html#cb428-8"></a><span class="op">};</span></span></code></pre></div>
+<p>Now when I ask C how big my <code>struct foo</code> is, it tells me 4! It was 16 bytes, but now it’s only 4. It has “packed” those 4 values down into 4 bytes, which is a four-fold memory savings.</p>
+<p>The tradeoff is, of course, that the 5-bit fields can only hold values from 0-31 and the 3-bit fields can only hold values from 0-7. But life’s all about compromise, after all.</p>
+<h3 data-number="20.8.1" id="non-adjacent-bit-fields"><span class="header-section-number">20.8.1</span> Non-Adjacent Bit-Fields</h3>
+<p>A gotcha: C will only combine <strong>adjacent</strong> bit-fields. If they’re interrupted by non-bit-fields, you get no savings:</p>
+<div class="sourceCode" id="cb429"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb429-1"><a href="structs-ii-more-fun-with-structs.html#cb429-1" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> foo <span class="op">{</span>            <span class="co">// sizeof(struct foo) == 16 (for me)</span></span>
+<span id="cb429-2"><a href="structs-ii-more-fun-with-structs.html#cb429-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">unsigned</span> <span class="dt">int</span> a<span class="op">:</span><span class="dv">1</span><span class="op">;</span>   <span class="co">// since a is not adjacent to c.</span></span>
+<span id="cb429-3"><a href="structs-ii-more-fun-with-structs.html#cb429-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">unsigned</span> <span class="dt">int</span> b<span class="op">;</span></span>
+<span id="cb429-4"><a href="structs-ii-more-fun-with-structs.html#cb429-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">unsigned</span> <span class="dt">int</span> c<span class="op">:</span><span class="dv">1</span><span class="op">;</span></span>
+<span id="cb429-5"><a href="structs-ii-more-fun-with-structs.html#cb429-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">unsigned</span> <span class="dt">int</span> d<span class="op">;</span></span>
+<span id="cb429-6"><a href="structs-ii-more-fun-with-structs.html#cb429-6" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span></code></pre></div>
+<p>In that example, since <code>a</code> is not adjacent to <code>c</code>, they are both “packed” in their own <code>int</code>s.</p>
+<p>So we have one <code>int</code> each for <code>a</code>, <code>b</code>, <code>c</code>, and <code>d</code>. Since my <code>int</code>s are 4 bytes, that’s a grand total of 16 bytes.</p>
+<p>A quick rearrangement yields some space savings from 16 bytes down to 12 bytes (on my system):</p>
+<div class="sourceCode" id="cb430"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb430-1"><a href="structs-ii-more-fun-with-structs.html#cb430-1" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> foo <span class="op">{</span>            <span class="co">// sizeof(struct foo) == 12 (for me)</span></span>
+<span id="cb430-2"><a href="structs-ii-more-fun-with-structs.html#cb430-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">unsigned</span> <span class="dt">int</span> a<span class="op">:</span><span class="dv">1</span><span class="op">;</span></span>
+<span id="cb430-3"><a href="structs-ii-more-fun-with-structs.html#cb430-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">unsigned</span> <span class="dt">int</span> c<span class="op">:</span><span class="dv">1</span><span class="op">;</span></span>
+<span id="cb430-4"><a href="structs-ii-more-fun-with-structs.html#cb430-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">unsigned</span> <span class="dt">int</span> b<span class="op">;</span></span>
+<span id="cb430-5"><a href="structs-ii-more-fun-with-structs.html#cb430-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">unsigned</span> <span class="dt">int</span> d<span class="op">;</span></span>
+<span id="cb430-6"><a href="structs-ii-more-fun-with-structs.html#cb430-6" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span></code></pre></div>
+<p>And now, since <code>a</code> is next to <code>c</code>, the compiler puts them together into a single <code>int</code>.</p>
+<p>So we have one <code>int</code> for a combined <code>a</code> and <code>c</code>, and one <code>int</code> each for <code>b</code> and <code>d</code>. For a grand total of 3 <code>int</code>s, or 12 bytes.</p>
+<p>Put all your bitfields together to get the compiler to combine them.</p>
+<h3 data-number="20.8.2" id="signed-or-unsigned-ints"><span class="header-section-number">20.8.2</span> Signed or Unsigned <code>int</code>s</h3>
+<p>If you just declare a bit-field to be <code>int</code>, the different compilers will treat it as <code>signed</code> or <code>unsigned</code>. Just like the situation with <code>char</code>.</p>
+<p>Be specific about the signedness when using bit-fields.</p>
+<h3 data-number="20.8.3" id="unnamed-bit-fields"><span class="header-section-number">20.8.3</span> Unnamed Bit-Fields</h3>
+<p>In some specific circumstances, you might need to reserve some bits for hardware reasons, but not need to use them in code.</p>
+<p>For example, let’s say you have a byte where the top 2 bits have a meaning, the bottom 1 bit has a meaning, but the middle 5 bits do not get used by you<a href="footnotes.html#fn136" class="footnote-ref" id="fnref136" role="doc-noteref"><sup>136</sup></a>.</p>
+<p>We <em>could</em> do something like this:</p>
+<div class="sourceCode" id="cb431"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb431-1"><a href="structs-ii-more-fun-with-structs.html#cb431-1" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> foo <span class="op">{</span></span>
+<span id="cb431-2"><a href="structs-ii-more-fun-with-structs.html#cb431-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">unsigned</span> <span class="dt">char</span> a<span class="op">:</span><span class="dv">2</span><span class="op">;</span></span>
+<span id="cb431-3"><a href="structs-ii-more-fun-with-structs.html#cb431-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">unsigned</span> <span class="dt">char</span> dummy<span class="op">:</span><span class="dv">5</span><span class="op">;</span></span>
+<span id="cb431-4"><a href="structs-ii-more-fun-with-structs.html#cb431-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">unsigned</span> <span class="dt">char</span> b<span class="op">:</span><span class="dv">1</span><span class="op">;</span></span>
+<span id="cb431-5"><a href="structs-ii-more-fun-with-structs.html#cb431-5" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span></code></pre></div>
+<p>And that works—in our code we use <code>a</code> and <code>b</code>, but never <code>dummy</code>. It’s just there to eat up 5 bits to make sure <code>a</code> and <code>b</code> are in the “required” (by this contrived example) positions within the byte.</p>
+<p>C allows us a way to clean this up: <em>unnamed bit-fields</em>. You can just leave the name (<code>dummy</code>) out in this case, and C is perfectly happy for the same effect:</p>
+<div class="sourceCode" id="cb432"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb432-1"><a href="structs-ii-more-fun-with-structs.html#cb432-1" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> foo <span class="op">{</span></span>
+<span id="cb432-2"><a href="structs-ii-more-fun-with-structs.html#cb432-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">unsigned</span> <span class="dt">char</span> a<span class="op">:</span><span class="dv">2</span><span class="op">;</span></span>
+<span id="cb432-3"><a href="structs-ii-more-fun-with-structs.html#cb432-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">unsigned</span> <span class="dt">char</span> <span class="op">:</span><span class="dv">5</span><span class="op">;</span>   <span class="co">// &lt;-- unnamed bit-field!</span></span>
+<span id="cb432-4"><a href="structs-ii-more-fun-with-structs.html#cb432-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">unsigned</span> <span class="dt">char</span> b<span class="op">:</span><span class="dv">1</span><span class="op">;</span></span>
+<span id="cb432-5"><a href="structs-ii-more-fun-with-structs.html#cb432-5" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span></code></pre></div>
+<h3 data-number="20.8.4" id="zero-width-unnamed-bit-fields"><span class="header-section-number">20.8.4</span> Zero-Width Unnamed Bit-Fields</h3>
+<p>Some more esoterica out here… Let’s say you were packing bits into an <code>unsigned int</code>, and you needed some adjacent bit-fields to pack into the <em>next</em> <code>unsigned int</code>.</p>
+<p>That is, if you do this:</p>
+<div class="sourceCode" id="cb433"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb433-1"><a href="structs-ii-more-fun-with-structs.html#cb433-1" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> foo <span class="op">{</span></span>
+<span id="cb433-2"><a href="structs-ii-more-fun-with-structs.html#cb433-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">unsigned</span> <span class="dt">int</span> a<span class="op">:</span><span class="dv">1</span><span class="op">;</span></span>
+<span id="cb433-3"><a href="structs-ii-more-fun-with-structs.html#cb433-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">unsigned</span> <span class="dt">int</span> b<span class="op">:</span><span class="dv">2</span><span class="op">;</span></span>
+<span id="cb433-4"><a href="structs-ii-more-fun-with-structs.html#cb433-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">unsigned</span> <span class="dt">int</span> c<span class="op">:</span><span class="dv">3</span><span class="op">;</span></span>
+<span id="cb433-5"><a href="structs-ii-more-fun-with-structs.html#cb433-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">unsigned</span> <span class="dt">int</span> d<span class="op">:</span><span class="dv">4</span><span class="op">;</span></span>
+<span id="cb433-6"><a href="structs-ii-more-fun-with-structs.html#cb433-6" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span></code></pre></div>
+<p>the compiler packs all those into a single <code>unsigned int</code>. But what if you needed <code>a</code> and <code>b</code> in one <code>int</code>, and <code>c</code> and <code>d</code> in a different one?</p>
+<p>There’s a solution for that: put an unnamed bit-field of width <code>0</code> where you want the compiler to start anew with packing bits in a different <code>int</code>:</p>
+<div class="sourceCode" id="cb434"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb434-1"><a href="structs-ii-more-fun-with-structs.html#cb434-1" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> foo <span class="op">{</span></span>
+<span id="cb434-2"><a href="structs-ii-more-fun-with-structs.html#cb434-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">unsigned</span> <span class="dt">int</span> a<span class="op">:</span><span class="dv">1</span><span class="op">;</span></span>
+<span id="cb434-3"><a href="structs-ii-more-fun-with-structs.html#cb434-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">unsigned</span> <span class="dt">int</span> b<span class="op">:</span><span class="dv">2</span><span class="op">;</span></span>
+<span id="cb434-4"><a href="structs-ii-more-fun-with-structs.html#cb434-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">unsigned</span> <span class="dt">int</span> <span class="op">:</span><span class="dv">0</span><span class="op">;</span>   <span class="co">// &lt;--Zero-width unnamed bit-field</span></span>
+<span id="cb434-5"><a href="structs-ii-more-fun-with-structs.html#cb434-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">unsigned</span> <span class="dt">int</span> c<span class="op">:</span><span class="dv">3</span><span class="op">;</span></span>
+<span id="cb434-6"><a href="structs-ii-more-fun-with-structs.html#cb434-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">unsigned</span> <span class="dt">int</span> d<span class="op">:</span><span class="dv">4</span><span class="op">;</span></span>
+<span id="cb434-7"><a href="structs-ii-more-fun-with-structs.html#cb434-7" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span></code></pre></div>
+<p>It’s analogous to an explicit page break in a word processor. You’re telling the compiler, “Stop packing bits in this <code>unsigned</code>, and start packing them in the next one.”</p>
+<p>By adding the zero-width unnamed bit field in that spot, the compiler puts <code>a</code> and <code>b</code> in one <code>unsigned int</code>, and <code>c</code> and <code>d</code> in another <code>unsigned int</code>. Two total, for a size of 8 bytes on my system (<code>unsigned int</code>s are 4 bytes each).</p>
+<p></p>
+<h2 data-number="20.9" id="unions"><span class="header-section-number">20.9</span> Unions</h2>
+<p></p>
+<p>These are basically just like <code>struct</code>s, except the fields overlap in memory. The <code>union</code> will be only large enough for the largest field, and you can only use one field at a time.</p>
+<p>It’s a way to reuse the same memory space for different types of data.</p>
+<p>You declare them just like <code>struct</code>s, except it’s <code>union</code>. Take a look at this:</p>
+<div class="sourceCode" id="cb435"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb435-1"><a href="structs-ii-more-fun-with-structs.html#cb435-1" aria-hidden="true" tabindex="-1"></a><span class="kw">union</span> foo <span class="op">{</span></span>
+<span id="cb435-2"><a href="structs-ii-more-fun-with-structs.html#cb435-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> a<span class="op">,</span> b<span class="op">,</span> c<span class="op">,</span> d<span class="op">,</span> e<span class="op">,</span> f<span class="op">;</span></span>
+<span id="cb435-3"><a href="structs-ii-more-fun-with-structs.html#cb435-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">float</span> g<span class="op">,</span> h<span class="op">;</span></span>
+<span id="cb435-4"><a href="structs-ii-more-fun-with-structs.html#cb435-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">char</span> i<span class="op">,</span> j<span class="op">,</span> k<span class="op">,</span> l<span class="op">;</span></span>
+<span id="cb435-5"><a href="structs-ii-more-fun-with-structs.html#cb435-5" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span></code></pre></div>
+<p>Now, that’s a lot of fields. If this were a <code>struct</code>, my system would tell me it took 36 bytes to hold it all.</p>
+<p>But it’s a <code>union</code>, so all those fields overlap in the same stretch of memory. The biggest one is <code>int</code> (or <code>float</code>), taking up 4 bytes on my system. And, indeed, if I ask for the <code>sizeof</code> the <code>union foo</code>, it tells me 4!</p>
+<p>The tradeoff is that you can only portably use one of those fields at a time. However…</p>
+<h3 data-number="20.9.1" id="union-type-punning"><span class="header-section-number">20.9.1</span> Unions and Type Punning</h3>
+<p></p>
+<p>You can non-portably write to one <code>union</code> field and read from another!</p>
+<p>Doing so is called <a href="https://en.wikipedia.org/wiki/Type_punning">type punning</a><a href="footnotes.html#fn137" class="footnote-ref" id="fnref137" role="doc-noteref"><sup>137</sup></a>, and you’d use it if you really knew what you were doing, typically with some kind of low-level programming.</p>
+<p>Since the members of a union share the same memory, writing to one member necessarily affects the others. And if you read from one what was written to another, you get some weird effects.</p>
+<div class="sourceCode" id="cb436"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb436-1"><a href="structs-ii-more-fun-with-structs.html#cb436-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb436-2"><a href="structs-ii-more-fun-with-structs.html#cb436-2"></a></span>
+<span id="cb436-3"><a href="structs-ii-more-fun-with-structs.html#cb436-3"></a><span class="kw">union</span> foo <span class="op">{</span></span>
+<span id="cb436-4"><a href="structs-ii-more-fun-with-structs.html#cb436-4"></a>    <span class="dt">float</span> b<span class="op">;</span></span>
+<span id="cb436-5"><a href="structs-ii-more-fun-with-structs.html#cb436-5"></a>    <span class="dt">short</span> a<span class="op">;</span></span>
+<span id="cb436-6"><a href="structs-ii-more-fun-with-structs.html#cb436-6"></a><span class="op">};</span></span>
+<span id="cb436-7"><a href="structs-ii-more-fun-with-structs.html#cb436-7"></a></span>
+<span id="cb436-8"><a href="structs-ii-more-fun-with-structs.html#cb436-8"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb436-9"><a href="structs-ii-more-fun-with-structs.html#cb436-9"></a><span class="op">{</span></span>
+<span id="cb436-10"><a href="structs-ii-more-fun-with-structs.html#cb436-10"></a>    <span class="kw">union</span> foo x<span class="op">;</span></span>
+<span id="cb436-11"><a href="structs-ii-more-fun-with-structs.html#cb436-11"></a></span>
+<span id="cb436-12"><a href="structs-ii-more-fun-with-structs.html#cb436-12"></a>    x<span class="op">.</span>b <span class="op">=</span> <span class="fl">3.14159</span><span class="op">;</span></span>
+<span id="cb436-13"><a href="structs-ii-more-fun-with-structs.html#cb436-13"></a></span>
+<span id="cb436-14"><a href="structs-ii-more-fun-with-structs.html#cb436-14"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%f\n</span><span class="st">&quot;</span><span class="op">,</span> x<span class="op">.</span>b<span class="op">);</span>  <span class="co">// 3.14159, fair enough</span></span>
+<span id="cb436-15"><a href="structs-ii-more-fun-with-structs.html#cb436-15"></a></span>
+<span id="cb436-16"><a href="structs-ii-more-fun-with-structs.html#cb436-16"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> x<span class="op">.</span>a<span class="op">);</span>  <span class="co">// But what about this?</span></span>
+<span id="cb436-17"><a href="structs-ii-more-fun-with-structs.html#cb436-17"></a><span class="op">}</span></span></code></pre></div>
+<p>On my system, this prints out:</p>
+<pre><code>3.141590
+4048</code></pre>
+<p>because under the hood, the object representation for the float <code>3.14159</code> was the same as the object representation for the short <code>4048</code>. On my system. Your results may vary.</p>
+<p></p>
+<h3 data-number="20.9.2" id="pointers-to-unions"><span class="header-section-number">20.9.2</span> Pointers to <code>union</code>s</h3>
+<p></p>
+<p>If you have a pointer to a <code>union</code>, you can cast that pointer to any of the types of the fields in that <code>union</code> and get the values out that way.</p>
+<p>In this example, we see that the <code>union</code> has <code>int</code>s and <code>float</code>s in it. And we get pointers to the <code>union</code>, but we cast them to <code>int*</code> and <code>float*</code> types (the cast silences compiler warnings). And then if we dereference those, we see that they have the values we stored directly in the <code>union</code>.</p>
+<div class="sourceCode" id="cb438"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb438-1"><a href="structs-ii-more-fun-with-structs.html#cb438-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb438-2"><a href="structs-ii-more-fun-with-structs.html#cb438-2"></a></span>
+<span id="cb438-3"><a href="structs-ii-more-fun-with-structs.html#cb438-3"></a><span class="kw">union</span> foo <span class="op">{</span></span>
+<span id="cb438-4"><a href="structs-ii-more-fun-with-structs.html#cb438-4"></a>    <span class="dt">int</span> a<span class="op">,</span> b<span class="op">,</span> c<span class="op">,</span> d<span class="op">,</span> e<span class="op">,</span> f<span class="op">;</span></span>
+<span id="cb438-5"><a href="structs-ii-more-fun-with-structs.html#cb438-5"></a>    <span class="dt">float</span> g<span class="op">,</span> h<span class="op">;</span></span>
+<span id="cb438-6"><a href="structs-ii-more-fun-with-structs.html#cb438-6"></a>    <span class="dt">char</span> i<span class="op">,</span> j<span class="op">,</span> k<span class="op">,</span> l<span class="op">;</span></span>
+<span id="cb438-7"><a href="structs-ii-more-fun-with-structs.html#cb438-7"></a><span class="op">};</span></span>
+<span id="cb438-8"><a href="structs-ii-more-fun-with-structs.html#cb438-8"></a></span>
+<span id="cb438-9"><a href="structs-ii-more-fun-with-structs.html#cb438-9"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb438-10"><a href="structs-ii-more-fun-with-structs.html#cb438-10"></a><span class="op">{</span></span>
+<span id="cb438-11"><a href="structs-ii-more-fun-with-structs.html#cb438-11"></a>    <span class="kw">union</span> foo x<span class="op">;</span></span>
+<span id="cb438-12"><a href="structs-ii-more-fun-with-structs.html#cb438-12"></a></span>
+<span id="cb438-13"><a href="structs-ii-more-fun-with-structs.html#cb438-13"></a>    <span class="dt">int</span> <span class="op">*</span>foo_int_p <span class="op">=</span> <span class="op">(</span><span class="dt">int</span> <span class="op">*)&amp;</span>x<span class="op">;</span></span>
+<span id="cb438-14"><a href="structs-ii-more-fun-with-structs.html#cb438-14"></a>    <span class="dt">float</span> <span class="op">*</span>foo_float_p <span class="op">=</span> <span class="op">(</span><span class="dt">float</span> <span class="op">*)&amp;</span>x<span class="op">;</span></span>
+<span id="cb438-15"><a href="structs-ii-more-fun-with-structs.html#cb438-15"></a></span>
+<span id="cb438-16"><a href="structs-ii-more-fun-with-structs.html#cb438-16"></a>    x<span class="op">.</span>a <span class="op">=</span> <span class="dv">12</span><span class="op">;</span></span>
+<span id="cb438-17"><a href="structs-ii-more-fun-with-structs.html#cb438-17"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> x<span class="op">.</span>a<span class="op">);</span>           <span class="co">// 12</span></span>
+<span id="cb438-18"><a href="structs-ii-more-fun-with-structs.html#cb438-18"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> <span class="op">*</span>foo_int_p<span class="op">);</span>    <span class="co">// 12, again</span></span>
+<span id="cb438-19"><a href="structs-ii-more-fun-with-structs.html#cb438-19"></a></span>
+<span id="cb438-20"><a href="structs-ii-more-fun-with-structs.html#cb438-20"></a>    x<span class="op">.</span>g <span class="op">=</span> <span class="fl">3.141592</span><span class="op">;</span></span>
+<span id="cb438-21"><a href="structs-ii-more-fun-with-structs.html#cb438-21"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%f\n</span><span class="st">&quot;</span><span class="op">,</span> x<span class="op">.</span>g<span class="op">);</span>           <span class="co">// 3.141592</span></span>
+<span id="cb438-22"><a href="structs-ii-more-fun-with-structs.html#cb438-22"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%f\n</span><span class="st">&quot;</span><span class="op">,</span> <span class="op">*</span>foo_float_p<span class="op">);</span>  <span class="co">// 3.141592, again</span></span>
+<span id="cb438-23"><a href="structs-ii-more-fun-with-structs.html#cb438-23"></a><span class="op">}</span></span></code></pre></div>
+<p>The reverse is also true. If we have a pointer to a type inside the <code>union</code>, we can cast that to a pointer to the <code>union</code> and access its members.</p>
+<div class="sourceCode" id="cb439"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb439-1"><a href="structs-ii-more-fun-with-structs.html#cb439-1" aria-hidden="true" tabindex="-1"></a><span class="kw">union</span> foo x<span class="op">;</span></span>
+<span id="cb439-2"><a href="structs-ii-more-fun-with-structs.html#cb439-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> <span class="op">*</span>foo_int_p <span class="op">=</span> <span class="op">(</span><span class="dt">int</span> <span class="op">*)&amp;</span>x<span class="op">;</span>             <span class="co">// Pointer to int field</span></span>
+<span id="cb439-3"><a href="structs-ii-more-fun-with-structs.html#cb439-3" aria-hidden="true" tabindex="-1"></a><span class="kw">union</span> foo <span class="op">*</span>p <span class="op">=</span> <span class="op">(</span><span class="kw">union</span> foo <span class="op">*)</span>foo_int_p<span class="op">;</span>  <span class="co">// Back to pointer to union</span></span>
+<span id="cb439-4"><a href="structs-ii-more-fun-with-structs.html#cb439-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb439-5"><a href="structs-ii-more-fun-with-structs.html#cb439-5" aria-hidden="true" tabindex="-1"></a>p<span class="op">-&gt;</span>a <span class="op">=</span> <span class="dv">12</span><span class="op">;</span>  <span class="co">// This line the same as...</span></span>
+<span id="cb439-6"><a href="structs-ii-more-fun-with-structs.html#cb439-6" aria-hidden="true" tabindex="-1"></a>x<span class="op">.</span>a <span class="op">=</span> <span class="dv">12</span><span class="op">;</span>   <span class="co">// this one.</span></span></code></pre></div>
+<p>All this just lets you know that, under the hood, all these values in a <code>union</code> start at the same place in memory, and that’s the same as where the entire <code>union</code> is.</p>
+<p></p>
+<h3 data-number="20.9.3" id="common-initial-sequences-in-unions"><span class="header-section-number">20.9.3</span> Common Initial Sequences in Unions</h3>
+<p></p>
+<p>If you have a <code>union</code> of <code>struct</code>s, and all those <code>struct</code>s begin with a <em>common initial sequence</em>, it’s valid to access members of that sequence from any of the <code>union</code> members.</p>
+<p>What?</p>
+<p>Here are two <code>struct</code>s with a common initial sequence:</p>
+<div class="sourceCode" id="cb440"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb440-1"><a href="structs-ii-more-fun-with-structs.html#cb440-1" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> a <span class="op">{</span></span>
+<span id="cb440-2"><a href="structs-ii-more-fun-with-structs.html#cb440-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> x<span class="op">;</span>     <span class="co">//</span></span>
+<span id="cb440-3"><a href="structs-ii-more-fun-with-structs.html#cb440-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">float</span> y<span class="op">;</span>   <span class="co">// Common initial sequence</span></span>
+<span id="cb440-4"><a href="structs-ii-more-fun-with-structs.html#cb440-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb440-5"><a href="structs-ii-more-fun-with-structs.html#cb440-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">char</span> <span class="op">*</span>p<span class="op">;</span></span>
+<span id="cb440-6"><a href="structs-ii-more-fun-with-structs.html#cb440-6" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb440-7"><a href="structs-ii-more-fun-with-structs.html#cb440-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb440-8"><a href="structs-ii-more-fun-with-structs.html#cb440-8" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> b <span class="op">{</span></span>
+<span id="cb440-9"><a href="structs-ii-more-fun-with-structs.html#cb440-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> x<span class="op">;</span>     <span class="co">//</span></span>
+<span id="cb440-10"><a href="structs-ii-more-fun-with-structs.html#cb440-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">float</span> y<span class="op">;</span>   <span class="co">// Common initial sequence</span></span>
+<span id="cb440-11"><a href="structs-ii-more-fun-with-structs.html#cb440-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb440-12"><a href="structs-ii-more-fun-with-structs.html#cb440-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">double</span> <span class="op">*</span>p<span class="op">;</span></span>
+<span id="cb440-13"><a href="structs-ii-more-fun-with-structs.html#cb440-13" aria-hidden="true" tabindex="-1"></a>    <span class="dt">short</span> z<span class="op">;</span></span>
+<span id="cb440-14"><a href="structs-ii-more-fun-with-structs.html#cb440-14" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span></code></pre></div>
+<p>Do you see it? It’s that they start with <code>int</code> followed by <code>float</code>—that’s the common initial sequence. The members in the sequence of the <code>struct</code>s have to be compatible types. And we see that with <code>x</code> and <code>y</code>, which are <code>int</code> and <code>float</code> respectively.</p>
+<p>Now let’s build a union of these:</p>
+<div class="sourceCode" id="cb441"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb441-1"><a href="structs-ii-more-fun-with-structs.html#cb441-1" aria-hidden="true" tabindex="-1"></a><span class="kw">union</span> foo <span class="op">{</span></span>
+<span id="cb441-2"><a href="structs-ii-more-fun-with-structs.html#cb441-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">struct</span> a sa<span class="op">;</span></span>
+<span id="cb441-3"><a href="structs-ii-more-fun-with-structs.html#cb441-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">struct</span> b sb<span class="op">;</span></span>
+<span id="cb441-4"><a href="structs-ii-more-fun-with-structs.html#cb441-4" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span></code></pre></div>
+<p>What this rule tells us is that we’re guaranteed that the members of the common initial sequences are interchangeable in code. That is:</p>
+<ul>
+<li><code>f.sa.x</code> is the same as <code>f.sb.x</code>.</li>
+</ul>
+<p>and</p>
+<ul>
+<li><code>f.sa.y</code> is the same as <code>f.sb.y</code>.</li>
+</ul>
+<p>Because fields <code>x</code> and <code>y</code> are both in the common initial sequence.</p>
+<p>Also, the names of the members in the common initial sequence don’t matter—all that matters is that the types are the same.</p>
+<p>All together, this allows us a way to safely add some shared information between <code>struct</code>s in the <code>union</code>. The best example of this is probably using a field to determine the type of <code>struct</code> out of all the <code>struct</code>s in the <code>union</code> that is currently “in use”.</p>
+<p>That is, if we weren’t allowed this and we passed the <code>union</code> to some function, how would that function know which member of the <code>union</code> was the one it should look at?</p>
+<p>Take a look at these <code>struct</code>s. Note the common initial sequence:</p>
+<div class="sourceCode" id="cb442"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb442-1"><a href="structs-ii-more-fun-with-structs.html#cb442-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb442-2"><a href="structs-ii-more-fun-with-structs.html#cb442-2"></a></span>
+<span id="cb442-3"><a href="structs-ii-more-fun-with-structs.html#cb442-3"></a><span class="kw">struct</span> common <span class="op">{</span></span>
+<span id="cb442-4"><a href="structs-ii-more-fun-with-structs.html#cb442-4"></a>    <span class="dt">int</span> type<span class="op">;</span>   <span class="co">// common initial sequence</span></span>
+<span id="cb442-5"><a href="structs-ii-more-fun-with-structs.html#cb442-5"></a><span class="op">};</span></span>
+<span id="cb442-6"><a href="structs-ii-more-fun-with-structs.html#cb442-6"></a></span>
+<span id="cb442-7"><a href="structs-ii-more-fun-with-structs.html#cb442-7"></a><span class="kw">struct</span> antelope <span class="op">{</span></span>
+<span id="cb442-8"><a href="structs-ii-more-fun-with-structs.html#cb442-8"></a>    <span class="dt">int</span> type<span class="op">;</span>   <span class="co">// common initial sequence</span></span>
+<span id="cb442-9"><a href="structs-ii-more-fun-with-structs.html#cb442-9"></a></span>
+<span id="cb442-10"><a href="structs-ii-more-fun-with-structs.html#cb442-10"></a>    <span class="dt">int</span> loudness<span class="op">;</span></span>
+<span id="cb442-11"><a href="structs-ii-more-fun-with-structs.html#cb442-11"></a><span class="op">};</span></span>
+<span id="cb442-12"><a href="structs-ii-more-fun-with-structs.html#cb442-12"></a></span>
+<span id="cb442-13"><a href="structs-ii-more-fun-with-structs.html#cb442-13"></a><span class="kw">struct</span> octopus <span class="op">{</span></span>
+<span id="cb442-14"><a href="structs-ii-more-fun-with-structs.html#cb442-14"></a>    <span class="dt">int</span> type<span class="op">;</span>   <span class="co">// common initial sequence</span></span>
+<span id="cb442-15"><a href="structs-ii-more-fun-with-structs.html#cb442-15"></a></span>
+<span id="cb442-16"><a href="structs-ii-more-fun-with-structs.html#cb442-16"></a>    <span class="dt">int</span> sea_creature<span class="op">;</span></span>
+<span id="cb442-17"><a href="structs-ii-more-fun-with-structs.html#cb442-17"></a>    <span class="dt">float</span> intelligence<span class="op">;</span></span>
+<span id="cb442-18"><a href="structs-ii-more-fun-with-structs.html#cb442-18"></a><span class="op">};</span></span></code></pre></div>
+<p>Now let’s throw them into a <code>union</code>:</p>
+<div class="sourceCode" id="cb443" data-startfrom="20"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c" style="counter-reset: source-line 19;"><span id="cb443-20"><a href="structs-ii-more-fun-with-structs.html#cb443-20"></a><span class="kw">union</span> animal <span class="op">{</span></span>
+<span id="cb443-21"><a href="structs-ii-more-fun-with-structs.html#cb443-21"></a>    <span class="kw">struct</span> common common<span class="op">;</span></span>
+<span id="cb443-22"><a href="structs-ii-more-fun-with-structs.html#cb443-22"></a>    <span class="kw">struct</span> antelope antelope<span class="op">;</span></span>
+<span id="cb443-23"><a href="structs-ii-more-fun-with-structs.html#cb443-23"></a>    <span class="kw">struct</span> octopus octopus<span class="op">;</span></span>
+<span id="cb443-24"><a href="structs-ii-more-fun-with-structs.html#cb443-24"></a><span class="op">};</span></span></code></pre></div>
+<p>Also, please indulge me these two <code>#define</code>s for the demo:</p>
+<div class="sourceCode" id="cb444" data-startfrom="26"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c" style="counter-reset: source-line 25;"><span id="cb444-26"><a href="structs-ii-more-fun-with-structs.html#cb444-26"></a><span class="pp">#define ANTELOPE </span><span class="dv">1</span></span>
+<span id="cb444-27"><a href="structs-ii-more-fun-with-structs.html#cb444-27"></a><span class="pp">#define OCTOPUS  </span><span class="dv">2</span></span></code></pre></div>
+<p>So far, nothing special has happened here. It seems like the <code>type</code> field is completely useless.</p>
+<p>But now let’s make a generic function that prints a <code>union animal</code>. It has to somehow be able to tell if it’s looking at a <code>struct antelope</code> or a <code>struct octopus</code>.</p>
+<p>Because of the magic of common initial sequences, it can look up the animal type in any of these places for a particular <code>union animal x</code>:</p>
+<div class="sourceCode" id="cb445"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb445-1"><a href="structs-ii-more-fun-with-structs.html#cb445-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> type <span class="op">=</span> x<span class="op">.</span>common<span class="op">.</span>type<span class="op">;</span>    \\ or<span class="op">...</span></span>
+<span id="cb445-2"><a href="structs-ii-more-fun-with-structs.html#cb445-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> type <span class="op">=</span> x<span class="op">.</span>antelope<span class="op">.</span>type<span class="op">;</span>  \\ or<span class="op">...</span></span>
+<span id="cb445-3"><a href="structs-ii-more-fun-with-structs.html#cb445-3" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> type <span class="op">=</span> x<span class="op">.</span>octopus<span class="op">.</span>type<span class="op">;</span></span></code></pre></div>
+<p>All those refer to the same value in memory.</p>
+<p>And, as you might have guessed, the <code>struct common</code> is there so code can agnostically look at the type without mentioning a particular animal.</p>
+<p>Let’s look at the code to print a <code>union animal</code>:</p>
+<div class="sourceCode" id="cb446" data-startfrom="29"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c" style="counter-reset: source-line 28;"><span id="cb446-29"><a href="structs-ii-more-fun-with-structs.html#cb446-29"></a><span class="dt">void</span> print_animal<span class="op">(</span><span class="kw">union</span> animal <span class="op">*</span>x<span class="op">)</span></span>
+<span id="cb446-30"><a href="structs-ii-more-fun-with-structs.html#cb446-30"></a><span class="op">{</span></span>
+<span id="cb446-31"><a href="structs-ii-more-fun-with-structs.html#cb446-31"></a>    <span class="cf">switch</span> <span class="op">(</span>x<span class="op">-&gt;</span>common<span class="op">.</span>type<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb446-32"><a href="structs-ii-more-fun-with-structs.html#cb446-32"></a>        <span class="cf">case</span> ANTELOPE<span class="op">:</span></span>
+<span id="cb446-33"><a href="structs-ii-more-fun-with-structs.html#cb446-33"></a>            printf<span class="op">(</span><span class="st">&quot;Antelope: loudness=</span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> x<span class="op">-&gt;</span>antelope<span class="op">.</span>loudness<span class="op">);</span></span>
+<span id="cb446-34"><a href="structs-ii-more-fun-with-structs.html#cb446-34"></a>            <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb446-35"><a href="structs-ii-more-fun-with-structs.html#cb446-35"></a></span>
+<span id="cb446-36"><a href="structs-ii-more-fun-with-structs.html#cb446-36"></a>        <span class="cf">case</span> OCTOPUS<span class="op">:</span></span>
+<span id="cb446-37"><a href="structs-ii-more-fun-with-structs.html#cb446-37"></a>            printf<span class="op">(</span><span class="st">&quot;Octopus : sea_creature=</span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> x<span class="op">-&gt;</span>octopus<span class="op">.</span>sea_creature<span class="op">);</span></span>
+<span id="cb446-38"><a href="structs-ii-more-fun-with-structs.html#cb446-38"></a>            printf<span class="op">(</span><span class="st">&quot;          intelligence=</span><span class="sc">%f\n</span><span class="st">&quot;</span><span class="op">,</span> x<span class="op">-&gt;</span>octopus<span class="op">.</span>intelligence<span class="op">);</span></span>
+<span id="cb446-39"><a href="structs-ii-more-fun-with-structs.html#cb446-39"></a>            <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb446-40"><a href="structs-ii-more-fun-with-structs.html#cb446-40"></a>        </span>
+<span id="cb446-41"><a href="structs-ii-more-fun-with-structs.html#cb446-41"></a>        <span class="cf">default</span><span class="op">:</span></span>
+<span id="cb446-42"><a href="structs-ii-more-fun-with-structs.html#cb446-42"></a>            printf<span class="op">(</span><span class="st">&quot;Unknown animal type</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb446-43"><a href="structs-ii-more-fun-with-structs.html#cb446-43"></a>    <span class="op">}</span></span>
+<span id="cb446-44"><a href="structs-ii-more-fun-with-structs.html#cb446-44"></a></span>
+<span id="cb446-45"><a href="structs-ii-more-fun-with-structs.html#cb446-45"></a><span class="op">}</span></span>
+<span id="cb446-46"><a href="structs-ii-more-fun-with-structs.html#cb446-46"></a></span>
+<span id="cb446-47"><a href="structs-ii-more-fun-with-structs.html#cb446-47"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb446-48"><a href="structs-ii-more-fun-with-structs.html#cb446-48"></a><span class="op">{</span></span>
+<span id="cb446-49"><a href="structs-ii-more-fun-with-structs.html#cb446-49"></a>    <span class="kw">union</span> animal a <span class="op">=</span> <span class="op">{.</span>antelope<span class="op">.</span>type<span class="op">=</span>ANTELOPE<span class="op">,</span> <span class="op">.</span>antelope<span class="op">.</span>loudness<span class="op">=</span><span class="dv">12</span><span class="op">};</span></span>
+<span id="cb446-50"><a href="structs-ii-more-fun-with-structs.html#cb446-50"></a>    <span class="kw">union</span> animal b <span class="op">=</span> <span class="op">{.</span>octopus<span class="op">.</span>type<span class="op">=</span>OCTOPUS<span class="op">,</span> <span class="op">.</span>octopus<span class="op">.</span>sea_creature<span class="op">=</span><span class="dv">1</span><span class="op">,</span></span>
+<span id="cb446-51"><a href="structs-ii-more-fun-with-structs.html#cb446-51"></a>                                       <span class="op">.</span>octopus<span class="op">.</span>intelligence<span class="op">=</span><span class="fl">12.8</span><span class="op">};</span></span>
+<span id="cb446-52"><a href="structs-ii-more-fun-with-structs.html#cb446-52"></a></span>
+<span id="cb446-53"><a href="structs-ii-more-fun-with-structs.html#cb446-53"></a>    print_animal<span class="op">(&amp;</span>a<span class="op">);</span></span>
+<span id="cb446-54"><a href="structs-ii-more-fun-with-structs.html#cb446-54"></a>    print_animal<span class="op">(&amp;</span>b<span class="op">);</span></span>
+<span id="cb446-55"><a href="structs-ii-more-fun-with-structs.html#cb446-55"></a><span class="op">}</span></span></code></pre></div>
+<p>See how on line 29 we’re just passing in the <code>union</code>—we have no idea what type of animal <code>struct</code> is in use within it.</p>
+<p>But that’s OK! Because on line 31 we check the type to see if it’s an antelope or an octopus. And then we can look at the proper <code>struct</code> to get the members.</p>
+<p>It’s definitely possible to get this same effect using just <code>struct</code>s, but you can do it this way if you want the memory-saving effects of a <code>union</code>.</p>
+<p></p>
+<h2 data-number="20.10" id="unions-and-unnamed-structs"><span class="header-section-number">20.10</span> Unions and Unnamed Structs</h2>
+<p></p>
+<p>You know how you can have an unnamed <code>struct</code>, like this:</p>
+<div class="sourceCode" id="cb447"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb447-1"><a href="structs-ii-more-fun-with-structs.html#cb447-1" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> <span class="op">{</span></span>
+<span id="cb447-2"><a href="structs-ii-more-fun-with-structs.html#cb447-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> x<span class="op">,</span> y<span class="op">;</span></span>
+<span id="cb447-3"><a href="structs-ii-more-fun-with-structs.html#cb447-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> s<span class="op">;</span></span></code></pre></div>
+<p>That defines a variable <code>s</code> that is of anonymous <code>struct</code> type (because the <code>struct</code> has no name tag), with members <code>x</code> and <code>y</code>.</p>
+<p>So things like this are valid:</p>
+<div class="sourceCode" id="cb448"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb448-1"><a href="structs-ii-more-fun-with-structs.html#cb448-1" aria-hidden="true" tabindex="-1"></a>s<span class="op">.</span>x <span class="op">=</span> <span class="dv">34</span><span class="op">;</span></span>
+<span id="cb448-2"><a href="structs-ii-more-fun-with-structs.html#cb448-2" aria-hidden="true" tabindex="-1"></a>s<span class="op">.</span>y <span class="op">=</span> <span class="dv">90</span><span class="op">;</span></span>
+<span id="cb448-3"><a href="structs-ii-more-fun-with-structs.html#cb448-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb448-4"><a href="structs-ii-more-fun-with-structs.html#cb448-4" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d</span><span class="st"> </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> s<span class="op">.</span>x<span class="op">,</span> s<span class="op">.</span>y<span class="op">);</span></span></code></pre></div>
+<p>Turns out you can drop those unnamed <code>struct</code>s in <code>union</code>s just like you might expect:</p>
+<div class="sourceCode" id="cb449"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb449-1"><a href="structs-ii-more-fun-with-structs.html#cb449-1" aria-hidden="true" tabindex="-1"></a><span class="kw">union</span> foo <span class="op">{</span></span>
+<span id="cb449-2"><a href="structs-ii-more-fun-with-structs.html#cb449-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">struct</span> <span class="op">{</span>       <span class="co">// unnamed!</span></span>
+<span id="cb449-3"><a href="structs-ii-more-fun-with-structs.html#cb449-3" aria-hidden="true" tabindex="-1"></a>        <span class="dt">int</span> x<span class="op">,</span> y<span class="op">;</span></span>
+<span id="cb449-4"><a href="structs-ii-more-fun-with-structs.html#cb449-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span> a<span class="op">;</span></span>
+<span id="cb449-5"><a href="structs-ii-more-fun-with-structs.html#cb449-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb449-6"><a href="structs-ii-more-fun-with-structs.html#cb449-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">struct</span> <span class="op">{</span>       <span class="co">// unnamed!</span></span>
+<span id="cb449-7"><a href="structs-ii-more-fun-with-structs.html#cb449-7" aria-hidden="true" tabindex="-1"></a>        <span class="dt">int</span> z<span class="op">,</span> w<span class="op">;</span></span>
+<span id="cb449-8"><a href="structs-ii-more-fun-with-structs.html#cb449-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span> b<span class="op">;</span></span>
+<span id="cb449-9"><a href="structs-ii-more-fun-with-structs.html#cb449-9" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span></code></pre></div>
+<p>And then access them as per normal:</p>
+<div class="sourceCode" id="cb450"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb450-1"><a href="structs-ii-more-fun-with-structs.html#cb450-1" aria-hidden="true" tabindex="-1"></a><span class="kw">union</span> foo f<span class="op">;</span></span>
+<span id="cb450-2"><a href="structs-ii-more-fun-with-structs.html#cb450-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb450-3"><a href="structs-ii-more-fun-with-structs.html#cb450-3" aria-hidden="true" tabindex="-1"></a>f<span class="op">.</span>a<span class="op">.</span>x <span class="op">=</span> <span class="dv">1</span><span class="op">;</span></span>
+<span id="cb450-4"><a href="structs-ii-more-fun-with-structs.html#cb450-4" aria-hidden="true" tabindex="-1"></a>f<span class="op">.</span>a<span class="op">.</span>y <span class="op">=</span> <span class="dv">2</span><span class="op">;</span></span>
+<span id="cb450-5"><a href="structs-ii-more-fun-with-structs.html#cb450-5" aria-hidden="true" tabindex="-1"></a>f<span class="op">.</span>b<span class="op">.</span>z <span class="op">=</span> <span class="dv">3</span><span class="op">;</span></span>
+<span id="cb450-6"><a href="structs-ii-more-fun-with-structs.html#cb450-6" aria-hidden="true" tabindex="-1"></a>f<span class="op">.</span>b<span class="op">.</span>w <span class="op">=</span> <span class="dv">4</span><span class="op">;</span></span></code></pre></div>
+<p>No problem!</p>
+<p></p>
+<h2 data-number="20.11" id="passing-and-returning-structs-and-unions"><span class="header-section-number">20.11</span> Passing and Returning <code>struct</code>s and <code>union</code>s</h2>
+<p> </p>
+<p>You can pass a <code>struct</code> or <code>union</code> to a function by value (as opposed to a pointer to it)—a copy of that object to the parameter will be made as if by assignment as per usual.</p>
+<p>You can also return a <code>struct</code> or <code>union</code> from a function and it is also passed by value back.</p>
+<div class="sourceCode" id="cb451"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb451-1"><a href="structs-ii-more-fun-with-structs.html#cb451-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb451-2"><a href="structs-ii-more-fun-with-structs.html#cb451-2"></a></span>
+<span id="cb451-3"><a href="structs-ii-more-fun-with-structs.html#cb451-3"></a><span class="kw">struct</span> foo <span class="op">{</span></span>
+<span id="cb451-4"><a href="structs-ii-more-fun-with-structs.html#cb451-4"></a>    <span class="dt">int</span> x<span class="op">,</span> y<span class="op">;</span></span>
+<span id="cb451-5"><a href="structs-ii-more-fun-with-structs.html#cb451-5"></a><span class="op">};</span></span>
+<span id="cb451-6"><a href="structs-ii-more-fun-with-structs.html#cb451-6"></a></span>
+<span id="cb451-7"><a href="structs-ii-more-fun-with-structs.html#cb451-7"></a><span class="kw">struct</span> foo f<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb451-8"><a href="structs-ii-more-fun-with-structs.html#cb451-8"></a><span class="op">{</span></span>
+<span id="cb451-9"><a href="structs-ii-more-fun-with-structs.html#cb451-9"></a>    <span class="cf">return</span> <span class="op">(</span><span class="kw">struct</span> foo<span class="op">){.</span>x<span class="op">=</span><span class="dv">34</span><span class="op">,</span> <span class="op">.</span>y<span class="op">=</span><span class="dv">90</span><span class="op">};</span></span>
+<span id="cb451-10"><a href="structs-ii-more-fun-with-structs.html#cb451-10"></a><span class="op">}</span></span>
+<span id="cb451-11"><a href="structs-ii-more-fun-with-structs.html#cb451-11"></a></span>
+<span id="cb451-12"><a href="structs-ii-more-fun-with-structs.html#cb451-12"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb451-13"><a href="structs-ii-more-fun-with-structs.html#cb451-13"></a><span class="op">{</span></span>
+<span id="cb451-14"><a href="structs-ii-more-fun-with-structs.html#cb451-14"></a>    <span class="kw">struct</span> foo a <span class="op">=</span> f<span class="op">();</span>  <span class="co">// Copy is made</span></span>
+<span id="cb451-15"><a href="structs-ii-more-fun-with-structs.html#cb451-15"></a></span>
+<span id="cb451-16"><a href="structs-ii-more-fun-with-structs.html#cb451-16"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d</span><span class="st"> </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> a<span class="op">.</span>x<span class="op">,</span> a<span class="op">.</span>y<span class="op">);</span></span>
+<span id="cb451-17"><a href="structs-ii-more-fun-with-structs.html#cb451-17"></a><span class="op">}</span></span></code></pre></div>
+<p>Fun fact: if you do this, you can use the <code>.</code> operator right off the function call:</p>
+<div class="sourceCode" id="cb452" data-startfrom="16"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c" style="counter-reset: source-line 15;"><span id="cb452-16"><a href="structs-ii-more-fun-with-structs.html#cb452-16"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d</span><span class="st"> </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> f<span class="op">().</span>x<span class="op">,</span> f<span class="op">().</span>y<span class="op">);</span></span></code></pre></div>
+<p>(Of course that example calls the function twice, inefficiently.)</p>
+<p>And the same holds true for returning pointers to <code>struct</code>s and <code>union</code>s—just be sure to use the <code>-&gt;</code> arrow operator in that case.</p>
+<p> </p>
+<!-- Beej's guide to C
+
+# vim: ts=4:sw=4:nosi:et:tw=72
+-->
+<hr><div style="text-align:center"><span><a href="the-c-preprocessor.html">Prev</a> | </span><a href="index.html">Contents</a><span> | <a href="characters-and-strings-ii.html">Next</a></span></div></body>
+</html>

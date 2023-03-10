@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Beej's Guide to C Programming</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Mono&display=swap" rel="stylesheet"> 
+
+  <!-- BG custom styling -->
+  <style type="text/css">
+  /* Fix for line numbers not visible */
+  pre.numberSource code > span {
+      left: -1em;
+  }
+  pre.numberSource {
+      margin-left: initial;
+  }
+
+  /* Put some space after the section numbers */
+  span.toc-section-number::after {
+      content: "\a0\a0\a0";  /* non-breaking whitespace */
+  }
+
+  /* Hide underlines on code number links */
+  pre > code.sourceCode > span > a:first-child::before {
+      text-decoration: none;
+  }
+
+  /* Color the source blocks */
+  div.sourceCode {
+      background-color: #f0f0f0;
+  }
+
+  /* Fix iOS big text rendering issue */
+  pre > code.sourceCode > span {
+      display: initial;
+  }
+
+
+  /* Color the inline code */
+  code:not(.sourceCode) {
+      background: #f0f0f0;
+      padding-left: 0.2em;
+      padding-right: 0.2em;
+      border-radius: 0.2em;
+  }
+
+  /* Keep code tags from wrapping in tables */
+  tbody code {
+      white-space: nowrap;
+  }
+
+  td {
+      vertical-align: top;
+  }
+
+  body {
+      font-size: 12pt;
+      max-width: 43em;
+  }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<div style="text-align:center"><span><a href="variable-length-arrays-vlas.html">Prev</a> | </span><a href="index.html">Contents</a><span> | <a href="types-part-v-compound-literals-and-generic-selections.html">Next</a></span></div><hr>
+<h1 data-number="31" id="goto"><span class="header-section-number">31</span> <code>goto</code></h1>
+<p></p>
+<p>The <code>goto</code> statement is universally revered and can be here presented without contest.</p>
+<p>Just kidding! Over the years, there has been a lot of back-and-forth over whether or not (often not) <code>goto</code> is <a href="https://en.wikipedia.org/wiki/Goto#Criticism">considered harmful</a><a href="footnotes.html#fn174" class="footnote-ref" id="fnref174" role="doc-noteref"><sup>174</sup></a>.</p>
+<p>In this programmer’s opinion, you should use whichever constructs leads to the <em>best</em> code, factoring in maintainability and speed. And sometimes this might be <code>goto</code>!</p>
+<p>In this chapter, we’ll see how <code>goto</code> works in C, and then check out some of the common cases where it is used<a href="footnotes.html#fn175" class="footnote-ref" id="fnref175" role="doc-noteref"><sup>175</sup></a>.</p>
+<h2 data-number="31.1" id="a-simple-example"><span class="header-section-number">31.1</span> A Simple Example</h2>
+<p></p>
+<p>In this example, we’re going to use <code>goto</code> to skip a line of code and jump to a <em>label</em>. The label is the identifier that can be a <code>goto</code> target—it ends with a colon (<code>:</code>).</p>
+<div class="sourceCode" id="cb583"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb583-1"><a href="goto.html#cb583-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb583-2"><a href="goto.html#cb583-2"></a></span>
+<span id="cb583-3"><a href="goto.html#cb583-3"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb583-4"><a href="goto.html#cb583-4"></a><span class="op">{</span></span>
+<span id="cb583-5"><a href="goto.html#cb583-5"></a>    printf<span class="op">(</span><span class="st">&quot;One</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb583-6"><a href="goto.html#cb583-6"></a>    printf<span class="op">(</span><span class="st">&quot;Two</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb583-7"><a href="goto.html#cb583-7"></a></span>
+<span id="cb583-8"><a href="goto.html#cb583-8"></a>    <span class="cf">goto</span> skip_3<span class="op">;</span></span>
+<span id="cb583-9"><a href="goto.html#cb583-9"></a></span>
+<span id="cb583-10"><a href="goto.html#cb583-10"></a>    printf<span class="op">(</span><span class="st">&quot;Three</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb583-11"><a href="goto.html#cb583-11"></a></span>
+<span id="cb583-12"><a href="goto.html#cb583-12"></a>skip_3<span class="op">:</span></span>
+<span id="cb583-13"><a href="goto.html#cb583-13"></a></span>
+<span id="cb583-14"><a href="goto.html#cb583-14"></a>    printf<span class="op">(</span><span class="st">&quot;Five!</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb583-15"><a href="goto.html#cb583-15"></a><span class="op">}</span></span></code></pre></div>
+<p>The output is:</p>
+<div class="sourceCode" id="cb584"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb584-1"><a href="goto.html#cb584-1" aria-hidden="true" tabindex="-1"></a>One</span>
+<span id="cb584-2"><a href="goto.html#cb584-2" aria-hidden="true" tabindex="-1"></a>Two</span>
+<span id="cb584-3"><a href="goto.html#cb584-3" aria-hidden="true" tabindex="-1"></a>Five!</span></code></pre></div>
+<p><code>goto</code> sends execution jumping to the specified label, skipping everything in between.</p>
+<p>You can jump forward or backward with <code>goto</code>.</p>
+<div class="sourceCode" id="cb585"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb585-1"><a href="goto.html#cb585-1" aria-hidden="true" tabindex="-1"></a>infinite_loop<span class="op">:</span></span>
+<span id="cb585-2"><a href="goto.html#cb585-2" aria-hidden="true" tabindex="-1"></a>    print<span class="op">(</span><span class="st">&quot;Hello, world!</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb585-3"><a href="goto.html#cb585-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">goto</span> infinite_loop<span class="op">;</span></span></code></pre></div>
+<p>Labels are skipped over during execution. The following will print all three numbers in order just as if the labels weren’t there:</p>
+<div class="sourceCode" id="cb586"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb586-1"><a href="goto.html#cb586-1" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;Zero</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb586-2"><a href="goto.html#cb586-2" aria-hidden="true" tabindex="-1"></a>label_1<span class="op">:</span></span>
+<span id="cb586-3"><a href="goto.html#cb586-3" aria-hidden="true" tabindex="-1"></a>label_2<span class="op">:</span></span>
+<span id="cb586-4"><a href="goto.html#cb586-4" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;One</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb586-5"><a href="goto.html#cb586-5" aria-hidden="true" tabindex="-1"></a>label_3<span class="op">:</span></span>
+<span id="cb586-6"><a href="goto.html#cb586-6" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;Two</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb586-7"><a href="goto.html#cb586-7" aria-hidden="true" tabindex="-1"></a>label_4<span class="op">:</span></span>
+<span id="cb586-8"><a href="goto.html#cb586-8" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;Three</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span></code></pre></div>
+<p>As you’ve noticed, it’s common convention to justify the labels all the way on the left. This increases readability because a reader can quickly scan to find the destination.</p>
+<p>Labels have <em>function scope</em>. That is, no matter how many levels deep in blocks they appear, you can still <code>goto</code> them from anywhere in the function.</p>
+<p>It also means you can only <code>goto</code> labels that are in the same function as the <code>goto</code> itself. Labels in other functions are out of scope from <code>goto</code>’s perspective. And it means you can use the same label name in two functions—just not the same label name in the same function.</p>
+<p></p>
+<h2 data-number="31.2" id="labeled-continue"><span class="header-section-number">31.2</span> Labeled <code>continue</code></h2>
+<p></p>
+<p>In some languages, you can actually specify a label for a <code>continue</code> statement. C doesn’t allow it, but you can easily use <code>goto</code> instead.</p>
+<p>To show the issue, check out <code>continue</code> in this nested loop:</p>
+<div class="sourceCode" id="cb587"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb587-1"><a href="goto.html#cb587-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> <span class="dv">3</span><span class="op">;</span> i<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb587-2"><a href="goto.html#cb587-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> j <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> j <span class="op">&lt;</span> <span class="dv">3</span><span class="op">;</span> j<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb587-3"><a href="goto.html#cb587-3" aria-hidden="true" tabindex="-1"></a>        printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d</span><span class="st">, </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> i<span class="op">,</span> j<span class="op">);</span></span>
+<span id="cb587-4"><a href="goto.html#cb587-4" aria-hidden="true" tabindex="-1"></a>        <span class="cf">continue</span><span class="op">;</span>   <span class="co">// Always goes to next j</span></span>
+<span id="cb587-5"><a href="goto.html#cb587-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb587-6"><a href="goto.html#cb587-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>As we see, that <code>continue</code>, like all <code>continues</code>, goes to the next iteration of the nearest enclosing loop. What if we want to <code>continue</code> in the next loop out, the loop with <code>i</code>?</p>
+<p>Well, we can <code>break</code> to get back to the outer loop, right?</p>
+<div class="sourceCode" id="cb588"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb588-1"><a href="goto.html#cb588-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> <span class="dv">3</span><span class="op">;</span> i<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb588-2"><a href="goto.html#cb588-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> j <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> j <span class="op">&lt;</span> <span class="dv">3</span><span class="op">;</span> j<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb588-3"><a href="goto.html#cb588-3" aria-hidden="true" tabindex="-1"></a>        printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d</span><span class="st">, </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> i<span class="op">,</span> j<span class="op">);</span></span>
+<span id="cb588-4"><a href="goto.html#cb588-4" aria-hidden="true" tabindex="-1"></a>        <span class="cf">break</span><span class="op">;</span>     <span class="co">// Gets us to the next iteration of i</span></span>
+<span id="cb588-5"><a href="goto.html#cb588-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb588-6"><a href="goto.html#cb588-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>That gets us two levels of nested loop. But then if we nest another loop, we’re out of options. What about this, where we don’t have any statement that will get us out to the next iteration of <code>i</code>?</p>
+<div class="sourceCode" id="cb589"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb589-1"><a href="goto.html#cb589-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> <span class="dv">3</span><span class="op">;</span> i<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb589-2"><a href="goto.html#cb589-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> j <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> j <span class="op">&lt;</span> <span class="dv">3</span><span class="op">;</span> j<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb589-3"><a href="goto.html#cb589-3" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> k <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> k <span class="op">&lt;</span> <span class="dv">3</span><span class="op">;</span> k<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb589-4"><a href="goto.html#cb589-4" aria-hidden="true" tabindex="-1"></a>            printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d</span><span class="st">, </span><span class="sc">%d</span><span class="st">, </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> i<span class="op">,</span> j<span class="op">,</span> k<span class="op">);</span></span>
+<span id="cb589-5"><a href="goto.html#cb589-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb589-6"><a href="goto.html#cb589-6" aria-hidden="true" tabindex="-1"></a>            <span class="cf">continue</span><span class="op">;</span>  <span class="co">// Gets us to the next iteration of k</span></span>
+<span id="cb589-7"><a href="goto.html#cb589-7" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span><span class="op">;</span>     <span class="co">// Gets us to the next iteration of j</span></span>
+<span id="cb589-8"><a href="goto.html#cb589-8" aria-hidden="true" tabindex="-1"></a>            <span class="op">????;</span>      <span class="co">// Gets us to the next iteration of i???</span></span>
+<span id="cb589-9"><a href="goto.html#cb589-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb589-10"><a href="goto.html#cb589-10" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb589-11"><a href="goto.html#cb589-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb589-12"><a href="goto.html#cb589-12" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>The <code>goto</code> statement offers us a way!</p>
+<div class="sourceCode" id="cb590"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb590-1"><a href="goto.html#cb590-1" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> <span class="dv">3</span><span class="op">;</span> i<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb590-2"><a href="goto.html#cb590-2" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> j <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> j <span class="op">&lt;</span> <span class="dv">3</span><span class="op">;</span> j<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb590-3"><a href="goto.html#cb590-3" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> k <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> k <span class="op">&lt;</span> <span class="dv">3</span><span class="op">;</span> k<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb590-4"><a href="goto.html#cb590-4" aria-hidden="true" tabindex="-1"></a>                printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d</span><span class="st">, </span><span class="sc">%d</span><span class="st">, </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> i<span class="op">,</span> j<span class="op">,</span> k<span class="op">);</span></span>
+<span id="cb590-5"><a href="goto.html#cb590-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb590-6"><a href="goto.html#cb590-6" aria-hidden="true" tabindex="-1"></a>                <span class="cf">goto</span> continue_i<span class="op">;</span>   <span class="co">// Now continuing the i loop!!</span></span>
+<span id="cb590-7"><a href="goto.html#cb590-7" aria-hidden="true" tabindex="-1"></a>            <span class="op">}</span></span>
+<span id="cb590-8"><a href="goto.html#cb590-8" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb590-9"><a href="goto.html#cb590-9" aria-hidden="true" tabindex="-1"></a>continue_i<span class="op">:</span> <span class="op">;</span></span>
+<span id="cb590-10"><a href="goto.html#cb590-10" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span></code></pre></div>
+<p>We have a <code>;</code> at the end there—that’s because you can’t have a label pointing to the plain end of a compound statement (or before a variable declaration).</p>
+<p></p>
+<h2 data-number="31.3" id="bailing-out"><span class="header-section-number">31.3</span> Bailing Out</h2>
+<p></p>
+<p>When you’re super nested in the middle of some code, you can use <code>goto</code> to get out of it in a manner that’s often cleaner than nesting more <code>if</code>s and using flag variables.</p>
+<div class="sourceCode" id="cb591"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb591-1"><a href="goto.html#cb591-1" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Pseudocode</span></span>
+<span id="cb591-2"><a href="goto.html#cb591-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb591-3"><a href="goto.html#cb591-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span><span class="op">(...)</span> <span class="op">{</span></span>
+<span id="cb591-4"><a href="goto.html#cb591-4" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> <span class="op">(...)</span> <span class="op">{</span></span>
+<span id="cb591-5"><a href="goto.html#cb591-5" aria-hidden="true" tabindex="-1"></a>            <span class="cf">while</span> <span class="op">(...)</span> <span class="op">{</span></span>
+<span id="cb591-6"><a href="goto.html#cb591-6" aria-hidden="true" tabindex="-1"></a>                <span class="cf">do</span> <span class="op">{</span></span>
+<span id="cb591-7"><a href="goto.html#cb591-7" aria-hidden="true" tabindex="-1"></a>                    <span class="cf">if</span> <span class="op">(</span>some_error_condition<span class="op">)</span></span>
+<span id="cb591-8"><a href="goto.html#cb591-8" aria-hidden="true" tabindex="-1"></a>                        <span class="cf">goto</span> bail<span class="op">;</span></span>
+<span id="cb591-9"><a href="goto.html#cb591-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb591-10"><a href="goto.html#cb591-10" aria-hidden="true" tabindex="-1"></a>                <span class="op">}</span> <span class="cf">while</span><span class="op">(...);</span></span>
+<span id="cb591-11"><a href="goto.html#cb591-11" aria-hidden="true" tabindex="-1"></a>            <span class="op">}</span></span>
+<span id="cb591-12"><a href="goto.html#cb591-12" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb591-13"><a href="goto.html#cb591-13" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb591-14"><a href="goto.html#cb591-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb591-15"><a href="goto.html#cb591-15" aria-hidden="true" tabindex="-1"></a>bail<span class="op">:</span></span>
+<span id="cb591-16"><a href="goto.html#cb591-16" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Cleanup here</span></span></code></pre></div>
+<p>Without <code>goto</code>, you’d have to check an error condition flag in all of the loops to get all the way out.</p>
+<p></p>
+<h2 data-number="31.4" id="labeled-break"><span class="header-section-number">31.4</span> Labeled <code>break</code></h2>
+<p></p>
+<p>This is a very similar situation to how <code>continue</code> only continues the innermost loop. <code>break</code> also only breaks out of the innermost loop.</p>
+<div class="sourceCode" id="cb592"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb592-1"><a href="goto.html#cb592-1" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> <span class="dv">3</span><span class="op">;</span> i<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb592-2"><a href="goto.html#cb592-2" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> j <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> j <span class="op">&lt;</span> <span class="dv">3</span><span class="op">;</span> j<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb592-3"><a href="goto.html#cb592-3" aria-hidden="true" tabindex="-1"></a>            printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d</span><span class="st">, </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> i<span class="op">,</span> j<span class="op">);</span></span>
+<span id="cb592-4"><a href="goto.html#cb592-4" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span><span class="op">;</span>   <span class="co">// Only breaks out of the j loop</span></span>
+<span id="cb592-5"><a href="goto.html#cb592-5" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb592-6"><a href="goto.html#cb592-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb592-7"><a href="goto.html#cb592-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb592-8"><a href="goto.html#cb592-8" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;Done!</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span></code></pre></div>
+<p>But we can use <code>goto</code> to break farther:</p>
+<div class="sourceCode" id="cb593"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb593-1"><a href="goto.html#cb593-1" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> <span class="dv">3</span><span class="op">;</span> i<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb593-2"><a href="goto.html#cb593-2" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> j <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> j <span class="op">&lt;</span> <span class="dv">3</span><span class="op">;</span> j<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb593-3"><a href="goto.html#cb593-3" aria-hidden="true" tabindex="-1"></a>            printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d</span><span class="st">, </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> i<span class="op">,</span> j<span class="op">);</span></span>
+<span id="cb593-4"><a href="goto.html#cb593-4" aria-hidden="true" tabindex="-1"></a>            <span class="cf">goto</span> break_i<span class="op">;</span>   <span class="co">// Now breaking out of the i loop!</span></span>
+<span id="cb593-5"><a href="goto.html#cb593-5" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb593-6"><a href="goto.html#cb593-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb593-7"><a href="goto.html#cb593-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb593-8"><a href="goto.html#cb593-8" aria-hidden="true" tabindex="-1"></a>break_i<span class="op">:</span></span>
+<span id="cb593-9"><a href="goto.html#cb593-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb593-10"><a href="goto.html#cb593-10" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;Done!</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span></code></pre></div>
+<p></p>
+<h2 data-number="31.5" id="multi-level-cleanup"><span class="header-section-number">31.5</span> Multi-level Cleanup</h2>
+<p></p>
+<p>If you’re calling multiple functions to initialize multiple systems and one of them fails, you should only de-initialize the ones that you’ve gotten to so far.</p>
+<p>Let’s do a fake example where we start initializing systems and checking to see if any returns an error (we’ll use <code>-1</code> to indicate an error). If one of them does, we have to shutdown only the systems we’ve initialized so far.</p>
+<div class="sourceCode" id="cb594"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb594-1"><a href="goto.html#cb594-1" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>init_system_1<span class="op">()</span> <span class="op">==</span> <span class="op">-</span><span class="dv">1</span><span class="op">)</span></span>
+<span id="cb594-2"><a href="goto.html#cb594-2" aria-hidden="true" tabindex="-1"></a>        <span class="cf">goto</span> shutdown<span class="op">;</span></span>
+<span id="cb594-3"><a href="goto.html#cb594-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb594-4"><a href="goto.html#cb594-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>init_system_2<span class="op">()</span> <span class="op">==</span> <span class="op">-</span><span class="dv">1</span><span class="op">)</span></span>
+<span id="cb594-5"><a href="goto.html#cb594-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">goto</span> shutdown_1<span class="op">;</span></span>
+<span id="cb594-6"><a href="goto.html#cb594-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb594-7"><a href="goto.html#cb594-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>init_system_3<span class="op">()</span> <span class="op">==</span> <span class="op">-</span><span class="dv">1</span><span class="op">)</span></span>
+<span id="cb594-8"><a href="goto.html#cb594-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">goto</span> shutdown_2<span class="op">;</span></span>
+<span id="cb594-9"><a href="goto.html#cb594-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb594-10"><a href="goto.html#cb594-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>init_system_4<span class="op">()</span> <span class="op">==</span> <span class="op">-</span><span class="dv">1</span><span class="op">)</span></span>
+<span id="cb594-11"><a href="goto.html#cb594-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">goto</span> shutdown_3<span class="op">;</span></span>
+<span id="cb594-12"><a href="goto.html#cb594-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb594-13"><a href="goto.html#cb594-13" aria-hidden="true" tabindex="-1"></a>    do_main_thing<span class="op">();</span>   <span class="co">// Run our program</span></span>
+<span id="cb594-14"><a href="goto.html#cb594-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb594-15"><a href="goto.html#cb594-15" aria-hidden="true" tabindex="-1"></a>    shutdown_system4<span class="op">();</span></span>
+<span id="cb594-16"><a href="goto.html#cb594-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb594-17"><a href="goto.html#cb594-17" aria-hidden="true" tabindex="-1"></a>shutdown_3<span class="op">:</span></span>
+<span id="cb594-18"><a href="goto.html#cb594-18" aria-hidden="true" tabindex="-1"></a>    shutdown_system3<span class="op">();</span></span>
+<span id="cb594-19"><a href="goto.html#cb594-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb594-20"><a href="goto.html#cb594-20" aria-hidden="true" tabindex="-1"></a>shutdown_2<span class="op">:</span></span>
+<span id="cb594-21"><a href="goto.html#cb594-21" aria-hidden="true" tabindex="-1"></a>    shutdown_system2<span class="op">();</span></span>
+<span id="cb594-22"><a href="goto.html#cb594-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb594-23"><a href="goto.html#cb594-23" aria-hidden="true" tabindex="-1"></a>shutdown_1<span class="op">:</span></span>
+<span id="cb594-24"><a href="goto.html#cb594-24" aria-hidden="true" tabindex="-1"></a>    shutdown_system1<span class="op">();</span></span>
+<span id="cb594-25"><a href="goto.html#cb594-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb594-26"><a href="goto.html#cb594-26" aria-hidden="true" tabindex="-1"></a>shutdown<span class="op">:</span></span>
+<span id="cb594-27"><a href="goto.html#cb594-27" aria-hidden="true" tabindex="-1"></a>    print<span class="op">(</span><span class="st">&quot;All subsystems shut down.</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span></code></pre></div>
+<p>Note that we’re shutting down in the reverse order that we initialized the subsystems. So if subsystem 4 fails to start up, it will shut down 3, 2, then 1 in that order.</p>
+<p></p>
+<h2 data-number="31.6" id="tail-call-optimization"><span class="header-section-number">31.6</span> Tail Call Optimization</h2>
+<p> </p>
+<p>Kinda. For recursive functions only.</p>
+<p>If you’re unfamiliar, <a href="https://en.wikipedia.org/wiki/Tail_call">Tail Call Optimization (TCO)</a><a href="footnotes.html#fn176" class="footnote-ref" id="fnref176" role="doc-noteref"><sup>176</sup></a> is a way to not waste stack space when calling other functions under very specific circumstances. Unfortunately the details are beyond the scope of this guide.</p>
+<p>But if you have a recursive function you know can be optimized in this way, you can make use of this technique. (Note that you can’t tail call other functions due to the function scope of labels.)</p>
+<p>Let’s do a straightforward example, factorial.</p>
+<p>Here’s a recursive version that’s not TCO, but it can be!</p>
+<div class="sourceCode" id="cb595"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb595-1"><a href="goto.html#cb595-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb595-2"><a href="goto.html#cb595-2"></a><span class="pp">#include </span><span class="im">&lt;complex.h&gt;</span></span>
+<span id="cb595-3"><a href="goto.html#cb595-3"></a></span>
+<span id="cb595-4"><a href="goto.html#cb595-4"></a><span class="dt">int</span> factorial<span class="op">(</span><span class="dt">int</span> n<span class="op">,</span> <span class="dt">int</span> a<span class="op">)</span></span>
+<span id="cb595-5"><a href="goto.html#cb595-5"></a><span class="op">{</span></span>
+<span id="cb595-6"><a href="goto.html#cb595-6"></a>    <span class="cf">if</span> <span class="op">(</span>n <span class="op">==</span> <span class="dv">0</span><span class="op">)</span></span>
+<span id="cb595-7"><a href="goto.html#cb595-7"></a>        <span class="cf">return</span> a<span class="op">;</span></span>
+<span id="cb595-8"><a href="goto.html#cb595-8"></a></span>
+<span id="cb595-9"><a href="goto.html#cb595-9"></a>    <span class="cf">return</span> factorial<span class="op">(</span>n <span class="op">-</span> <span class="dv">1</span><span class="op">,</span> a <span class="op">*</span> n<span class="op">);</span></span>
+<span id="cb595-10"><a href="goto.html#cb595-10"></a><span class="op">}</span></span>
+<span id="cb595-11"><a href="goto.html#cb595-11"></a></span>
+<span id="cb595-12"><a href="goto.html#cb595-12"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb595-13"><a href="goto.html#cb595-13"></a><span class="op">{</span></span>
+<span id="cb595-14"><a href="goto.html#cb595-14"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> <span class="dv">8</span><span class="op">;</span> i<span class="op">++)</span></span>
+<span id="cb595-15"><a href="goto.html#cb595-15"></a>        printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d</span><span class="st">! == </span><span class="sc">%ld\n</span><span class="st">&quot;</span><span class="op">,</span> i<span class="op">,</span> factorial<span class="op">(</span>i<span class="op">,</span> <span class="dv">1</span><span class="op">));</span></span>
+<span id="cb595-16"><a href="goto.html#cb595-16"></a><span class="op">}</span></span></code></pre></div>
+<p>To make it happen, you can replace the call with two steps:</p>
+<ol type="1">
+<li>Set the values of the parameters to what they’d be on the next call.</li>
+<li><code>goto</code> a label on the first line of the function.</li>
+</ol>
+<p>Let’s try it:</p>
+<div class="sourceCode" id="cb596"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb596-1"><a href="goto.html#cb596-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb596-2"><a href="goto.html#cb596-2"></a></span>
+<span id="cb596-3"><a href="goto.html#cb596-3"></a><span class="dt">int</span> factorial<span class="op">(</span><span class="dt">int</span> n<span class="op">,</span> <span class="dt">int</span> a<span class="op">)</span></span>
+<span id="cb596-4"><a href="goto.html#cb596-4"></a><span class="op">{</span></span>
+<span id="cb596-5"><a href="goto.html#cb596-5"></a>tco<span class="op">:</span>  <span class="co">// add this</span></span>
+<span id="cb596-6"><a href="goto.html#cb596-6"></a></span>
+<span id="cb596-7"><a href="goto.html#cb596-7"></a>    <span class="cf">if</span> <span class="op">(</span>n <span class="op">==</span> <span class="dv">0</span><span class="op">)</span></span>
+<span id="cb596-8"><a href="goto.html#cb596-8"></a>        <span class="cf">return</span> a<span class="op">;</span></span>
+<span id="cb596-9"><a href="goto.html#cb596-9"></a></span>
+<span id="cb596-10"><a href="goto.html#cb596-10"></a>    <span class="co">// replace return by setting new parameter values and</span></span>
+<span id="cb596-11"><a href="goto.html#cb596-11"></a>    <span class="co">// goto-ing the beginning of the function</span></span>
+<span id="cb596-12"><a href="goto.html#cb596-12"></a></span>
+<span id="cb596-13"><a href="goto.html#cb596-13"></a>    <span class="co">//return factorial(n - 1, a * n);</span></span>
+<span id="cb596-14"><a href="goto.html#cb596-14"></a></span>
+<span id="cb596-15"><a href="goto.html#cb596-15"></a>    <span class="dt">int</span> next_n <span class="op">=</span> n <span class="op">-</span> <span class="dv">1</span><span class="op">;</span>  <span class="co">// See how these match up with</span></span>
+<span id="cb596-16"><a href="goto.html#cb596-16"></a>    <span class="dt">int</span> next_a <span class="op">=</span> a <span class="op">*</span> n<span class="op">;</span>  <span class="co">// the recursive arguments, above?</span></span>
+<span id="cb596-17"><a href="goto.html#cb596-17"></a></span>
+<span id="cb596-18"><a href="goto.html#cb596-18"></a>    n <span class="op">=</span> next_n<span class="op">;</span>   <span class="co">// Set the parameters to the new values</span></span>
+<span id="cb596-19"><a href="goto.html#cb596-19"></a>    a <span class="op">=</span> next_a<span class="op">;</span></span>
+<span id="cb596-20"><a href="goto.html#cb596-20"></a></span>
+<span id="cb596-21"><a href="goto.html#cb596-21"></a>    <span class="cf">goto</span> tco<span class="op">;</span>   <span class="co">// And repeat!</span></span>
+<span id="cb596-22"><a href="goto.html#cb596-22"></a><span class="op">}</span></span>
+<span id="cb596-23"><a href="goto.html#cb596-23"></a></span>
+<span id="cb596-24"><a href="goto.html#cb596-24"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb596-25"><a href="goto.html#cb596-25"></a><span class="op">{</span></span>
+<span id="cb596-26"><a href="goto.html#cb596-26"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> <span class="dv">8</span><span class="op">;</span> i<span class="op">++)</span></span>
+<span id="cb596-27"><a href="goto.html#cb596-27"></a>        printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d</span><span class="st">! == </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> i<span class="op">,</span> factorial<span class="op">(</span>i<span class="op">,</span> <span class="dv">1</span><span class="op">));</span></span>
+<span id="cb596-28"><a href="goto.html#cb596-28"></a><span class="op">}</span></span></code></pre></div>
+<p>I used temporary variables up there to set the next values of the parameters before jumping to the start of the function. See how they correspond to the recursive arguments that were in the recursive call?</p>
+<p>Now, why use temp variables? I could have done this instead:</p>
+<div class="sourceCode" id="cb597"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb597-1"><a href="goto.html#cb597-1" aria-hidden="true" tabindex="-1"></a>    a <span class="op">*=</span> n<span class="op">;</span></span>
+<span id="cb597-2"><a href="goto.html#cb597-2" aria-hidden="true" tabindex="-1"></a>    n <span class="op">-=</span> <span class="dv">1</span><span class="op">;</span></span>
+<span id="cb597-3"><a href="goto.html#cb597-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb597-4"><a href="goto.html#cb597-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">goto</span> tco<span class="op">;</span></span></code></pre></div>
+<p>and that actually works just fine. But if I carelessly reverse those two lines of code:</p>
+<div class="sourceCode" id="cb598"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb598-1"><a href="goto.html#cb598-1" aria-hidden="true" tabindex="-1"></a>    n <span class="op">-=</span> <span class="dv">1</span><span class="op">;</span>  <span class="co">// BAD NEWS</span></span>
+<span id="cb598-2"><a href="goto.html#cb598-2" aria-hidden="true" tabindex="-1"></a>    a <span class="op">*=</span> n<span class="op">;</span></span></code></pre></div>
+<p>—now we’re in trouble. We modified <code>n</code> before using it to modify <code>a</code>. That’s Bad because that’s not how it works when you call recursively. Using the temporary variables avoids this problem even if you’re not looking out for it. And the compiler likely optimizes them out, anyway.</p>
+<p> </p>
+<h2 data-number="31.7" id="restarting-interrupted-system-calls"><span class="header-section-number">31.7</span> Restarting Interrupted System Calls</h2>
+<p></p>
+<p>This is outside the spec, but commonly seen in Unix-like systems.</p>
+<p>Certain long-lived system calls might return an error if they’re interrupted by a signal, and <code>errno</code> will be set to <code>EINTR</code> to indicate the syscall was doing fine; it was just interrupted.</p>
+<p>In those cases, it’s really common for the programmer to want to restart the call and try it again.</p>
+<div class="sourceCode" id="cb599"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb599-1"><a href="goto.html#cb599-1" aria-hidden="true" tabindex="-1"></a>retry<span class="op">:</span></span>
+<span id="cb599-2"><a href="goto.html#cb599-2" aria-hidden="true" tabindex="-1"></a>    byte_count <span class="op">=</span> read<span class="op">(</span><span class="dv">0</span><span class="op">,</span> buf<span class="op">,</span> <span class="kw">sizeof</span><span class="op">(</span>buf<span class="op">)</span> <span class="op">-</span> <span class="dv">1</span><span class="op">);</span>  <span class="co">// Unix read() syscall</span></span>
+<span id="cb599-3"><a href="goto.html#cb599-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb599-4"><a href="goto.html#cb599-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>byte_count <span class="op">==</span> <span class="op">-</span><span class="dv">1</span><span class="op">)</span> <span class="op">{</span>            <span class="co">// An error occurred...</span></span>
+<span id="cb599-5"><a href="goto.html#cb599-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="op">(</span>errno <span class="op">==</span> EINTR<span class="op">)</span> <span class="op">{</span>          <span class="co">// But it was just interrupted</span></span>
+<span id="cb599-6"><a href="goto.html#cb599-6" aria-hidden="true" tabindex="-1"></a>            printf<span class="op">(</span><span class="st">&quot;Restarting...</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb599-7"><a href="goto.html#cb599-7" aria-hidden="true" tabindex="-1"></a>            <span class="cf">goto</span> retry<span class="op">;</span></span>
+<span id="cb599-8"><a href="goto.html#cb599-8" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span></code></pre></div>
+<p>Many Unix-likes have an <code>SA_RESTART</code> flag you can pass to <code>sigaction()</code> to request the OS automatically restart any slow syscalls instead of failing with <code>EINTR</code>.</p>
+<p>Again, this is Unix-specific and is outside the C standard.</p>
+<p>That said, it’s possible to use a similar technique any time any function should be restarted.</p>
+<p></p>
+<h2 data-number="31.8" id="goto-and-variable-scope"><span class="header-section-number">31.8</span> <code>goto</code> and Variable Scope</h2>
+<p></p>
+<p>We’ve already seen that labels have function scope, but weird things can happen if we jump past some variable initialization.</p>
+<p>Look at this example where we jump from a place where the variable <code>x</code> is out of scope into the middle of its scope (in the block).</p>
+<div class="sourceCode" id="cb600"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb600-1"><a href="goto.html#cb600-1" aria-hidden="true" tabindex="-1"></a>    <span class="cf">goto</span> label<span class="op">;</span></span>
+<span id="cb600-2"><a href="goto.html#cb600-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb600-3"><a href="goto.html#cb600-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">{</span></span>
+<span id="cb600-4"><a href="goto.html#cb600-4" aria-hidden="true" tabindex="-1"></a>        <span class="dt">int</span> x <span class="op">=</span> <span class="dv">12345</span><span class="op">;</span></span>
+<span id="cb600-5"><a href="goto.html#cb600-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb600-6"><a href="goto.html#cb600-6" aria-hidden="true" tabindex="-1"></a>label<span class="op">:</span></span>
+<span id="cb600-7"><a href="goto.html#cb600-7" aria-hidden="true" tabindex="-1"></a>        printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> x<span class="op">);</span></span>
+<span id="cb600-8"><a href="goto.html#cb600-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span></code></pre></div>
+<p>This will compile and run, but gives me a warning:</p>
+<div class="sourceCode" id="cb601"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb601-1"><a href="goto.html#cb601-1" aria-hidden="true" tabindex="-1"></a>warning: ‘x’ is used uninitialized in this function</span></code></pre></div>
+<p>And then it prints out <code>0</code> when I run it (your mileage may vary).</p>
+<p>Basically what has happened is that we jumped into <code>x</code>’s scope (so it was OK to reference it in the <code>printf()</code>) but we jumped over the line that actually initialized it to <code>12345</code>. So the value was indeterminate.</p>
+<p>The fix is, of course, to get the initialization <em>after</em> the label one way or another.</p>
+<div class="sourceCode" id="cb602"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb602-1"><a href="goto.html#cb602-1" aria-hidden="true" tabindex="-1"></a>    <span class="cf">goto</span> label<span class="op">;</span></span>
+<span id="cb602-2"><a href="goto.html#cb602-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb602-3"><a href="goto.html#cb602-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">{</span></span>
+<span id="cb602-4"><a href="goto.html#cb602-4" aria-hidden="true" tabindex="-1"></a>        <span class="dt">int</span> x<span class="op">;</span></span>
+<span id="cb602-5"><a href="goto.html#cb602-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb602-6"><a href="goto.html#cb602-6" aria-hidden="true" tabindex="-1"></a>label<span class="op">:</span></span>
+<span id="cb602-7"><a href="goto.html#cb602-7" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> <span class="dv">12345</span><span class="op">;</span></span>
+<span id="cb602-8"><a href="goto.html#cb602-8" aria-hidden="true" tabindex="-1"></a>        printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> x<span class="op">);</span></span>
+<span id="cb602-9"><a href="goto.html#cb602-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span></code></pre></div>
+<p>Let’s look at one more example.</p>
+<div class="sourceCode" id="cb603"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb603-1"><a href="goto.html#cb603-1" aria-hidden="true" tabindex="-1"></a>    <span class="op">{</span></span>
+<span id="cb603-2"><a href="goto.html#cb603-2" aria-hidden="true" tabindex="-1"></a>        <span class="dt">int</span> x <span class="op">=</span> <span class="dv">10</span><span class="op">;</span></span>
+<span id="cb603-3"><a href="goto.html#cb603-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb603-4"><a href="goto.html#cb603-4" aria-hidden="true" tabindex="-1"></a>label<span class="op">:</span></span>
+<span id="cb603-5"><a href="goto.html#cb603-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb603-6"><a href="goto.html#cb603-6" aria-hidden="true" tabindex="-1"></a>        printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> x<span class="op">);</span></span>
+<span id="cb603-7"><a href="goto.html#cb603-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb603-8"><a href="goto.html#cb603-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb603-9"><a href="goto.html#cb603-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">goto</span> label<span class="op">;</span></span></code></pre></div>
+<p>What happens here?</p>
+<p>The first time through the block, we’re good. <code>x</code> is <code>10</code> and that’s what prints.</p>
+<p>But after the <code>goto</code>, we’re jumping into the scope of <code>x</code>, but past its initialization. Which means we can still print it, but the value is indeterminate (since it hasn’t been reinitialized).</p>
+<p>On my machine, it prints <code>10</code> again (to infinity), but that’s just luck. It could print any value after the <code>goto</code> since <code>x</code> is uninitialized.</p>
+<p></p>
+<h2 data-number="31.9" id="goto-and-variable-length-arrays"><span class="header-section-number">31.9</span> <code>goto</code> and Variable-Length Arrays</h2>
+<p></p>
+<p>When it comes to VLAs and <code>goto</code>, there’s one rule: you can’t jump from outside the scope of a VLA into the scope of that VLA.</p>
+<p>If I try to do this:</p>
+<div class="sourceCode" id="cb604"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb604-1"><a href="goto.html#cb604-1" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> x <span class="op">=</span> <span class="dv">10</span><span class="op">;</span></span>
+<span id="cb604-2"><a href="goto.html#cb604-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb604-3"><a href="goto.html#cb604-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">goto</span> label<span class="op">;</span></span>
+<span id="cb604-4"><a href="goto.html#cb604-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb604-5"><a href="goto.html#cb604-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">{</span></span>
+<span id="cb604-6"><a href="goto.html#cb604-6" aria-hidden="true" tabindex="-1"></a>        <span class="dt">int</span> v<span class="op">[</span>x<span class="op">];</span></span>
+<span id="cb604-7"><a href="goto.html#cb604-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb604-8"><a href="goto.html#cb604-8" aria-hidden="true" tabindex="-1"></a>label<span class="op">:</span></span>
+<span id="cb604-9"><a href="goto.html#cb604-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb604-10"><a href="goto.html#cb604-10" aria-hidden="true" tabindex="-1"></a>        printf<span class="op">(</span><span class="st">&quot;Hi!</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb604-11"><a href="goto.html#cb604-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span></code></pre></div>
+<p>I get an error:</p>
+<div class="sourceCode" id="cb605"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb605-1"><a href="goto.html#cb605-1" aria-hidden="true" tabindex="-1"></a>error: jump into scope of identifier with variably modified type</span></code></pre></div>
+<p>You can jump in ahead of the VLA declaration, like this:</p>
+<div class="sourceCode" id="cb606"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb606-1"><a href="goto.html#cb606-1" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> x <span class="op">=</span> <span class="dv">10</span><span class="op">;</span></span>
+<span id="cb606-2"><a href="goto.html#cb606-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb606-3"><a href="goto.html#cb606-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">goto</span> label<span class="op">;</span></span>
+<span id="cb606-4"><a href="goto.html#cb606-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb606-5"><a href="goto.html#cb606-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">{</span></span>
+<span id="cb606-6"><a href="goto.html#cb606-6" aria-hidden="true" tabindex="-1"></a>label<span class="op">:</span>  <span class="op">;</span></span>
+<span id="cb606-7"><a href="goto.html#cb606-7" aria-hidden="true" tabindex="-1"></a>        <span class="dt">int</span> v<span class="op">[</span>x<span class="op">];</span></span>
+<span id="cb606-8"><a href="goto.html#cb606-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb606-9"><a href="goto.html#cb606-9" aria-hidden="true" tabindex="-1"></a>        printf<span class="op">(</span><span class="st">&quot;Hi!</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb606-10"><a href="goto.html#cb606-10" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span></code></pre></div>
+<p>Because that way the VLA gets allocated properly before its inevitable deallocation once it falls out of scope.</p>
+<p> </p>
+<!-- Beej's guide to C
+
+# vim: ts=4:sw=4:nosi:et:tw=72
+-->
+<hr><div style="text-align:center"><span><a href="variable-length-arrays-vlas.html">Prev</a> | </span><a href="index.html">Contents</a><span> | <a href="types-part-v-compound-literals-and-generic-selections.html">Next</a></span></div></body>
+</html>

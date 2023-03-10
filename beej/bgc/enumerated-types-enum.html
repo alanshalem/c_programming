@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Beej's Guide to C Programming</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Mono&display=swap" rel="stylesheet"> 
+
+  <!-- BG custom styling -->
+  <style type="text/css">
+  /* Fix for line numbers not visible */
+  pre.numberSource code > span {
+      left: -1em;
+  }
+  pre.numberSource {
+      margin-left: initial;
+  }
+
+  /* Put some space after the section numbers */
+  span.toc-section-number::after {
+      content: "\a0\a0\a0";  /* non-breaking whitespace */
+  }
+
+  /* Hide underlines on code number links */
+  pre > code.sourceCode > span > a:first-child::before {
+      text-decoration: none;
+  }
+
+  /* Color the source blocks */
+  div.sourceCode {
+      background-color: #f0f0f0;
+  }
+
+  /* Fix iOS big text rendering issue */
+  pre > code.sourceCode > span {
+      display: initial;
+  }
+
+
+  /* Color the inline code */
+  code:not(.sourceCode) {
+      background: #f0f0f0;
+      padding-left: 0.2em;
+      padding-right: 0.2em;
+      border-radius: 0.2em;
+  }
+
+  /* Keep code tags from wrapping in tables */
+  tbody code {
+      white-space: nowrap;
+  }
+
+  td {
+      vertical-align: top;
+  }
+
+  body {
+      font-size: 12pt;
+      max-width: 43em;
+  }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<div style="text-align:center"><span><a href="characters-and-strings-ii.html">Prev</a> | </span><a href="index.html">Contents</a><span> | <a href="pointers-iii-pointers-to-pointers-and-more.html">Next</a></span></div><hr>
+<h1 data-number="22" id="enumerated-types-enum"><span class="header-section-number">22</span> Enumerated Types: <code>enum</code></h1>
+<p></p>
+<p>C offers us another way to have constant integer values by name: <code>enum</code>.</p>
+<p>For example:</p>
+<div class="sourceCode" id="cb469"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb469-1"><a href="enumerated-types-enum.html#cb469-1" aria-hidden="true" tabindex="-1"></a><span class="kw">enum</span> <span class="op">{</span></span>
+<span id="cb469-2"><a href="enumerated-types-enum.html#cb469-2" aria-hidden="true" tabindex="-1"></a>  ONE<span class="op">=</span><span class="dv">1</span><span class="op">,</span></span>
+<span id="cb469-3"><a href="enumerated-types-enum.html#cb469-3" aria-hidden="true" tabindex="-1"></a>  TWO<span class="op">=</span><span class="dv">2</span></span>
+<span id="cb469-4"><a href="enumerated-types-enum.html#cb469-4" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb469-5"><a href="enumerated-types-enum.html#cb469-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb469-6"><a href="enumerated-types-enum.html#cb469-6" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d</span><span class="st"> </span><span class="sc">%d</span><span class="st">&quot;</span><span class="op">,</span> ONE<span class="op">,</span> TWO<span class="op">);</span>  <span class="co">// 1 2</span></span></code></pre></div>
+<p>In some ways, it can be better—or different—than using a <code>#define</code>. Key differences:</p>
+<ul>
+<li><code>enum</code>s can only be integer types.</li>
+<li><code>#define</code> can define anything at all.</li>
+<li><code>enum</code>s are often shown by their symbolic identifier name in a debugger.</li>
+<li><code>#define</code>d numbers just show as raw numbers which are harder to know the meaning of while debugging.</li>
+</ul>
+<p>Since they’re integer types, they can be used any place integers can be used, including in array dimensions and <code>case</code> statements.</p>
+<p>Let’s tear into this more.</p>
+<h2 data-number="22.1" id="behavior-of-enum"><span class="header-section-number">22.1</span> Behavior of <code>enum</code></h2>
+<h3 data-number="22.1.1" id="numbering"><span class="header-section-number">22.1.1</span> Numbering</h3>
+<p></p>
+<p><code>enum</code>s are automatically numbered unless you override them.</p>
+<p>They start at <code>0</code>, and autoincrement up from there, by default:</p>
+<div class="sourceCode" id="cb470"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb470-1"><a href="enumerated-types-enum.html#cb470-1" aria-hidden="true" tabindex="-1"></a><span class="kw">enum</span> <span class="op">{</span></span>
+<span id="cb470-2"><a href="enumerated-types-enum.html#cb470-2" aria-hidden="true" tabindex="-1"></a>    SHEEP<span class="op">,</span>  <span class="co">// Value is 0</span></span>
+<span id="cb470-3"><a href="enumerated-types-enum.html#cb470-3" aria-hidden="true" tabindex="-1"></a>    WHEAT<span class="op">,</span>  <span class="co">// Value is 1</span></span>
+<span id="cb470-4"><a href="enumerated-types-enum.html#cb470-4" aria-hidden="true" tabindex="-1"></a>    WOOD<span class="op">,</span>   <span class="co">// Value is 2</span></span>
+<span id="cb470-5"><a href="enumerated-types-enum.html#cb470-5" aria-hidden="true" tabindex="-1"></a>    BRICK<span class="op">,</span>  <span class="co">// Value is 3</span></span>
+<span id="cb470-6"><a href="enumerated-types-enum.html#cb470-6" aria-hidden="true" tabindex="-1"></a>    ORE     <span class="co">// Value is 4</span></span>
+<span id="cb470-7"><a href="enumerated-types-enum.html#cb470-7" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb470-8"><a href="enumerated-types-enum.html#cb470-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb470-9"><a href="enumerated-types-enum.html#cb470-9" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d</span><span class="st"> </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> SHEEP<span class="op">,</span> BRICK<span class="op">);</span>  <span class="co">// 0 3</span></span></code></pre></div>
+<p>You can force particular integer values, as we saw earlier:</p>
+<div class="sourceCode" id="cb471"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb471-1"><a href="enumerated-types-enum.html#cb471-1" aria-hidden="true" tabindex="-1"></a><span class="kw">enum</span> <span class="op">{</span></span>
+<span id="cb471-2"><a href="enumerated-types-enum.html#cb471-2" aria-hidden="true" tabindex="-1"></a>  X<span class="op">=</span><span class="dv">2</span><span class="op">,</span></span>
+<span id="cb471-3"><a href="enumerated-types-enum.html#cb471-3" aria-hidden="true" tabindex="-1"></a>  Y<span class="op">=</span><span class="dv">18</span><span class="op">,</span></span>
+<span id="cb471-4"><a href="enumerated-types-enum.html#cb471-4" aria-hidden="true" tabindex="-1"></a>  Z<span class="op">=-</span><span class="dv">2</span></span>
+<span id="cb471-5"><a href="enumerated-types-enum.html#cb471-5" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span></code></pre></div>
+<p>Duplicates are not a problem:</p>
+<div class="sourceCode" id="cb472"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb472-1"><a href="enumerated-types-enum.html#cb472-1" aria-hidden="true" tabindex="-1"></a><span class="kw">enum</span> <span class="op">{</span></span>
+<span id="cb472-2"><a href="enumerated-types-enum.html#cb472-2" aria-hidden="true" tabindex="-1"></a>  X<span class="op">=</span><span class="dv">2</span><span class="op">,</span></span>
+<span id="cb472-3"><a href="enumerated-types-enum.html#cb472-3" aria-hidden="true" tabindex="-1"></a>  Y<span class="op">=</span><span class="dv">2</span><span class="op">,</span></span>
+<span id="cb472-4"><a href="enumerated-types-enum.html#cb472-4" aria-hidden="true" tabindex="-1"></a>  Z<span class="op">=</span><span class="dv">2</span></span>
+<span id="cb472-5"><a href="enumerated-types-enum.html#cb472-5" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span></code></pre></div>
+<p>if values are omitted, numbering continues counting in the positive direction from whichever value was last specified. For example:</p>
+<div class="sourceCode" id="cb473"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb473-1"><a href="enumerated-types-enum.html#cb473-1" aria-hidden="true" tabindex="-1"></a><span class="kw">enum</span> <span class="op">{</span></span>
+<span id="cb473-2"><a href="enumerated-types-enum.html#cb473-2" aria-hidden="true" tabindex="-1"></a>  A<span class="op">,</span>    <span class="co">// 0, default starting value</span></span>
+<span id="cb473-3"><a href="enumerated-types-enum.html#cb473-3" aria-hidden="true" tabindex="-1"></a>  B<span class="op">,</span>    <span class="co">// 1</span></span>
+<span id="cb473-4"><a href="enumerated-types-enum.html#cb473-4" aria-hidden="true" tabindex="-1"></a>  C<span class="op">=</span><span class="dv">4</span><span class="op">,</span>  <span class="co">// 4, manually set</span></span>
+<span id="cb473-5"><a href="enumerated-types-enum.html#cb473-5" aria-hidden="true" tabindex="-1"></a>  D<span class="op">,</span>    <span class="co">// 5</span></span>
+<span id="cb473-6"><a href="enumerated-types-enum.html#cb473-6" aria-hidden="true" tabindex="-1"></a>  E<span class="op">,</span>    <span class="co">// 6</span></span>
+<span id="cb473-7"><a href="enumerated-types-enum.html#cb473-7" aria-hidden="true" tabindex="-1"></a>  F<span class="op">=</span><span class="dv">3</span>   <span class="co">// 3, manually set</span></span>
+<span id="cb473-8"><a href="enumerated-types-enum.html#cb473-8" aria-hidden="true" tabindex="-1"></a>  G<span class="op">,</span>    <span class="co">// 4</span></span>
+<span id="cb473-9"><a href="enumerated-types-enum.html#cb473-9" aria-hidden="true" tabindex="-1"></a>  H     <span class="co">// 5</span></span>
+<span id="cb473-10"><a href="enumerated-types-enum.html#cb473-10" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p></p>
+<h3 data-number="22.1.2" id="trailing-commas"><span class="header-section-number">22.1.2</span> Trailing Commas</h3>
+<p>This is perfectly fine, if that’s your style:</p>
+<div class="sourceCode" id="cb474"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb474-1"><a href="enumerated-types-enum.html#cb474-1" aria-hidden="true" tabindex="-1"></a><span class="kw">enum</span> <span class="op">{</span></span>
+<span id="cb474-2"><a href="enumerated-types-enum.html#cb474-2" aria-hidden="true" tabindex="-1"></a>  X<span class="op">=</span><span class="dv">2</span><span class="op">,</span></span>
+<span id="cb474-3"><a href="enumerated-types-enum.html#cb474-3" aria-hidden="true" tabindex="-1"></a>  Y<span class="op">=</span><span class="dv">18</span><span class="op">,</span></span>
+<span id="cb474-4"><a href="enumerated-types-enum.html#cb474-4" aria-hidden="true" tabindex="-1"></a>  Z<span class="op">=-</span><span class="dv">2</span><span class="op">,</span>   <span class="co">// &lt;-- Trailing comma</span></span>
+<span id="cb474-5"><a href="enumerated-types-enum.html#cb474-5" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span></code></pre></div>
+<p>It’s gotten more popular in languages of the recent decades so you might be pleased to see it.</p>
+<h3 data-number="22.1.3" id="scope-1"><span class="header-section-number">22.1.3</span> Scope</h3>
+<p></p>
+<p><code>enum</code>s scope as you’d expect. If at file scope, the whole file can see it. If in a block, it’s local to that block.</p>
+<p>It’s really common for <code>enum</code>s to be defined in header files so they can be <code>#include</code>d at file scope.</p>
+<p></p>
+<h3 data-number="22.1.4" id="style"><span class="header-section-number">22.1.4</span> Style</h3>
+<p>As you’ve noticed, it’s common to declare the <code>enum</code> symbols in uppercase (with underscores).</p>
+<p>This isn’t a requirement, but is a very, very common idiom.</p>
+<h2 data-number="22.2" id="your-enum-is-a-type"><span class="header-section-number">22.2</span> Your <code>enum</code> is a Type</h2>
+<p>This is an important thing to know about <code>enum</code>: they’re a type, analogous to how a <code>struct</code> is a type.</p>
+<p>You can give them a tag name so you can refer to the type later and declare variables of that type.</p>
+<p>Now, since <code>enum</code>s are integer types, why not just use <code>int</code>?</p>
+<p>In C, the best reason for this is code clarity–it’s a nice, typed way to describe your thinking in code. C (unlike C++) doesn’t actually enforce any values being in range for a particular <code>enum</code>.</p>
+<p>Let’s do an example where we declare a variable <code>r</code> of type <code>enum resource</code> that can hold those values:</p>
+<div class="sourceCode" id="cb475"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb475-1"><a href="enumerated-types-enum.html#cb475-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Named enum, type is &quot;enum resource&quot;</span></span>
+<span id="cb475-2"><a href="enumerated-types-enum.html#cb475-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb475-3"><a href="enumerated-types-enum.html#cb475-3" aria-hidden="true" tabindex="-1"></a><span class="kw">enum</span> resource <span class="op">{</span></span>
+<span id="cb475-4"><a href="enumerated-types-enum.html#cb475-4" aria-hidden="true" tabindex="-1"></a>    SHEEP<span class="op">,</span></span>
+<span id="cb475-5"><a href="enumerated-types-enum.html#cb475-5" aria-hidden="true" tabindex="-1"></a>    WHEAT<span class="op">,</span></span>
+<span id="cb475-6"><a href="enumerated-types-enum.html#cb475-6" aria-hidden="true" tabindex="-1"></a>    WOOD<span class="op">,</span></span>
+<span id="cb475-7"><a href="enumerated-types-enum.html#cb475-7" aria-hidden="true" tabindex="-1"></a>    BRICK<span class="op">,</span></span>
+<span id="cb475-8"><a href="enumerated-types-enum.html#cb475-8" aria-hidden="true" tabindex="-1"></a>    ORE</span>
+<span id="cb475-9"><a href="enumerated-types-enum.html#cb475-9" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb475-10"><a href="enumerated-types-enum.html#cb475-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb475-11"><a href="enumerated-types-enum.html#cb475-11" aria-hidden="true" tabindex="-1"></a><span class="co">// Declare a variable &quot;r&quot; of type &quot;enum resource&quot;</span></span>
+<span id="cb475-12"><a href="enumerated-types-enum.html#cb475-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb475-13"><a href="enumerated-types-enum.html#cb475-13" aria-hidden="true" tabindex="-1"></a><span class="kw">enum</span> resource r <span class="op">=</span> BRICK<span class="op">;</span></span>
+<span id="cb475-14"><a href="enumerated-types-enum.html#cb475-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb475-15"><a href="enumerated-types-enum.html#cb475-15" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(</span>r <span class="op">==</span> BRICK<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb475-16"><a href="enumerated-types-enum.html#cb475-16" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;I&#39;ll trade you a brick for two sheep.</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb475-17"><a href="enumerated-types-enum.html#cb475-17" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>You can also <code>typedef</code> these, of course, though I personally don’t like to.</p>
+<div class="sourceCode" id="cb476"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb476-1"><a href="enumerated-types-enum.html#cb476-1" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="kw">enum</span> <span class="op">{</span></span>
+<span id="cb476-2"><a href="enumerated-types-enum.html#cb476-2" aria-hidden="true" tabindex="-1"></a>    SHEEP<span class="op">,</span></span>
+<span id="cb476-3"><a href="enumerated-types-enum.html#cb476-3" aria-hidden="true" tabindex="-1"></a>    WHEAT<span class="op">,</span></span>
+<span id="cb476-4"><a href="enumerated-types-enum.html#cb476-4" aria-hidden="true" tabindex="-1"></a>    WOOD<span class="op">,</span></span>
+<span id="cb476-5"><a href="enumerated-types-enum.html#cb476-5" aria-hidden="true" tabindex="-1"></a>    BRICK<span class="op">,</span></span>
+<span id="cb476-6"><a href="enumerated-types-enum.html#cb476-6" aria-hidden="true" tabindex="-1"></a>    ORE</span>
+<span id="cb476-7"><a href="enumerated-types-enum.html#cb476-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> RESOURCE<span class="op">;</span></span>
+<span id="cb476-8"><a href="enumerated-types-enum.html#cb476-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb476-9"><a href="enumerated-types-enum.html#cb476-9" aria-hidden="true" tabindex="-1"></a>RESOURCE r <span class="op">=</span> BRICK<span class="op">;</span></span></code></pre></div>
+<p>Another shortcut that’s legal but rare is to declare variables when you declare the <code>enum</code>:</p>
+<div class="sourceCode" id="cb477"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb477-1"><a href="enumerated-types-enum.html#cb477-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Declare an enum and some initialized variables of that type:</span></span>
+<span id="cb477-2"><a href="enumerated-types-enum.html#cb477-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb477-3"><a href="enumerated-types-enum.html#cb477-3" aria-hidden="true" tabindex="-1"></a><span class="kw">enum</span> <span class="op">{</span></span>
+<span id="cb477-4"><a href="enumerated-types-enum.html#cb477-4" aria-hidden="true" tabindex="-1"></a>    SHEEP<span class="op">,</span></span>
+<span id="cb477-5"><a href="enumerated-types-enum.html#cb477-5" aria-hidden="true" tabindex="-1"></a>    WHEAT<span class="op">,</span></span>
+<span id="cb477-6"><a href="enumerated-types-enum.html#cb477-6" aria-hidden="true" tabindex="-1"></a>    WOOD<span class="op">,</span></span>
+<span id="cb477-7"><a href="enumerated-types-enum.html#cb477-7" aria-hidden="true" tabindex="-1"></a>    BRICK<span class="op">,</span></span>
+<span id="cb477-8"><a href="enumerated-types-enum.html#cb477-8" aria-hidden="true" tabindex="-1"></a>    ORE</span>
+<span id="cb477-9"><a href="enumerated-types-enum.html#cb477-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> r <span class="op">=</span> BRICK<span class="op">,</span> s <span class="op">=</span> WOOD<span class="op">;</span></span></code></pre></div>
+<p>You can also give the <code>enum</code> a name so you can use it later, which is probably what you want to do in most cases:</p>
+<div class="sourceCode" id="cb478"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb478-1"><a href="enumerated-types-enum.html#cb478-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Declare an enum and some initialized variables of that type:</span></span>
+<span id="cb478-2"><a href="enumerated-types-enum.html#cb478-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb478-3"><a href="enumerated-types-enum.html#cb478-3" aria-hidden="true" tabindex="-1"></a><span class="kw">enum</span> resource <span class="op">{</span>   <span class="co">// &lt;-- type is now &quot;enum resource&quot;</span></span>
+<span id="cb478-4"><a href="enumerated-types-enum.html#cb478-4" aria-hidden="true" tabindex="-1"></a>    SHEEP<span class="op">,</span></span>
+<span id="cb478-5"><a href="enumerated-types-enum.html#cb478-5" aria-hidden="true" tabindex="-1"></a>    WHEAT<span class="op">,</span></span>
+<span id="cb478-6"><a href="enumerated-types-enum.html#cb478-6" aria-hidden="true" tabindex="-1"></a>    WOOD<span class="op">,</span></span>
+<span id="cb478-7"><a href="enumerated-types-enum.html#cb478-7" aria-hidden="true" tabindex="-1"></a>    BRICK<span class="op">,</span></span>
+<span id="cb478-8"><a href="enumerated-types-enum.html#cb478-8" aria-hidden="true" tabindex="-1"></a>    ORE</span>
+<span id="cb478-9"><a href="enumerated-types-enum.html#cb478-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> r <span class="op">=</span> BRICK<span class="op">,</span> s <span class="op">=</span> WOOD<span class="op">;</span></span></code></pre></div>
+<p>In short, <code>enum</code>s are a great way to write nice, scoped, typed, clean code.</p>
+<p></p>
+<!-- Beej's guide to C
+
+# vim: ts=4:sw=4:nosi:et:tw=72
+-->
+<hr><div style="text-align:center"><span><a href="characters-and-strings-ii.html">Prev</a> | </span><a href="index.html">Contents</a><span> | <a href="pointers-iii-pointers-to-pointers-and-more.html">Next</a></span></div></body>
+</html>

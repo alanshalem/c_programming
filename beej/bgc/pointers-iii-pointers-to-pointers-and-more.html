@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Beej's Guide to C Programming</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Mono&display=swap" rel="stylesheet"> 
+
+  <!-- BG custom styling -->
+  <style type="text/css">
+  /* Fix for line numbers not visible */
+  pre.numberSource code > span {
+      left: -1em;
+  }
+  pre.numberSource {
+      margin-left: initial;
+  }
+
+  /* Put some space after the section numbers */
+  span.toc-section-number::after {
+      content: "\a0\a0\a0";  /* non-breaking whitespace */
+  }
+
+  /* Hide underlines on code number links */
+  pre > code.sourceCode > span > a:first-child::before {
+      text-decoration: none;
+  }
+
+  /* Color the source blocks */
+  div.sourceCode {
+      background-color: #f0f0f0;
+  }
+
+  /* Fix iOS big text rendering issue */
+  pre > code.sourceCode > span {
+      display: initial;
+  }
+
+
+  /* Color the inline code */
+  code:not(.sourceCode) {
+      background: #f0f0f0;
+      padding-left: 0.2em;
+      padding-right: 0.2em;
+      border-radius: 0.2em;
+  }
+
+  /* Keep code tags from wrapping in tables */
+  tbody code {
+      white-space: nowrap;
+  }
+
+  td {
+      vertical-align: top;
+  }
+
+  body {
+      font-size: 12pt;
+      max-width: 43em;
+  }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<div style="text-align:center"><span><a href="enumerated-types-enum.html">Prev</a> | </span><a href="index.html">Contents</a><span> | <a href="bitwise-operations.html">Next</a></span></div><hr>
+<h1 data-number="23" id="pointers-iii-pointers-to-pointers-and-more"><span class="header-section-number">23</span> Pointers III: Pointers to Pointers and More</h1>
+<p>Here’s where we cover some intermediate and advanced pointer usage. If you don’t have pointers down well, review the previous chapters on <a href="pointers.html#pointers">pointers</a> and <a href="pointers2.html#pointers2">pointer arithmetic</a> before starting on this stuff.</p>
+<h2 data-number="23.1" id="pointers-to-pointers"><span class="header-section-number">23.1</span> Pointers to Pointers</h2>
+<p></p>
+<p>If you can have a pointer to a variable, and a variable can be a pointer, can you have a pointer to a variable that it itself a pointer?</p>
+<p>Yes! This is a pointer to a pointer, and it’s held in variable of type pointer-pointer.</p>
+<p>Before we tear into that, I want to try for a <em>gut feel</em> for how pointers to pointers work.</p>
+<p>Remember that a pointer is just a number. It’s a number that represents an index in computer memory, typically one that holds a value we’re interested in for some reason.</p>
+<p>That pointer, which is a number, has to be stored somewhere. And that place is memory, just like everything else<a href="footnotes.html#fn139" class="footnote-ref" id="fnref139" role="doc-noteref"><sup>139</sup></a>.</p>
+<p>But because it’s stored in memory, it must have an index it’s stored at, right? The pointer must have an index in memory where it is stored. And that index is a number. It’s the address of the pointer. It’s a pointer to the pointer.</p>
+<p>Let’s start with a regular pointer to an <code>int</code>, back from the earlier chapters:</p>
+<div class="sourceCode" id="cb479"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb479-1"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb479-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb479-2"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb479-2"></a></span>
+<span id="cb479-3"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb479-3"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb479-4"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb479-4"></a><span class="op">{</span></span>
+<span id="cb479-5"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb479-5"></a>    <span class="dt">int</span> x <span class="op">=</span> <span class="dv">3490</span><span class="op">;</span>  <span class="co">// Type: int</span></span>
+<span id="cb479-6"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb479-6"></a>    <span class="dt">int</span> <span class="op">*</span>p <span class="op">=</span> <span class="op">&amp;</span>x<span class="op">;</span>   <span class="co">// Type: pointer to an int</span></span>
+<span id="cb479-7"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb479-7"></a></span>
+<span id="cb479-8"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb479-8"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> <span class="op">*</span>p<span class="op">);</span>  <span class="co">// 3490</span></span>
+<span id="cb479-9"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb479-9"></a><span class="op">}</span></span></code></pre></div>
+<p>Straightforward enough, right? We have two types represented: <code>int</code> and <code>int*</code>, and we set up <code>p</code> to point to <code>x</code>. Then we can dereference <code>p</code> on line 8 and print out the value <code>3490</code>.</p>
+<p>But, like we said, we can have a pointer to any variable… so does that mean we can have a pointer to <code>p</code>?</p>
+<p>In other words, what type is this expression?</p>
+<div class="sourceCode" id="cb480"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb480-1"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb480-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> x <span class="op">=</span> <span class="dv">3490</span><span class="op">;</span>  <span class="co">// Type: int</span></span>
+<span id="cb480-2"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb480-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> <span class="op">*</span>p <span class="op">=</span> <span class="op">&amp;</span>x<span class="op">;</span>   <span class="co">// Type: pointer to an int</span></span>
+<span id="cb480-3"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb480-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb480-4"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb480-4" aria-hidden="true" tabindex="-1"></a><span class="op">&amp;</span>p  <span class="co">// &lt;-- What type is the address of p? AKA a pointer to p?</span></span></code></pre></div>
+<p>If <code>x</code> is an <code>int</code>, then <code>&amp;x</code> is a pointer to an <code>int</code> that we’ve stored in <code>p</code> which is type <code>int*</code>. Follow? (Repeat this paragraph until you do!)</p>
+<p>And therefore <code>&amp;p</code> is a pointer to an <code>int*</code>, AKA a “pointer to a pointer to an <code>int</code>”. AKA “<code>int</code>-pointer-pointer”.</p>
+<p>Got it? (Repeat the previous paragraph until you do!)</p>
+<p>We write this type with two asterisks: <code>int **</code>. Let’s see it in action.</p>
+<div class="sourceCode" id="cb481"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb481-1"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb481-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb481-2"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb481-2"></a></span>
+<span id="cb481-3"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb481-3"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb481-4"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb481-4"></a><span class="op">{</span></span>
+<span id="cb481-5"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb481-5"></a>    <span class="dt">int</span> x <span class="op">=</span> <span class="dv">3490</span><span class="op">;</span>  <span class="co">// Type: int</span></span>
+<span id="cb481-6"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb481-6"></a>    <span class="dt">int</span> <span class="op">*</span>p <span class="op">=</span> <span class="op">&amp;</span>x<span class="op">;</span>   <span class="co">// Type: pointer to an int</span></span>
+<span id="cb481-7"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb481-7"></a>    <span class="dt">int</span> <span class="op">**</span>q <span class="op">=</span> <span class="op">&amp;</span>p<span class="op">;</span>  <span class="co">// Type: pointer to pointer to int</span></span>
+<span id="cb481-8"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb481-8"></a></span>
+<span id="cb481-9"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb481-9"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d</span><span class="st"> </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> <span class="op">*</span>p<span class="op">,</span> <span class="op">**</span>q<span class="op">);</span>  <span class="co">// 3490 3490</span></span>
+<span id="cb481-10"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb481-10"></a><span class="op">}</span></span></code></pre></div>
+<p>Let’s make up some pretend addresses for the above values as examples and see what these three variables might look like in memory. The address values, below are just made up by me for example purposes:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Variable</th>
+<th>Stored at Address</th>
+<th>Value Stored There</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>x</code></td>
+<td><code>28350</code></td>
+<td><code>3490</code>—the value from the code</td>
+</tr>
+<tr class="even">
+<td><code>p</code></td>
+<td><code>29122</code></td>
+<td><code>28350</code>—the address of <code>x</code>!</td>
+</tr>
+<tr class="odd">
+<td><code>q</code></td>
+<td><code>30840</code></td>
+<td><code>29122</code>—the address of <code>p</code>!</td>
+</tr>
+</tbody>
+</table>
+<p>Indeed, let’s try it for real on my computer<a href="footnotes.html#fn140" class="footnote-ref" id="fnref140" role="doc-noteref"><sup>140</sup></a> and print out the pointer values with <code>%p</code> and I’ll do the same table again with actual references (printed in hex).</p>
+<table>
+<thead>
+<tr class="header">
+<th>Variable</th>
+<th>Stored at Address</th>
+<th>Value Stored There</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>x</code></td>
+<td><code>0x7ffd96a07b94</code></td>
+<td><code>3490</code>—the value from the code</td>
+</tr>
+<tr class="even">
+<td><code>p</code></td>
+<td><code>0x7ffd96a07b98</code></td>
+<td><code>0x7ffd96a07b94</code>—the address of <code>x</code>!</td>
+</tr>
+<tr class="odd">
+<td><code>q</code></td>
+<td><code>0x7ffd96a07ba0</code></td>
+<td><code>0x7ffd96a07b98</code>—the address of <code>p</code>!</td>
+</tr>
+</tbody>
+</table>
+<p>You can see those addresses are the same except the last byte, so just focus on those.</p>
+<p>On my system, <code>int</code>s are 4 bytes, which is why we’re seeing the address go up by 4 from <code>x</code> to <code>p</code><a href="footnotes.html#fn141" class="footnote-ref" id="fnref141" role="doc-noteref"><sup>141</sup></a> and then goes up by 8 from <code>p</code> to <code>q</code>. On my system, all pointers are 8 bytes.</p>
+<p>Does it matter if it’s an <code>int*</code> or an <code>int**</code>? Is one more bytes than the other? Nope! Remember that all pointers are addresses, that is indexes into memory. And on my machine you can represent an index with 8 bytes… doesn’t matter what’s stored at that index.</p>
+<p>Now check out what we did there on line 9 of the previous example: we <em>double dereferenced</em> <code>q</code> to get back to our <code>3490</code>.</p>
+<p>This is the important bit about pointers and pointers to pointers:</p>
+<ul>
+<li>You can get a pointer to anything with <code>&amp;</code> (including to a pointer!)</li>
+<li>You can get the thing a pointer points to with <code>*</code> (including a pointer!)</li>
+</ul>
+<p>So you can think of <code>&amp;</code> as being used to make pointers, and <code>*</code> being the inverse—it goes the opposite direction of <code>&amp;</code>—to get to the thing pointed to.</p>
+<p>In terms of type, each time you <code>&amp;</code>, that adds another pointer level to the type.</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">If you have</th>
+<th style="text-align: center;">Then you run</th>
+<th style="text-align: left;">The result type is</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>int x</code></td>
+<td style="text-align: center;"><code>&amp;x</code></td>
+<td style="text-align: left;"><code>int *</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>int *x</code></td>
+<td style="text-align: center;"><code>&amp;x</code></td>
+<td style="text-align: left;"><code>int **</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>int **x</code></td>
+<td style="text-align: center;"><code>&amp;x</code></td>
+<td style="text-align: left;"><code>int ***</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>int ***x</code></td>
+<td style="text-align: center;"><code>&amp;x</code></td>
+<td style="text-align: left;"><code>int ****</code></td>
+</tr>
+</tbody>
+</table>
+<p>And each time you use dereference (<code>*</code>), it does the opposite:</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">If you have</th>
+<th style="text-align: center;">Then you run</th>
+<th style="text-align: left;">The result type is</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>int ****x</code></td>
+<td style="text-align: center;"><code>*x</code></td>
+<td style="text-align: left;"><code>int ***</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>int ***x</code></td>
+<td style="text-align: center;"><code>*x</code></td>
+<td style="text-align: left;"><code>int **</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>int **x</code></td>
+<td style="text-align: center;"><code>*x</code></td>
+<td style="text-align: left;"><code>int *</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>int *x</code></td>
+<td style="text-align: center;"><code>*x</code></td>
+<td style="text-align: left;"><code>int</code></td>
+</tr>
+</tbody>
+</table>
+<p>Note that you can use multiple <code>*</code>s in a row to quickly dereference, just like we saw in the example code with <code>**q</code>, above. Each one strips away one level of indirection.</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">If you have</th>
+<th style="text-align: center;">Then you run</th>
+<th style="text-align: left;">The result type is</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>int ****x</code></td>
+<td style="text-align: center;"><code>***x</code></td>
+<td style="text-align: left;"><code>int *</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>int ***x</code></td>
+<td style="text-align: center;"><code>**x</code></td>
+<td style="text-align: left;"><code>int *</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>int **x</code></td>
+<td style="text-align: center;"><code>**x</code></td>
+<td style="text-align: left;"><code>int</code></td>
+</tr>
+</tbody>
+</table>
+<p>In general, <code>&amp;*E == E</code><a href="footnotes.html#fn142" class="footnote-ref" id="fnref142" role="doc-noteref"><sup>142</sup></a>. The dereference “undoes” the address-of.</p>
+<p>But <code>&amp;</code> doesn’t work the same way—you can only do those one at a time, and have to store the result in an intermediate variable:</p>
+<div class="sourceCode" id="cb482"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb482-1"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb482-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> x <span class="op">=</span> <span class="dv">3490</span><span class="op">;</span>     <span class="co">// Type: int</span></span>
+<span id="cb482-2"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb482-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> <span class="op">*</span>p <span class="op">=</span> <span class="op">&amp;</span>x<span class="op">;</span>      <span class="co">// Type: int *, pointer to an int</span></span>
+<span id="cb482-3"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb482-3" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> <span class="op">**</span>q <span class="op">=</span> <span class="op">&amp;</span>p<span class="op">;</span>     <span class="co">// Type: int **, pointer to pointer to int</span></span>
+<span id="cb482-4"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb482-4" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> <span class="op">***</span>r <span class="op">=</span> <span class="op">&amp;</span>q<span class="op">;</span>    <span class="co">// Type: int ***, pointer to pointer to pointer to int</span></span>
+<span id="cb482-5"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb482-5" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> <span class="op">****</span>s <span class="op">=</span> <span class="op">&amp;</span>r<span class="op">;</span>   <span class="co">// Type: int ****, you get the idea</span></span>
+<span id="cb482-6"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb482-6" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> <span class="op">*****</span>t <span class="op">=</span> <span class="op">&amp;</span>s<span class="op">;</span>  <span class="co">// Type: int *****</span></span></code></pre></div>
+<p></p>
+<h3 data-number="23.1.1" id="pointer-pointers-and-const"><span class="header-section-number">23.1.1</span> Pointer Pointers and <code>const</code></h3>
+<p></p>
+<p>If you recall, declaring a pointer like this:</p>
+<div class="sourceCode" id="cb483"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb483-1"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb483-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> <span class="op">*</span><span class="dt">const</span> p<span class="op">;</span></span></code></pre></div>
+<p>means that you can’t modify <code>p</code>. Trying to <code>p++</code> would give you a compile-time error.</p>
+<p>But how does that work with <code>int **</code> or <code>int ***</code>? Where does the <code>const</code> go, and what does it mean?</p>
+<p>Let’s start with the simple bit. The <code>const</code> right next to the variable name refers to that variable. So if you want an <code>int***</code> that you can’t change, you can do this:</p>
+<div class="sourceCode" id="cb484"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb484-1"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb484-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> <span class="op">***</span><span class="dt">const</span> p<span class="op">;</span></span>
+<span id="cb484-2"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb484-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb484-3"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb484-3" aria-hidden="true" tabindex="-1"></a>p<span class="op">++;</span>  <span class="co">// Not allowed</span></span></code></pre></div>
+<p>But here’s where things get a little weird.</p>
+<p>What if we had this situation:</p>
+<div class="sourceCode" id="cb485"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb485-1"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb485-1"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb485-2"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb485-2"></a><span class="op">{</span></span>
+<span id="cb485-3"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb485-3"></a>    <span class="dt">int</span> x <span class="op">=</span> <span class="dv">3490</span><span class="op">;</span></span>
+<span id="cb485-4"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb485-4"></a>    <span class="dt">int</span> <span class="op">*</span><span class="dt">const</span> p <span class="op">=</span> <span class="op">&amp;</span>x<span class="op">;</span></span>
+<span id="cb485-5"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb485-5"></a>    <span class="dt">int</span> <span class="op">**</span>q <span class="op">=</span> <span class="op">&amp;</span>p<span class="op">;</span></span>
+<span id="cb485-6"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb485-6"></a><span class="op">}</span></span></code></pre></div>
+<p>When I build that, I get a warning:</p>
+<div class="sourceCode" id="cb486"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb486-1"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb486-1" aria-hidden="true" tabindex="-1"></a>warning: initialization discards ‘const’ qualifier from pointer target type</span>
+<span id="cb486-2"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb486-2" aria-hidden="true" tabindex="-1"></a>    7 |     int **q = &amp;p;</span>
+<span id="cb486-3"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb486-3" aria-hidden="true" tabindex="-1"></a>      |               ^</span></code></pre></div>
+<p>What’s going on? The</p>
+<p>That is, we’re saying that q is type <code>int **</code>, and if you dereference that, the rightmost <code>*</code> in the type goes away. So after the dereference, we have type <code>int *</code>.</p>
+<p>And we’re assigning <code>&amp;p</code> into it which is <em>a pointer to</em> an <code>int *const</code>, or, in other words, <code>int *const *</code>.</p>
+<p>But <code>q</code> is <code>int **</code>! A type with different <code>const</code>ness on the first <code>*</code>! So we get a warning that the <code>const</code> in <code>p</code>’s <code>int *const *</code> is being ignored and thrown away.</p>
+<p>We can fix that by making sure <code>q</code>’s type is at least as <code>const</code> as <code>p</code>.</p>
+<div class="sourceCode" id="cb487"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb487-1"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb487-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> x <span class="op">=</span> <span class="dv">3490</span><span class="op">;</span></span>
+<span id="cb487-2"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb487-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> <span class="op">*</span><span class="dt">const</span> p <span class="op">=</span> <span class="op">&amp;</span>x<span class="op">;</span></span>
+<span id="cb487-3"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb487-3" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> <span class="op">*</span><span class="dt">const</span> <span class="op">*</span>q <span class="op">=</span> <span class="op">&amp;</span>p<span class="op">;</span></span></code></pre></div>
+<p>And now we’re happy.</p>
+<p>We could make <code>q</code> even more <code>const</code>. As it is, above, we’re saying, “<code>q</code> isn’t itself <code>const</code>, but the thing it points to is <code>const</code>.” But we could make them both <code>const</code>:</p>
+<div class="sourceCode" id="cb488"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb488-1"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb488-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> x <span class="op">=</span> <span class="dv">3490</span><span class="op">;</span></span>
+<span id="cb488-2"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb488-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> <span class="op">*</span><span class="dt">const</span> p <span class="op">=</span> <span class="op">&amp;</span>x<span class="op">;</span></span>
+<span id="cb488-3"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb488-3" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> <span class="op">*</span><span class="dt">const</span> <span class="op">*</span><span class="dt">const</span> q <span class="op">=</span> <span class="op">&amp;</span>p<span class="op">;</span>  <span class="co">// More const!</span></span></code></pre></div>
+<p>And that works, too. Now we can’t modify <code>q</code>, or the pointer <code>q</code> points to.</p>
+<p></p>
+<h2 data-number="23.2" id="multibyte-values"><span class="header-section-number">23.2</span> Multibyte Values</h2>
+<p></p>
+<p>We kinda hinted at this in a variety of places earlier, but clearly not every value can be stored in a single byte of memory. Things take up multiple bytes of memory (assuming they’re not <code>char</code>s). You can tell how many bytes by using <code>sizeof</code>. And you can tell which address in memory is the <em>first</em> byte of the object by using the standard <code>&amp;</code> operator, which always returns the address of the first byte.</p>
+<p>And here’s another fun fact! If you iterate over the bytes of any object, you get its <em>object representation</em>. Two things with the same object representation in memory are equal.</p>
+<p>If you want to iterate over the object representation, you should do it with pointers to <code>unsigned char</code>.</p>
+<p>Let’s make our own version of <a href="https://beej.us/guide/bgclr/html/split/stringref.html#man-memcpy"><code>memcpy()</code></a><a href="footnotes.html#fn143" class="footnote-ref" id="fnref143" role="doc-noteref"><sup>143</sup></a> that does exactly this:</p>
+<div class="sourceCode" id="cb489"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb489-1"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb489-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> <span class="op">*</span>my_memcpy<span class="op">(</span><span class="dt">void</span> <span class="op">*</span>dest<span class="op">,</span> <span class="dt">const</span> <span class="dt">void</span> <span class="op">*</span>src<span class="op">,</span> <span class="dt">size_t</span> n<span class="op">)</span></span>
+<span id="cb489-2"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb489-2" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb489-3"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb489-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Make local variables for src and dest, but of type unsigned char</span></span>
+<span id="cb489-4"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb489-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb489-5"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb489-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">const</span> <span class="dt">unsigned</span> <span class="dt">char</span> <span class="op">*</span>s <span class="op">=</span> src<span class="op">;</span></span>
+<span id="cb489-6"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb489-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">unsigned</span> <span class="dt">char</span> <span class="op">*</span>d <span class="op">=</span> dest<span class="op">;</span></span>
+<span id="cb489-7"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb489-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb489-8"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb489-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> <span class="op">(</span>n<span class="op">--</span> <span class="op">&gt;</span> <span class="dv">0</span><span class="op">)</span>   <span class="co">// For the given number of bytes</span></span>
+<span id="cb489-9"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb489-9" aria-hidden="true" tabindex="-1"></a>        <span class="op">*</span>d<span class="op">++</span> <span class="op">=</span> <span class="op">*</span>s<span class="op">++;</span>  <span class="co">// Copy source byte to dest byte</span></span>
+<span id="cb489-10"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb489-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb489-11"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb489-11" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Most copy functions return a pointer to the dest as a convenience</span></span>
+<span id="cb489-12"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb489-12" aria-hidden="true" tabindex="-1"></a>    <span class="co">// to the caller</span></span>
+<span id="cb489-13"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb489-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb489-14"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb489-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> dest<span class="op">;</span></span>
+<span id="cb489-15"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb489-15" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>(There are some good examples of post-increment and post-decrement in there for you to study, as well.)</p>
+<p>It’s important to note that the version, above, is probably less efficient than the one that comes with your system.</p>
+<p>But you can pass pointers to anything into it, and it’ll copy those objects. Could be <code>int*</code>, <code>struct animal*</code>, or anything.</p>
+<p>Let’s do another example that prints out the object representation bytes of a <code>struct</code> so we can see if there’s any padding in there and what values it has<a href="footnotes.html#fn144" class="footnote-ref" id="fnref144" role="doc-noteref"><sup>144</sup></a>.</p>
+<div class="sourceCode" id="cb490"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb490-1"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb490-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb490-2"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb490-2"></a></span>
+<span id="cb490-3"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb490-3"></a><span class="kw">struct</span> foo <span class="op">{</span></span>
+<span id="cb490-4"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb490-4"></a>    <span class="dt">char</span> a<span class="op">;</span></span>
+<span id="cb490-5"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb490-5"></a>    <span class="dt">int</span> b<span class="op">;</span></span>
+<span id="cb490-6"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb490-6"></a><span class="op">};</span></span>
+<span id="cb490-7"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb490-7"></a></span>
+<span id="cb490-8"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb490-8"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb490-9"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb490-9"></a><span class="op">{</span></span>
+<span id="cb490-10"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb490-10"></a>    <span class="kw">struct</span> foo x <span class="op">=</span> <span class="op">{</span><span class="bn">0x12</span><span class="op">,</span> <span class="bn">0x12345678</span><span class="op">};</span></span>
+<span id="cb490-11"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb490-11"></a>    <span class="dt">unsigned</span> <span class="dt">char</span> <span class="op">*</span>p <span class="op">=</span> <span class="op">(</span><span class="dt">unsigned</span> <span class="dt">char</span> <span class="op">*)&amp;</span>x<span class="op">;</span></span>
+<span id="cb490-12"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb490-12"></a></span>
+<span id="cb490-13"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb490-13"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">size_t</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> <span class="kw">sizeof</span> x<span class="op">;</span> i<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb490-14"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb490-14"></a>        printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%02X\n</span><span class="st">&quot;</span><span class="op">,</span> p<span class="op">[</span>i<span class="op">]);</span></span>
+<span id="cb490-15"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb490-15"></a>    <span class="op">}</span></span>
+<span id="cb490-16"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb490-16"></a><span class="op">}</span></span></code></pre></div>
+<p>What we have there is a <code>struct foo</code> that’s built in such a way that should encourage a compiler to inject padding bytes (though it doesn’t have to). And then we get an <code>unsigned char *</code> to the first byte of the <code>struct foo</code> variable <code>x</code>.</p>
+<p>From there, all we need to know is the <code>sizeof x</code> and we can loop through that many bytes, printing out the values (in hex for ease).</p>
+<p>Running this gives a bunch of numbers as output. I’ve annotated it below to identify where the values were stored:</p>
+<div class="sourceCode" id="cb491"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb491-1"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb491-1" aria-hidden="true" tabindex="-1"></a>12  | x.a == 0x12</span>
+<span id="cb491-2"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb491-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb491-3"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb491-3" aria-hidden="true" tabindex="-1"></a>AB  |</span>
+<span id="cb491-4"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb491-4" aria-hidden="true" tabindex="-1"></a>BF  | padding bytes with &quot;random&quot; value</span>
+<span id="cb491-5"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb491-5" aria-hidden="true" tabindex="-1"></a>26  |</span>
+<span id="cb491-6"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb491-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb491-7"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb491-7" aria-hidden="true" tabindex="-1"></a>78  |</span>
+<span id="cb491-8"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb491-8" aria-hidden="true" tabindex="-1"></a>56  | x.b == 0x12345678</span>
+<span id="cb491-9"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb491-9" aria-hidden="true" tabindex="-1"></a>34  |</span>
+<span id="cb491-10"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb491-10" aria-hidden="true" tabindex="-1"></a>12  |</span></code></pre></div>
+<p>On all systems, <code>sizeof(char)</code> is 1, and we see that first byte at the top of the output holding the value <code>0x12</code> that we stored there.</p>
+<p>Then we have some padding bytes—for me, these varied from run to run.</p>
+<p>Finally, on my system, <code>sizeof(int)</code> is 4, and we can see those 4 bytes at the end. Notice how they’re the same bytes as are in the hex value <code>0x12345678</code>, but strangely in reverse order<a href="footnotes.html#fn145" class="footnote-ref" id="fnref145" role="doc-noteref"><sup>145</sup></a>.</p>
+<p>So that’s a little peek under the hood at the bytes of a more complex entity in memory.</p>
+<p></p>
+<h2 data-number="23.3" id="the-null-pointer-and-zero"><span class="header-section-number">23.3</span> The <code>NULL</code> Pointer and Zero</h2>
+<p></p>
+<p>These things can be used interchangeably:</p>
+<ul>
+<li><code>NULL</code></li>
+<li><code>0</code></li>
+<li><code>'\0'</code></li>
+<li><code>(void *)0</code></li>
+</ul>
+<p>Personally, I always use <code>NULL</code> when I mean <code>NULL</code>, but you might see some other variants from time to time. Though <code>'\0'</code> (a byte with all bits set to zero) will also compare equal, it’s <em>weird</em> to compare it to a pointer; you should compare <code>NULL</code> against the pointer. (Of course, lots of times in string processing, you’re comparing <em>the thing the pointer points to</em> to <code>'\0'</code>, and that’s right.)</p>
+<p><code>0</code> is called the <em>null pointer constant</em>, and, when compared to or assigned into another pointer, it is converted to a null pointer of the same type.</p>
+<p></p>
+<h2 data-number="23.4" id="pointers-as-integers"><span class="header-section-number">23.4</span> Pointers as Integers</h2>
+<p></p>
+<p>You can cast pointers to integers and vice-versa (since a pointer is just an index into memory), but you probably only ever need to do this if you’re doing some low-level hardware stuff. The results of such machinations are implementation-defined, so they aren’t portable. And <em>weird things</em> could happen.</p>
+<p>C does make one guarantee, though: you can convert a pointer to a <code>uintptr_t</code> type and you’ll be able to convert it back to a pointer without losing any data.</p>
+<p><code>uintptr_t</code> is defined in <code>&lt;stdint.h&gt;</code><a href="footnotes.html#fn146" class="footnote-ref" id="fnref146" role="doc-noteref"><sup>146</sup></a>.</p>
+<p>Additionally, if you feel like being signed, you can use <code>intptr_t</code> to the same effect.</p>
+<p></p>
+<h2 data-number="23.5" id="casting-pointers-to-other-pointers"><span class="header-section-number">23.5</span> Casting Pointers to other Pointers</h2>
+<p></p>
+<p>There’s only one safe pointer conversion:</p>
+<ol type="1">
+<li>Converting to <code>intptr_t</code> or <code>uintptr_t</code>.</li>
+<li>Converting to and from <code>void*</code>.</li>
+</ol>
+<p>TWO! Two safe pointer conversions.</p>
+<ol start="3" type="1">
+<li>Converting to and from <code>char*</code>.</li>
+</ol>
+<p>THREE! Three safe conversions!</p>
+<ol start="4" type="1">
+<li>Converting to and from a pointer to a <code>struct</code> and a pointer to its first member, and vice-versa.</li>
+</ol>
+<p>FOUR! Four safe conversions!</p>
+<p>If you cast to a pointer of another type and then access the object it points to, the behavior is undefined due to something called <em>strict aliasing</em>.</p>
+<p>Plain old <em>aliasing</em> refers to the ability to have more than one way to access the same object. The access points are aliases for each other.</p>
+<p><em>Strict aliasing</em> says you are only allowed to access an object via pointers to <em>compatible types</em> to that object.</p>
+<p>For example, this is definitely allowed:</p>
+<div class="sourceCode" id="cb492"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb492-1"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb492-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> a <span class="op">=</span> <span class="dv">1</span><span class="op">;</span></span>
+<span id="cb492-2"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb492-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> <span class="op">*</span>p <span class="op">=</span> <span class="op">&amp;</span>a<span class="op">;</span></span></code></pre></div>
+<p><code>p</code> is a pointer to an <code>int</code>, and it points to a compatible type—namely <code>int</code>—so we’re golden.</p>
+<p>But the following isn’t good because <code>int</code> and <code>float</code> are not compatible types:</p>
+<div class="sourceCode" id="cb493"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb493-1"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb493-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> a <span class="op">=</span> <span class="dv">1</span><span class="op">;</span></span>
+<span id="cb493-2"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb493-2" aria-hidden="true" tabindex="-1"></a><span class="dt">float</span> <span class="op">*</span>p <span class="op">=</span> <span class="op">(</span><span class="dt">float</span> <span class="op">*)&amp;</span>a<span class="op">;</span></span></code></pre></div>
+<p>Here’s a demo program that does some aliasing. It takes a variable <code>v</code> of type <code>int32_t</code> and aliases it to a pointer to a <code>struct words</code>. That <code>struct</code> has two <code>int16_t</code>s in it. These types are incompatible, so we’re in violation of strict aliasing rules. The compiler will assume that these two pointers never point to the same object… but we’re making it so they do. Which is naughty of us.</p>
+<p>Let’s see if we can break something.</p>
+<div class="sourceCode" id="cb494"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb494-1"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb494-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb494-2"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb494-2"></a><span class="pp">#include </span><span class="im">&lt;stdint.h&gt;</span></span>
+<span id="cb494-3"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb494-3"></a></span>
+<span id="cb494-4"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb494-4"></a><span class="kw">struct</span> words <span class="op">{</span></span>
+<span id="cb494-5"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb494-5"></a>    <span class="dt">int16_t</span> v<span class="op">[</span><span class="dv">2</span><span class="op">];</span></span>
+<span id="cb494-6"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb494-6"></a><span class="op">};</span></span>
+<span id="cb494-7"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb494-7"></a></span>
+<span id="cb494-8"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb494-8"></a><span class="dt">void</span> fun<span class="op">(</span><span class="dt">int32_t</span> <span class="op">*</span>pv<span class="op">,</span> <span class="kw">struct</span> words <span class="op">*</span>pw<span class="op">)</span></span>
+<span id="cb494-9"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb494-9"></a><span class="op">{</span></span>
+<span id="cb494-10"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb494-10"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> <span class="dv">5</span><span class="op">;</span> i<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb494-11"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb494-11"></a>        <span class="op">(*</span>pv<span class="op">)++;</span></span>
+<span id="cb494-12"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb494-12"></a></span>
+<span id="cb494-13"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb494-13"></a>        <span class="co">// Print the 32-bit value and the 16-bit values:</span></span>
+<span id="cb494-14"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb494-14"></a></span>
+<span id="cb494-15"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb494-15"></a>        printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%x</span><span class="st">, </span><span class="sc">%x</span><span class="st">-</span><span class="sc">%x\n</span><span class="st">&quot;</span><span class="op">,</span> <span class="op">*</span>pv<span class="op">,</span> pw<span class="op">-&gt;</span>v<span class="op">[</span><span class="dv">1</span><span class="op">],</span> pw<span class="op">-&gt;</span>v<span class="op">[</span><span class="dv">0</span><span class="op">]);</span></span>
+<span id="cb494-16"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb494-16"></a>    <span class="op">}</span></span>
+<span id="cb494-17"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb494-17"></a><span class="op">}</span></span>
+<span id="cb494-18"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb494-18"></a></span>
+<span id="cb494-19"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb494-19"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb494-20"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb494-20"></a><span class="op">{</span></span>
+<span id="cb494-21"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb494-21"></a>    <span class="dt">int32_t</span> v <span class="op">=</span> <span class="bn">0x12345678</span><span class="op">;</span></span>
+<span id="cb494-22"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb494-22"></a></span>
+<span id="cb494-23"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb494-23"></a>    <span class="kw">struct</span> words <span class="op">*</span>pw <span class="op">=</span> <span class="op">(</span><span class="kw">struct</span> words <span class="op">*)&amp;</span>v<span class="op">;</span>  <span class="co">// Violates strict aliasing</span></span>
+<span id="cb494-24"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb494-24"></a></span>
+<span id="cb494-25"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb494-25"></a>    fun<span class="op">(&amp;</span>v<span class="op">,</span> pw<span class="op">);</span></span>
+<span id="cb494-26"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb494-26"></a><span class="op">}</span></span></code></pre></div>
+<p>See how I pass in the two incompatible pointers to <code>fun()</code>? One of the types is <code>int32_t*</code> and the other is <code>struct words*</code>.</p>
+<p>But they both point to the same object: the 32-bit value initialized to <code>0x12345678</code>.</p>
+<p>So if we look at the fields in the <code>struct words</code>, we should see the two 16-bit halves of that number. Right?</p>
+<p>And in the <code>fun()</code> loop, we increment the pointer to the <code>int32_t</code>. That’s it. But since the <code>struct</code> points to that same memory, it, too, should be updated to the same value.</p>
+<p>So let’s run it and get this, with the 32-bit value on the left and the two 16-bit portions on the right. It should match<a href="footnotes.html#fn147" class="footnote-ref" id="fnref147" role="doc-noteref"><sup>147</sup></a>:</p>
+<div class="sourceCode" id="cb495"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb495-1"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb495-1" aria-hidden="true" tabindex="-1"></a>12345679, 1234-5679</span>
+<span id="cb495-2"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb495-2" aria-hidden="true" tabindex="-1"></a>1234567a, 1234-567a</span>
+<span id="cb495-3"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb495-3" aria-hidden="true" tabindex="-1"></a>1234567b, 1234-567b</span>
+<span id="cb495-4"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb495-4" aria-hidden="true" tabindex="-1"></a>1234567c, 1234-567c</span>
+<span id="cb495-5"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb495-5" aria-hidden="true" tabindex="-1"></a>1234567d, 1234-567d</span></code></pre></div>
+<p>and it does… <em>UNTIL TOMORROW!</em></p>
+<p>Let’s try it compiling GCC with <code>-O3</code> and <code>-fstrict-aliasing</code>:</p>
+<div class="sourceCode" id="cb496"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb496-1"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb496-1" aria-hidden="true" tabindex="-1"></a>12345679, 1234-5678</span>
+<span id="cb496-2"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb496-2" aria-hidden="true" tabindex="-1"></a>1234567a, 1234-5679</span>
+<span id="cb496-3"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb496-3" aria-hidden="true" tabindex="-1"></a>1234567b, 1234-567a</span>
+<span id="cb496-4"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb496-4" aria-hidden="true" tabindex="-1"></a>1234567c, 1234-567b</span>
+<span id="cb496-5"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb496-5" aria-hidden="true" tabindex="-1"></a>1234567d, 1234-567c</span></code></pre></div>
+<p>They’re off by one! But they point to the same memory! How could this be? Answer: it’s undefined behavior to alias memory like that. <em>Anything is possible</em>, except not in a good way.</p>
+<p>If your code violates strict aliasing rules, whether it works or not depends on how someone decides to compile it. And that’s a bummer since that’s beyond your control. Unless you’re some kind of omnipotent deity.</p>
+<p>Unlikely, sorry.</p>
+<p>GCC can be forced to not use the strict aliasing rules with <code>-fno-strict-aliasing</code>. Compiling the demo program, above, with <code>-O3</code> and this flag causes the output to be as expected.</p>
+<p>Lastly, <em>type punning</em> is using pointers of different types to look at the same data. Before strict aliasing, this kind of things was fairly common:</p>
+<div class="sourceCode" id="cb497"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb497-1"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb497-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> a <span class="op">=</span> <span class="bn">0x12345678</span><span class="op">;</span></span>
+<span id="cb497-2"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb497-2" aria-hidden="true" tabindex="-1"></a><span class="dt">short</span> b <span class="op">=</span> <span class="op">*((</span><span class="dt">short</span> <span class="op">*)&amp;</span>a<span class="op">);</span>   <span class="co">// Violates strict aliasing</span></span></code></pre></div>
+<p>If you want to do type punning (relatively) safely, see the section on <a href="structs-ii-more-fun-with-structs.html#union-type-punning">Unions and Type Punning</a>.</p>
+<p></p>
+<h2 data-number="23.6" id="ptr_differences"><span class="header-section-number">23.6</span> Pointer Differences</h2>
+<p></p>
+<p>As you know from the section on pointer arithmetic, you can subtract one pointer from another<a href="footnotes.html#fn148" class="footnote-ref" id="fnref148" role="doc-noteref"><sup>148</sup></a> to get the difference between them in count of array elements.</p>
+<p>Now the <em>type of that difference</em> is something that’s up to the implementation, so it could vary from system to system.</p>
+<p></p>
+<p>To be more portable, you can store the result in a variable of type <code>ptrdiff_t</code> defined in <code>&lt;stddef.h&gt;</code>.</p>
+<div class="sourceCode" id="cb498"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb498-1"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb498-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> cats<span class="op">[</span><span class="dv">100</span><span class="op">];</span></span>
+<span id="cb498-2"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb498-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb498-3"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb498-3" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> <span class="op">*</span>f <span class="op">=</span> cats <span class="op">+</span> <span class="dv">20</span><span class="op">;</span></span>
+<span id="cb498-4"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb498-4" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> <span class="op">*</span>g <span class="op">=</span> cats <span class="op">+</span> <span class="dv">60</span><span class="op">;</span></span>
+<span id="cb498-5"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb498-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb498-6"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb498-6" aria-hidden="true" tabindex="-1"></a><span class="dt">ptrdiff_t</span> d <span class="op">=</span> g <span class="op">-</span> f<span class="op">;</span>  <span class="co">// difference is 40</span></span></code></pre></div>
+<p> And you can print it by prefixing the integer format specifier with <code>t</code>:</p>
+<div class="sourceCode" id="cb499"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb499-1"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb499-1" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%td\n</span><span class="st">&quot;</span><span class="op">,</span> d<span class="op">);</span>  <span class="co">// Print decimal: 40</span></span>
+<span id="cb499-2"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb499-2" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%tX\n</span><span class="st">&quot;</span><span class="op">,</span> d<span class="op">);</span>  <span class="co">// Print hex:     28</span></span></code></pre></div>
+<p> </p>
+<h2 data-number="23.7" id="pointers-to-functions"><span class="header-section-number">23.7</span> Pointers to Functions</h2>
+<p></p>
+<p>Functions are just collections of machine instructions in memory, so there’s no reason we can’t get a pointer to the first instruction of the function.</p>
+<p>And then call it.</p>
+<p>This can be useful for passing a pointer to a function into another function as an argument. Then the second one could call whatever was passed in.</p>
+<p>The tricky part with these, though, is that C needs to know the type of the variable that is the pointer to the function.</p>
+<p>And it would really like to know all the details.</p>
+<p>Like “this is a pointer to a function that takes two <code>int</code> arguments and returns <code>void</code>”.</p>
+<p>How do you write all that down so you can declare a variable?</p>
+<p>Well, it turns out it looks very much like a function prototype, except with some extra parentheses:</p>
+<div class="sourceCode" id="cb500"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb500-1"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb500-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Declare p to be a pointer to a function.</span></span>
+<span id="cb500-2"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb500-2" aria-hidden="true" tabindex="-1"></a><span class="co">// This function returns a float, and takes two ints as arguments.</span></span>
+<span id="cb500-3"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb500-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb500-4"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb500-4" aria-hidden="true" tabindex="-1"></a><span class="dt">float</span> <span class="op">(*</span>p<span class="op">)(</span><span class="dt">int</span><span class="op">,</span> <span class="dt">int</span><span class="op">);</span></span></code></pre></div>
+<p>Also notice that you don’t have to give the parameters names. But you can if you want; they’re just ignored.</p>
+<div class="sourceCode" id="cb501"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb501-1"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb501-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Declare p to be a pointer to a function.</span></span>
+<span id="cb501-2"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb501-2" aria-hidden="true" tabindex="-1"></a><span class="co">// This function returns a float, and takes two ints as arguments.</span></span>
+<span id="cb501-3"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb501-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb501-4"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb501-4" aria-hidden="true" tabindex="-1"></a><span class="dt">float</span> <span class="op">(*</span>p<span class="op">)(</span><span class="dt">int</span> a<span class="op">,</span> <span class="dt">int</span> b<span class="op">);</span></span></code></pre></div>
+<p>So now that we know how to declare a variable, how do we know what to assign into it? How do we get the address of a function?</p>
+<p>Turns out there’s a shortcut just like with getting a pointer to an array: you can just refer to the bare function name without parens. (You can put an <code>&amp;</code> in front of this if you like, but it’s unnecessary and not idiomatic.)</p>
+<p>Once you have a pointer to a function, you can call it just by adding parens and an argument list.</p>
+<p>Let’s do a simple example where I effectively make an alias for a function by setting a pointer to it. Then we’ll call it.</p>
+<p>This code prints out <code>3490</code>:</p>
+<div class="sourceCode" id="cb502"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb502-1"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb502-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb502-2"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb502-2"></a></span>
+<span id="cb502-3"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb502-3"></a><span class="dt">void</span> print_int<span class="op">(</span><span class="dt">int</span> n<span class="op">)</span></span>
+<span id="cb502-4"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb502-4"></a><span class="op">{</span></span>
+<span id="cb502-5"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb502-5"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> n<span class="op">);</span></span>
+<span id="cb502-6"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb502-6"></a><span class="op">}</span></span>
+<span id="cb502-7"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb502-7"></a></span>
+<span id="cb502-8"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb502-8"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb502-9"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb502-9"></a><span class="op">{</span></span>
+<span id="cb502-10"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb502-10"></a>    <span class="co">// Assign p to point to print_int:</span></span>
+<span id="cb502-11"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb502-11"></a></span>
+<span id="cb502-12"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb502-12"></a>    <span class="dt">void</span> <span class="op">(*</span>p<span class="op">)(</span><span class="dt">int</span><span class="op">)</span> <span class="op">=</span> print_int<span class="op">;</span></span>
+<span id="cb502-13"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb502-13"></a></span>
+<span id="cb502-14"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb502-14"></a>    p<span class="op">(</span><span class="dv">3490</span><span class="op">);</span>          <span class="co">// Call print_int via the pointer</span></span>
+<span id="cb502-15"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb502-15"></a><span class="op">}</span></span></code></pre></div>
+<p>Notice how the type of <code>p</code> represents the return value and parameter types of <code>print_int</code>. It has to, or else C will complain about incompatible pointer types.</p>
+<p>One more example here shows how we might pass a pointer to a function as an argument to another function.</p>
+<p>We’ll write a function that takes a couple integer arguments, plus a pointer to a function that operates on those two arguments. Then it prints the result.</p>
+<div class="sourceCode" id="cb503"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb503-1"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb503-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb503-2"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb503-2"></a></span>
+<span id="cb503-3"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb503-3"></a><span class="dt">int</span> add<span class="op">(</span><span class="dt">int</span> a<span class="op">,</span> <span class="dt">int</span> b<span class="op">)</span></span>
+<span id="cb503-4"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb503-4"></a><span class="op">{</span></span>
+<span id="cb503-5"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb503-5"></a>    <span class="cf">return</span> a <span class="op">+</span> b<span class="op">;</span></span>
+<span id="cb503-6"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb503-6"></a><span class="op">}</span></span>
+<span id="cb503-7"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb503-7"></a></span>
+<span id="cb503-8"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb503-8"></a><span class="dt">int</span> mult<span class="op">(</span><span class="dt">int</span> a<span class="op">,</span> <span class="dt">int</span> b<span class="op">)</span></span>
+<span id="cb503-9"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb503-9"></a><span class="op">{</span></span>
+<span id="cb503-10"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb503-10"></a>    <span class="cf">return</span> a <span class="op">*</span> b<span class="op">;</span></span>
+<span id="cb503-11"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb503-11"></a><span class="op">}</span></span>
+<span id="cb503-12"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb503-12"></a></span>
+<span id="cb503-13"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb503-13"></a><span class="dt">void</span> print_math<span class="op">(</span><span class="dt">int</span> <span class="op">(*</span>op<span class="op">)(</span><span class="dt">int</span><span class="op">,</span> <span class="dt">int</span><span class="op">),</span> <span class="dt">int</span> x<span class="op">,</span> <span class="dt">int</span> y<span class="op">)</span></span>
+<span id="cb503-14"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb503-14"></a><span class="op">{</span></span>
+<span id="cb503-15"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb503-15"></a>    <span class="dt">int</span> result <span class="op">=</span> op<span class="op">(</span>x<span class="op">,</span> y<span class="op">);</span></span>
+<span id="cb503-16"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb503-16"></a></span>
+<span id="cb503-17"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb503-17"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> result<span class="op">);</span></span>
+<span id="cb503-18"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb503-18"></a><span class="op">}</span></span>
+<span id="cb503-19"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb503-19"></a></span>
+<span id="cb503-20"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb503-20"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb503-21"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb503-21"></a><span class="op">{</span></span>
+<span id="cb503-22"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb503-22"></a>    print_math<span class="op">(</span>add<span class="op">,</span> <span class="dv">5</span><span class="op">,</span> <span class="dv">7</span><span class="op">);</span>   <span class="co">// 12</span></span>
+<span id="cb503-23"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb503-23"></a>    print_math<span class="op">(</span>mult<span class="op">,</span> <span class="dv">5</span><span class="op">,</span> <span class="dv">7</span><span class="op">);</span>  <span class="co">// 35</span></span>
+<span id="cb503-24"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb503-24"></a><span class="op">}</span></span></code></pre></div>
+<p>Take a moment to digest that. The idea here is that we’re going to pass a pointer to a function to <code>print_math()</code>, and it’s going to call that function to do some math.</p>
+<p>This way we can change the behavior of <code>print_math()</code> by passing another function into it. You can see we do that on lines 22-23 when we pass in pointers to functions <code>add</code> and <code>mult</code>, respectively.</p>
+<p>Now, on line 13, I think we can all agree the function signature of <code>print_math()</code> is a sight to behold. And, if you can believe it, this one is actually pretty straight-forward compared to some things you can construct<a href="footnotes.html#fn149" class="footnote-ref" id="fnref149" role="doc-noteref"><sup>149</sup></a>.</p>
+<p>But let’s digest it. Turns out there are only three parameters, but they’re a little hard to see:</p>
+<div class="sourceCode" id="cb504"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb504-1"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb504-1" aria-hidden="true" tabindex="-1"></a><span class="co">//                      op             x      y</span></span>
+<span id="cb504-2"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb504-2" aria-hidden="true" tabindex="-1"></a><span class="co">//              |-----------------|  |---|  |---|</span></span>
+<span id="cb504-3"><a href="pointers-iii-pointers-to-pointers-and-more.html#cb504-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> print_math<span class="op">(</span><span class="dt">int</span> <span class="op">(*</span>op<span class="op">)(</span><span class="dt">int</span><span class="op">,</span> <span class="dt">int</span><span class="op">),</span> <span class="dt">int</span> x<span class="op">,</span> <span class="dt">int</span> y<span class="op">)</span></span></code></pre></div>
+<p>The first, <code>op</code>, is a pointer to a function that takes two <code>int</code>s as arguments and returns an <code>int</code>. This matches the signatures for both <code>add()</code> and <code>mult()</code>.</p>
+<p>The second and third, <code>x</code> and <code>y</code>, are just standard <code>int</code> parameters.</p>
+<p>Slowly and deliberately let your eyes play over the signature while you identify the working parts. One thing that always stands out for me is the sequence <code>(*op)(</code>, the parens and the asterisk. That’s the giveaway it’s a pointer to a function.</p>
+<p>Finally, jump back to the <em>Pointers II</em> chapter for a pointer-to-function <a href="pointers2.html#qsort-example">example using the built-in <code>qsort()</code></a>.</p>
+<p></p>
+<!-- Beej's guide to C
+
+# vim: ts=4:sw=4:nosi:et:tw=72
+-->
+<hr><div style="text-align:center"><span><a href="enumerated-types-enum.html">Prev</a> | </span><a href="index.html">Contents</a><span> | <a href="bitwise-operations.html">Next</a></span></div></body>
+</html>

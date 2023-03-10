@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Beej's Guide to C Programming</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Mono&display=swap" rel="stylesheet"> 
+
+  <!-- BG custom styling -->
+  <style type="text/css">
+  /* Fix for line numbers not visible */
+  pre.numberSource code > span {
+      left: -1em;
+  }
+  pre.numberSource {
+      margin-left: initial;
+  }
+
+  /* Put some space after the section numbers */
+  span.toc-section-number::after {
+      content: "\a0\a0\a0";  /* non-breaking whitespace */
+  }
+
+  /* Hide underlines on code number links */
+  pre > code.sourceCode > span > a:first-child::before {
+      text-decoration: none;
+  }
+
+  /* Color the source blocks */
+  div.sourceCode {
+      background-color: #f0f0f0;
+  }
+
+  /* Fix iOS big text rendering issue */
+  pre > code.sourceCode > span {
+      display: initial;
+  }
+
+
+  /* Color the inline code */
+  code:not(.sourceCode) {
+      background: #f0f0f0;
+      padding-left: 0.2em;
+      padding-right: 0.2em;
+      border-radius: 0.2em;
+  }
+
+  /* Keep code tags from wrapping in tables */
+  tbody code {
+      white-space: nowrap;
+  }
+
+  td {
+      vertical-align: top;
+  }
+
+  body {
+      font-size: 12pt;
+      max-width: 43em;
+  }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<div style="text-align:center"><span><a href="structs.html">Prev</a> | </span><a href="index.html">Contents</a><span> | <a href="typedef-making-new-types.html">Next</a></span></div><hr>
+<h1 data-number="9" id="file-inputoutput"><span class="header-section-number">9</span> File Input/Output</h1>
+<p> We’ve already seen a couple examples of I/O with <code>scanf()</code> and <code>printf()</code> for doing I/O at the console (screen/keyboard).</p>
+<p>But we’ll push those concepts a little farther this chapter.</p>
+<h2 data-number="9.1" id="the-file-data-type"><span class="header-section-number">9.1</span> The <code>FILE*</code> Data Type</h2>
+<p> When we do any kind of I/O in C, we do so through a piece of data that you get in the form of a <code>FILE*</code> type. This <code>FILE*</code> holds all the information needed to communicate with the I/O subsystem about which file you have open, where you are in the file, and so on.</p>
+<p>The spec refers to these as <em>streams</em>, i.e. a stream of data from a file or from any source. I’m going to use “files” and “streams” interchangeably, but really you should think of a “file” as a special case of a “stream”. There are other ways to stream data into a program than just reading from a file.</p>
+<p>We’ll see in a moment how to go from having a filename to getting an open <code>FILE*</code> for it, but first I want to mention three streams that are already open for you and ready for use.</p>
+<p> </p>
+<table>
+<thead>
+<tr class="header">
+<th><code>FILE*</code> name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>stdin</code></td>
+<td>Standard Input, generally the keyboard by default</td>
+</tr>
+<tr class="even">
+<td><code>stdout</code></td>
+<td>Standard Output, generally the screen by default</td>
+</tr>
+<tr class="odd">
+<td><code>stderr</code></td>
+<td>Standard Error, generally the screen by default, as well</td>
+</tr>
+</tbody>
+</table>
+<p>We’ve actually been using these implicitly already, it turns out. For example, these two calls are the same:</p>
+<div class="sourceCode" id="cb138"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb138-1"><a href="file-inputoutput.html#cb138-1" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;Hello, world!</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb138-2"><a href="file-inputoutput.html#cb138-2" aria-hidden="true" tabindex="-1"></a>fprintf<span class="op">(</span>stdout<span class="op">,</span> <span class="st">&quot;Hello, world!</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span>  <span class="co">// printf to a file</span></span></code></pre></div>
+<p>But more on that later.</p>
+<p>Also you’ll notice that both <code>stdout</code> and <code>stderr</code> go to the screen. While this seems at first either like an oversight or redundancy, it actually isn’t. Typical operating systems allow you to <em>redirect</em> the output of either of those into different files, and it can be convenient to be able to separate error messages from regular non-error output.</p>
+<p>For example, in a POSIX shell (like sh, ksh, bash, zsh, etc.) on a Unix-like system, we could run a program and send just the non-error (<code>stdout</code>) output to one file, and all the error (<code>stderr</code>) output to another file.</p>
+<div class="sourceCode" id="cb139"><pre class="sourceCode zsh"><code class="sourceCode zsh"><span id="cb139-1"><a href="file-inputoutput.html#cb139-1" aria-hidden="true" tabindex="-1"></a><span class="ex">./foo</span> <span class="op">&gt;</span> output.txt <span class="dv">2</span><span class="op">&gt;</span> errors.txt   <span class="co"># This command is Unix-specific</span></span></code></pre></div>
+<p>For this reason, you should send serious error messages to <code>stderr</code> instead of <code>stdout</code>. </p>
+<p>More on how to do that later. </p>
+<h2 data-number="9.2" id="reading-text-files"><span class="header-section-number">9.2</span> Reading Text Files</h2>
+<p> Streams are largely categorized two different ways: <em>text</em> and <em>binary</em>.</p>
+<p>Text streams are allowed to do significant translation of the data, most notably translations of newlines to their different representations<a href="footnotes.html#fn74" class="footnote-ref" id="fnref74" role="doc-noteref"><sup>74</sup></a>. Text files are logically a sequence of <em>lines</em> separated by newlines. To be portable, your input data should always end with a newline.</p>
+<p>But the general rule is that if you’re able to edit the file in a regular text editor, it’s a text file. Otherwise, it’s binary. More on binary later.</p>
+<p>So let’s get to work—how do we open a file for reading, and pull data out of it?</p>
+<p>Let’s create a file called <code>hello.txt</code> that has just this in it:</p>
+<div class="sourceCode" id="cb140"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb140-1"><a href="file-inputoutput.html#cb140-1" aria-hidden="true" tabindex="-1"></a>Hello, world!</span></code></pre></div>
+<p>And let’s write a program to open the file, read a character out of it, and then close the file when we’re done. That’s the game plan!</p>
+<p> </p>
+<div class="sourceCode" id="cb141"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb141-1"><a href="file-inputoutput.html#cb141-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb141-2"><a href="file-inputoutput.html#cb141-2"></a></span>
+<span id="cb141-3"><a href="file-inputoutput.html#cb141-3"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb141-4"><a href="file-inputoutput.html#cb141-4"></a><span class="op">{</span></span>
+<span id="cb141-5"><a href="file-inputoutput.html#cb141-5"></a>    <span class="dt">FILE</span> <span class="op">*</span>fp<span class="op">;</span>                      <span class="co">// Variable to represent open file</span></span>
+<span id="cb141-6"><a href="file-inputoutput.html#cb141-6"></a></span>
+<span id="cb141-7"><a href="file-inputoutput.html#cb141-7"></a>    fp <span class="op">=</span> fopen<span class="op">(</span><span class="st">&quot;hello.txt&quot;</span><span class="op">,</span> <span class="st">&quot;r&quot;</span><span class="op">);</span>  <span class="co">// Open file for reading</span></span>
+<span id="cb141-8"><a href="file-inputoutput.html#cb141-8"></a></span>
+<span id="cb141-9"><a href="file-inputoutput.html#cb141-9"></a>    <span class="dt">int</span> c <span class="op">=</span> fgetc<span class="op">(</span>fp<span class="op">);</span>             <span class="co">// Read a single character</span></span>
+<span id="cb141-10"><a href="file-inputoutput.html#cb141-10"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%c\n</span><span class="st">&quot;</span><span class="op">,</span> c<span class="op">);</span>             <span class="co">// Print char to stdout</span></span>
+<span id="cb141-11"><a href="file-inputoutput.html#cb141-11"></a></span>
+<span id="cb141-12"><a href="file-inputoutput.html#cb141-12"></a>    fclose<span class="op">(</span>fp<span class="op">);</span>                    <span class="co">// Close the file when done</span></span>
+<span id="cb141-13"><a href="file-inputoutput.html#cb141-13"></a><span class="op">}</span></span></code></pre></div>
+<p>See how when we opened the file with <code>fopen()</code>, it returned the <code>FILE*</code> to us so we could use it later.</p>
+<p>(I’m leaving it out for brevity, but <code>fopen()</code> will return <code>NULL</code> if something goes wrong, like file-not-found, so you should really error check it!)</p>
+<p>Also notice the <code>"r"</code> that we passed in—this means “open a text stream for reading”. (There are various strings we can pass to <code>fopen()</code> with additional meaning, like writing, or appending, and so on.) </p>
+<p>After that, we used the <code>fgetc()</code> function to get a character from the stream. You might be wondering why I’ve made <code>c</code> an <code>int</code> instead of a <code>char</code>—hold that thought! </p>
+<p>Finally, we close the stream when we’re done with it. All streams are automatically closed when the program exits, but it’s good form and good housekeeping to explicitly close any files yourself when done with them. </p>
+<p>The <code>FILE*</code> keeps track of our position in the file. So subsequent calls to <code>fgetc()</code> would get the next character in the file, and then the next, until the end.</p>
+<p>But that sounds like a pain. Let’s see if we can make it easier. </p>
+<h2 data-number="9.3" id="end-of-file-eof"><span class="header-section-number">9.3</span> End of File: <code>EOF</code></h2>
+<p> There is a special character defined as a macro: <code>EOF</code>. This is what <code>fgetc()</code> will return when the end of the file has been reached and you’ve attempted to read another character.</p>
+<p>How about I share that Fun Fact™, now. Turns out <code>EOF</code> is the reason why <code>fgetc()</code> and functions like it return an <code>int</code> instead of a <code>char</code>. <code>EOF</code> isn’t a character proper, and its value likely falls outside the range of <code>char</code>. Since <code>fgetc()</code> needs to be able to return any byte <strong>and</strong> <code>EOF</code>, it needs to be a wider type that can hold more values. so <code>int</code> it is. But unless you’re comparing the returned value against <code>EOF</code>, you can know, deep down, it’s a <code>char</code>.</p>
+<p>All right! Back to reality! We can use this to read the whole file in a loop.</p>
+<p> </p>
+<div class="sourceCode" id="cb142"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb142-1"><a href="file-inputoutput.html#cb142-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb142-2"><a href="file-inputoutput.html#cb142-2"></a></span>
+<span id="cb142-3"><a href="file-inputoutput.html#cb142-3"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb142-4"><a href="file-inputoutput.html#cb142-4"></a><span class="op">{</span></span>
+<span id="cb142-5"><a href="file-inputoutput.html#cb142-5"></a>    <span class="dt">FILE</span> <span class="op">*</span>fp<span class="op">;</span></span>
+<span id="cb142-6"><a href="file-inputoutput.html#cb142-6"></a>    <span class="dt">int</span> c<span class="op">;</span></span>
+<span id="cb142-7"><a href="file-inputoutput.html#cb142-7"></a></span>
+<span id="cb142-8"><a href="file-inputoutput.html#cb142-8"></a>    fp <span class="op">=</span> fopen<span class="op">(</span><span class="st">&quot;hello.txt&quot;</span><span class="op">,</span> <span class="st">&quot;r&quot;</span><span class="op">);</span></span>
+<span id="cb142-9"><a href="file-inputoutput.html#cb142-9"></a></span>
+<span id="cb142-10"><a href="file-inputoutput.html#cb142-10"></a>    <span class="cf">while</span> <span class="op">((</span>c <span class="op">=</span> fgetc<span class="op">(</span>fp<span class="op">))</span> <span class="op">!=</span> EOF<span class="op">)</span></span>
+<span id="cb142-11"><a href="file-inputoutput.html#cb142-11"></a>        printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%c</span><span class="st">&quot;</span><span class="op">,</span> c<span class="op">);</span></span>
+<span id="cb142-12"><a href="file-inputoutput.html#cb142-12"></a></span>
+<span id="cb142-13"><a href="file-inputoutput.html#cb142-13"></a>    fclose<span class="op">(</span>fp<span class="op">);</span></span>
+<span id="cb142-14"><a href="file-inputoutput.html#cb142-14"></a><span class="op">}</span></span></code></pre></div>
+<p> </p>
+<p>(If line 10 is too weird, just break it down starting with the innermost-nested parens. The first thing we do is assign the result of <code>fgetc()</code> into <code>c</code>, and <em>then</em> we compare <em>that</em> against <code>EOF</code>. We’ve just crammed it into a single line. This might look hard to read, but study it—it’s idiomatic C.) </p>
+<p>And running this, we see:</p>
+<div class="sourceCode" id="cb143"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb143-1"><a href="file-inputoutput.html#cb143-1" aria-hidden="true" tabindex="-1"></a>Hello, world!</span></code></pre></div>
+<p>But still, we’re operating a character at a time, and lots of text files make more sense at the line level. Let’s switch to that. </p>
+<h3 data-number="9.3.1" id="reading-a-line-at-a-time"><span class="header-section-number">9.3.1</span> Reading a Line at a Time</h3>
+<p> So how can we get an entire line at once? <code>fgets()</code> to the rescue! For arguments, it takes a pointer to a <code>char</code> buffer to hold bytes, a maximum number of bytes to read, and a <code>FILE*</code> to read from. It returns <code>NULL</code> on end-of-file or error. <code>fgets()</code> is even nice enough to NUL-terminate the string when its done<a href="footnotes.html#fn75" class="footnote-ref" id="fnref75" role="doc-noteref"><sup>75</sup></a>.</p>
+<p>Let’s do a similar loop as before, except let’s have a multiline file and read it in a line at a time.</p>
+<p>Here’s a file <code>quote.txt</code>:</p>
+<div class="sourceCode" id="cb144"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb144-1"><a href="file-inputoutput.html#cb144-1" aria-hidden="true" tabindex="-1"></a>A wise man can learn more from</span>
+<span id="cb144-2"><a href="file-inputoutput.html#cb144-2" aria-hidden="true" tabindex="-1"></a>a foolish question than a fool</span>
+<span id="cb144-3"><a href="file-inputoutput.html#cb144-3" aria-hidden="true" tabindex="-1"></a>can learn from a wise answer.</span>
+<span id="cb144-4"><a href="file-inputoutput.html#cb144-4" aria-hidden="true" tabindex="-1"></a>                  --Bruce Lee</span></code></pre></div>
+<p>And here’s some code that reads that file a line at a time and prints out a line number before each one:</p>
+<p></p>
+<div class="sourceCode" id="cb145"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb145-1"><a href="file-inputoutput.html#cb145-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb145-2"><a href="file-inputoutput.html#cb145-2"></a></span>
+<span id="cb145-3"><a href="file-inputoutput.html#cb145-3"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb145-4"><a href="file-inputoutput.html#cb145-4"></a><span class="op">{</span></span>
+<span id="cb145-5"><a href="file-inputoutput.html#cb145-5"></a>    <span class="dt">FILE</span> <span class="op">*</span>fp<span class="op">;</span></span>
+<span id="cb145-6"><a href="file-inputoutput.html#cb145-6"></a>    <span class="dt">char</span> s<span class="op">[</span><span class="dv">1024</span><span class="op">];</span>  <span class="co">// Big enough for any line this program will encounter</span></span>
+<span id="cb145-7"><a href="file-inputoutput.html#cb145-7"></a>    <span class="dt">int</span> linecount <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb145-8"><a href="file-inputoutput.html#cb145-8"></a></span>
+<span id="cb145-9"><a href="file-inputoutput.html#cb145-9"></a>    fp <span class="op">=</span> fopen<span class="op">(</span><span class="st">&quot;quote.txt&quot;</span><span class="op">,</span> <span class="st">&quot;r&quot;</span><span class="op">);</span></span>
+<span id="cb145-10"><a href="file-inputoutput.html#cb145-10"></a></span>
+<span id="cb145-11"><a href="file-inputoutput.html#cb145-11"></a>    <span class="cf">while</span> <span class="op">(</span>fgets<span class="op">(</span>s<span class="op">,</span> <span class="kw">sizeof</span> s<span class="op">,</span> fp<span class="op">)</span> <span class="op">!=</span> NULL<span class="op">)</span> </span>
+<span id="cb145-12"><a href="file-inputoutput.html#cb145-12"></a>        printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d</span><span class="st">: </span><span class="sc">%s</span><span class="st">&quot;</span><span class="op">,</span> <span class="op">++</span>linecount<span class="op">,</span> s<span class="op">);</span></span>
+<span id="cb145-13"><a href="file-inputoutput.html#cb145-13"></a></span>
+<span id="cb145-14"><a href="file-inputoutput.html#cb145-14"></a>    fclose<span class="op">(</span>fp<span class="op">);</span></span>
+<span id="cb145-15"><a href="file-inputoutput.html#cb145-15"></a><span class="op">}</span></span></code></pre></div>
+<p></p>
+<p>Which gives the output:</p>
+<div class="sourceCode" id="cb146"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb146-1"><a href="file-inputoutput.html#cb146-1" aria-hidden="true" tabindex="-1"></a>1: A wise man can learn more from</span>
+<span id="cb146-2"><a href="file-inputoutput.html#cb146-2" aria-hidden="true" tabindex="-1"></a>2: a foolish question than a fool</span>
+<span id="cb146-3"><a href="file-inputoutput.html#cb146-3" aria-hidden="true" tabindex="-1"></a>3: can learn from a wise answer.</span>
+<span id="cb146-4"><a href="file-inputoutput.html#cb146-4" aria-hidden="true" tabindex="-1"></a>4:                   --Bruce Lee</span></code></pre></div>
+<p></p>
+<h2 data-number="9.4" id="formatted-input"><span class="header-section-number">9.4</span> Formatted Input</h2>
+<p> You know how you can get formatted output with <code>printf()</code> (and, thus, <code>fprintf()</code> like we’ll see, below)?</p>
+<p> You can do the same thing with <code>fscanf()</code>.</p>
+<p>Let’s have a file with a series of data records in it. In this case, whales, with name, length in meters, and weight in tonnes. <code>whales.txt</code>:</p>
+<div class="sourceCode" id="cb147"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb147-1"><a href="file-inputoutput.html#cb147-1" aria-hidden="true" tabindex="-1"></a>blue 29.9 173</span>
+<span id="cb147-2"><a href="file-inputoutput.html#cb147-2" aria-hidden="true" tabindex="-1"></a>right 20.7 135</span>
+<span id="cb147-3"><a href="file-inputoutput.html#cb147-3" aria-hidden="true" tabindex="-1"></a>gray 14.9 41</span>
+<span id="cb147-4"><a href="file-inputoutput.html#cb147-4" aria-hidden="true" tabindex="-1"></a>humpback 16.0 30</span></code></pre></div>
+<p>Yes, we could read these with <code>fgets()</code> and then parse the string with <code>sscanf()</code> (and in some ways that’s more resilient against corrupted files), but in this case, let’s just use <code>fscanf()</code> and pull it in directly.</p>
+<p>The <code>fscanf()</code> function skips leading whitespace when reading, and returns <code>EOF</code> on end-of-file or error.</p>
+<div class="sourceCode" id="cb148"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb148-1"><a href="file-inputoutput.html#cb148-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb148-2"><a href="file-inputoutput.html#cb148-2"></a></span>
+<span id="cb148-3"><a href="file-inputoutput.html#cb148-3"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb148-4"><a href="file-inputoutput.html#cb148-4"></a><span class="op">{</span></span>
+<span id="cb148-5"><a href="file-inputoutput.html#cb148-5"></a>    <span class="dt">FILE</span> <span class="op">*</span>fp<span class="op">;</span></span>
+<span id="cb148-6"><a href="file-inputoutput.html#cb148-6"></a>    <span class="dt">char</span> name<span class="op">[</span><span class="dv">1024</span><span class="op">];</span>  <span class="co">// Big enough for any line this program will encounter</span></span>
+<span id="cb148-7"><a href="file-inputoutput.html#cb148-7"></a>    <span class="dt">float</span> length<span class="op">;</span></span>
+<span id="cb148-8"><a href="file-inputoutput.html#cb148-8"></a>    <span class="dt">int</span> mass<span class="op">;</span></span>
+<span id="cb148-9"><a href="file-inputoutput.html#cb148-9"></a></span>
+<span id="cb148-10"><a href="file-inputoutput.html#cb148-10"></a>    fp <span class="op">=</span> fopen<span class="op">(</span><span class="st">&quot;whales.txt&quot;</span><span class="op">,</span> <span class="st">&quot;r&quot;</span><span class="op">);</span></span>
+<span id="cb148-11"><a href="file-inputoutput.html#cb148-11"></a></span>
+<span id="cb148-12"><a href="file-inputoutput.html#cb148-12"></a>    <span class="cf">while</span> <span class="op">(</span>fscanf<span class="op">(</span>fp<span class="op">,</span> <span class="st">&quot;</span><span class="sc">%s</span><span class="st"> </span><span class="sc">%f</span><span class="st"> </span><span class="sc">%d</span><span class="st">&quot;</span><span class="op">,</span> name<span class="op">,</span> <span class="op">&amp;</span>length<span class="op">,</span> <span class="op">&amp;</span>mass<span class="op">)</span> <span class="op">!=</span> EOF<span class="op">)</span></span>
+<span id="cb148-13"><a href="file-inputoutput.html#cb148-13"></a>        printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%s</span><span class="st"> whale, </span><span class="sc">%d</span><span class="st"> tonnes, </span><span class="sc">%.1f</span><span class="st"> meters</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">,</span> name<span class="op">,</span> mass<span class="op">,</span> length<span class="op">);</span></span>
+<span id="cb148-14"><a href="file-inputoutput.html#cb148-14"></a></span>
+<span id="cb148-15"><a href="file-inputoutput.html#cb148-15"></a>    fclose<span class="op">(</span>fp<span class="op">);</span></span>
+<span id="cb148-16"><a href="file-inputoutput.html#cb148-16"></a><span class="op">}</span></span></code></pre></div>
+<p></p>
+<p>Which gives the result:</p>
+<div class="sourceCode" id="cb149"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb149-1"><a href="file-inputoutput.html#cb149-1" aria-hidden="true" tabindex="-1"></a>blue whale, 173 tonnes, 29.9 meters</span>
+<span id="cb149-2"><a href="file-inputoutput.html#cb149-2" aria-hidden="true" tabindex="-1"></a>right whale, 135 tonnes, 20.7 meters</span>
+<span id="cb149-3"><a href="file-inputoutput.html#cb149-3" aria-hidden="true" tabindex="-1"></a>gray whale, 41 tonnes, 14.9 meters</span>
+<span id="cb149-4"><a href="file-inputoutput.html#cb149-4" aria-hidden="true" tabindex="-1"></a>humpback whale, 30 tonnes, 16.0 meters</span></code></pre></div>
+<p></p>
+<h2 data-number="9.5" id="writing-text-files"><span class="header-section-number">9.5</span> Writing Text Files</h2>
+<p> In much the same way we can use <code>fgetc()</code>, <code>fgets()</code>, and <code>fscanf()</code> to read text streams, we can use <code>fputc()</code>, <code>fputs()</code>, and <code>fprintf()</code> to write text streams.</p>
+<p>To do so, we have to <code>fopen()</code> the file in write mode by passing <code>"w"</code> as the second argument. Opening an existing file in <code>"w"</code> mode will instantly truncate that file to 0 bytes for a full overwrite.</p>
+<p>We’ll put together a simple program that outputs a file <code>output.txt</code> using a variety of output functions.</p>
+<div class="sourceCode" id="cb150"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb150-1"><a href="file-inputoutput.html#cb150-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb150-2"><a href="file-inputoutput.html#cb150-2"></a></span>
+<span id="cb150-3"><a href="file-inputoutput.html#cb150-3"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb150-4"><a href="file-inputoutput.html#cb150-4"></a><span class="op">{</span></span>
+<span id="cb150-5"><a href="file-inputoutput.html#cb150-5"></a>    <span class="dt">FILE</span> <span class="op">*</span>fp<span class="op">;</span></span>
+<span id="cb150-6"><a href="file-inputoutput.html#cb150-6"></a>    <span class="dt">int</span> x <span class="op">=</span> <span class="dv">32</span><span class="op">;</span></span>
+<span id="cb150-7"><a href="file-inputoutput.html#cb150-7"></a></span>
+<span id="cb150-8"><a href="file-inputoutput.html#cb150-8"></a>    fp <span class="op">=</span> fopen<span class="op">(</span><span class="st">&quot;output.txt&quot;</span><span class="op">,</span> <span class="st">&quot;w&quot;</span><span class="op">);</span></span>
+<span id="cb150-9"><a href="file-inputoutput.html#cb150-9"></a></span>
+<span id="cb150-10"><a href="file-inputoutput.html#cb150-10"></a>    fputc<span class="op">(</span><span class="ch">&#39;B&#39;</span><span class="op">,</span> fp<span class="op">);</span></span>
+<span id="cb150-11"><a href="file-inputoutput.html#cb150-11"></a>    fputc<span class="op">(</span><span class="ch">&#39;</span><span class="sc">\n</span><span class="ch">&#39;</span><span class="op">,</span> fp<span class="op">);</span>   <span class="co">// newline</span></span>
+<span id="cb150-12"><a href="file-inputoutput.html#cb150-12"></a>    fprintf<span class="op">(</span>fp<span class="op">,</span> <span class="st">&quot;x = </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> x<span class="op">);</span></span>
+<span id="cb150-13"><a href="file-inputoutput.html#cb150-13"></a>    fputs<span class="op">(</span><span class="st">&quot;Hello, world!</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">,</span> fp<span class="op">);</span></span>
+<span id="cb150-14"><a href="file-inputoutput.html#cb150-14"></a></span>
+<span id="cb150-15"><a href="file-inputoutput.html#cb150-15"></a>    fclose<span class="op">(</span>fp<span class="op">);</span></span>
+<span id="cb150-16"><a href="file-inputoutput.html#cb150-16"></a><span class="op">}</span></span></code></pre></div>
+<p> </p>
+<p>And this produces a file, <code>output.txt</code>, with these contents:</p>
+<div class="sourceCode" id="cb151"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb151-1"><a href="file-inputoutput.html#cb151-1" aria-hidden="true" tabindex="-1"></a>B</span>
+<span id="cb151-2"><a href="file-inputoutput.html#cb151-2" aria-hidden="true" tabindex="-1"></a>x = 32</span>
+<span id="cb151-3"><a href="file-inputoutput.html#cb151-3" aria-hidden="true" tabindex="-1"></a>Hello, world!</span></code></pre></div>
+<p>Fun fact: since <code>stdout</code> is a file, you could replace line 8 with:</p>
+<div class="sourceCode" id="cb152"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb152-1"><a href="file-inputoutput.html#cb152-1" aria-hidden="true" tabindex="-1"></a>fp <span class="op">=</span> stdout<span class="op">;</span></span></code></pre></div>
+<p>and the program would have outputted to the console instead of to a file. Try it! </p>
+<h2 data-number="9.6" id="binary-file-io"><span class="header-section-number">9.6</span> Binary File I/O</h2>
+<p> So far we’ve just been talking text files. But there’s that other beast we mentioned early on called <em>binary</em> files, or binary streams.</p>
+<p>These work very similarly to text files, except the I/O subsystem doesn’t perform any translations on the data like it might with a text file. With binary files, you get a raw stream of bytes, and that’s all.</p>
+<p>The big difference in opening the file is that you have to add a <code>"b"</code> to the mode. That is, to read a binary file, open it in <code>"rb"</code> mode. To write a file, open it in <code>"wb"</code> mode.</p>
+<p>Because it’s streams of bytes, and streams of bytes can contain NUL characters, and the NUL character is the end-of-string marker in C, it’s rare that people use the <code>fprintf()</code>-and-friends functions to operate on binary files.</p>
+<p> Instead the most common functions are <code>fread()</code> and <code>fwrite()</code>. The functions read and write a specified number of bytes to the stream.</p>
+<p>To demo, we’ll write a couple programs. One will write a sequence of byte values to disk all at once. And the second program will read a byte at a time and print them out<a href="footnotes.html#fn76" class="footnote-ref" id="fnref76" role="doc-noteref"><sup>76</sup></a>.</p>
+<div class="sourceCode" id="cb153"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb153-1"><a href="file-inputoutput.html#cb153-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb153-2"><a href="file-inputoutput.html#cb153-2"></a></span>
+<span id="cb153-3"><a href="file-inputoutput.html#cb153-3"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb153-4"><a href="file-inputoutput.html#cb153-4"></a><span class="op">{</span></span>
+<span id="cb153-5"><a href="file-inputoutput.html#cb153-5"></a>    <span class="dt">FILE</span> <span class="op">*</span>fp<span class="op">;</span></span>
+<span id="cb153-6"><a href="file-inputoutput.html#cb153-6"></a>    <span class="dt">unsigned</span> <span class="dt">char</span> bytes<span class="op">[</span><span class="dv">6</span><span class="op">]</span> <span class="op">=</span> <span class="op">{</span><span class="dv">5</span><span class="op">,</span> <span class="dv">37</span><span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="dv">88</span><span class="op">,</span> <span class="dv">255</span><span class="op">,</span> <span class="dv">12</span><span class="op">};</span></span>
+<span id="cb153-7"><a href="file-inputoutput.html#cb153-7"></a></span>
+<span id="cb153-8"><a href="file-inputoutput.html#cb153-8"></a>    fp <span class="op">=</span> fopen<span class="op">(</span><span class="st">&quot;output.bin&quot;</span><span class="op">,</span> <span class="st">&quot;wb&quot;</span><span class="op">);</span>  <span class="co">// wb mode for &quot;write binary&quot;!</span></span>
+<span id="cb153-9"><a href="file-inputoutput.html#cb153-9"></a></span>
+<span id="cb153-10"><a href="file-inputoutput.html#cb153-10"></a>    <span class="co">// In the call to fwrite, the arguments are:</span></span>
+<span id="cb153-11"><a href="file-inputoutput.html#cb153-11"></a>    <span class="co">//</span></span>
+<span id="cb153-12"><a href="file-inputoutput.html#cb153-12"></a>    <span class="co">// * Pointer to data to write</span></span>
+<span id="cb153-13"><a href="file-inputoutput.html#cb153-13"></a>    <span class="co">// * Size of each &quot;piece&quot; of data</span></span>
+<span id="cb153-14"><a href="file-inputoutput.html#cb153-14"></a>    <span class="co">// * Count of each &quot;piece&quot; of data</span></span>
+<span id="cb153-15"><a href="file-inputoutput.html#cb153-15"></a>    <span class="co">// * FILE*</span></span>
+<span id="cb153-16"><a href="file-inputoutput.html#cb153-16"></a></span>
+<span id="cb153-17"><a href="file-inputoutput.html#cb153-17"></a>    fwrite<span class="op">(</span>bytes<span class="op">,</span> <span class="kw">sizeof</span><span class="op">(</span><span class="dt">char</span><span class="op">),</span> <span class="dv">6</span><span class="op">,</span> fp<span class="op">);</span></span>
+<span id="cb153-18"><a href="file-inputoutput.html#cb153-18"></a></span>
+<span id="cb153-19"><a href="file-inputoutput.html#cb153-19"></a>    fclose<span class="op">(</span>fp<span class="op">);</span></span>
+<span id="cb153-20"><a href="file-inputoutput.html#cb153-20"></a><span class="op">}</span></span></code></pre></div>
+<p></p>
+<p>Those two middle arguments to <code>fwrite()</code> are pretty odd. But basically what we want to tell the function is, “We have items that are <em>this</em> big, and we want to write <em>that</em> many of them.” This makes it convenient if you have a record of a fixed length, and you have a bunch of them in an array. You can just tell it the size of one record and how many to write.</p>
+<p>In the example above, we tell it each record is the size of a <code>char</code>, and we have 6 of them.</p>
+<p>Running the program gives us a file <code>output.bin</code>, but opening it in a text editor doesn’t show anything friendly! It’s binary data—not text. And random binary data I just made up, at that!</p>
+<p>If I run it through a <a href="https://en.wikipedia.org/wiki/Hex_dump">hex dump</a><a href="footnotes.html#fn77" class="footnote-ref" id="fnref77" role="doc-noteref"><sup>77</sup></a> program, we can see the output as bytes:</p>
+<div class="sourceCode" id="cb154"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb154-1"><a href="file-inputoutput.html#cb154-1" aria-hidden="true" tabindex="-1"></a>05 25 00 58 ff 0c</span></code></pre></div>
+<p>And those values in hex do match up to the values (in decimal) that we wrote out.</p>
+<p>But now let’s try to read them back in with a different program. This one will open the file for binary reading (<code>"rb"</code> mode) and will read the bytes one at a time in a loop.</p>
+<p> <code>fread()</code> has the neat feature where it returns the number of bytes read, or <code>0</code> on EOF. So we can loop until we see that, printing numbers as we go.</p>
+<div class="sourceCode" id="cb155"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb155-1"><a href="file-inputoutput.html#cb155-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb155-2"><a href="file-inputoutput.html#cb155-2"></a></span>
+<span id="cb155-3"><a href="file-inputoutput.html#cb155-3"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb155-4"><a href="file-inputoutput.html#cb155-4"></a><span class="op">{</span></span>
+<span id="cb155-5"><a href="file-inputoutput.html#cb155-5"></a>    <span class="dt">FILE</span> <span class="op">*</span>fp<span class="op">;</span></span>
+<span id="cb155-6"><a href="file-inputoutput.html#cb155-6"></a>    <span class="dt">unsigned</span> <span class="dt">char</span> c<span class="op">;</span></span>
+<span id="cb155-7"><a href="file-inputoutput.html#cb155-7"></a></span>
+<span id="cb155-8"><a href="file-inputoutput.html#cb155-8"></a>    fp <span class="op">=</span> fopen<span class="op">(</span><span class="st">&quot;output.bin&quot;</span><span class="op">,</span> <span class="st">&quot;rb&quot;</span><span class="op">);</span> <span class="co">// rb for &quot;read binary&quot;!</span></span>
+<span id="cb155-9"><a href="file-inputoutput.html#cb155-9"></a></span>
+<span id="cb155-10"><a href="file-inputoutput.html#cb155-10"></a>    <span class="cf">while</span> <span class="op">(</span>fread<span class="op">(&amp;</span>c<span class="op">,</span> <span class="kw">sizeof</span><span class="op">(</span><span class="dt">char</span><span class="op">),</span> <span class="dv">1</span><span class="op">,</span> fp<span class="op">)</span> <span class="op">&gt;</span> <span class="dv">0</span><span class="op">)</span></span>
+<span id="cb155-11"><a href="file-inputoutput.html#cb155-11"></a>        printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> c<span class="op">);</span></span>
+<span id="cb155-12"><a href="file-inputoutput.html#cb155-12"></a><span class="op">}</span></span></code></pre></div>
+<p></p>
+<p>And, running it, we see our original numbers!</p>
+<div class="sourceCode" id="cb156"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb156-1"><a href="file-inputoutput.html#cb156-1" aria-hidden="true" tabindex="-1"></a>5</span>
+<span id="cb156-2"><a href="file-inputoutput.html#cb156-2" aria-hidden="true" tabindex="-1"></a>37</span>
+<span id="cb156-3"><a href="file-inputoutput.html#cb156-3" aria-hidden="true" tabindex="-1"></a>0</span>
+<span id="cb156-4"><a href="file-inputoutput.html#cb156-4" aria-hidden="true" tabindex="-1"></a>88</span>
+<span id="cb156-5"><a href="file-inputoutput.html#cb156-5" aria-hidden="true" tabindex="-1"></a>255</span>
+<span id="cb156-6"><a href="file-inputoutput.html#cb156-6" aria-hidden="true" tabindex="-1"></a>12</span></code></pre></div>
+<p>Woo hoo! </p>
+<h3 data-number="9.6.1" id="struct-and-number-caveats"><span class="header-section-number">9.6.1</span> <code>struct</code> and Number Caveats</h3>
+<p> As we saw in the <code>struct</code>s section, the compiler is free to add padding to a <code>struct</code> as it sees fit. And different compilers might do this differently. And the same compiler on different architectures could do it differently. And the same compiler on the same architectures could do it differently.</p>
+<p>What I’m getting at is this: it’s not portable to just <code>fwrite()</code> an entire <code>struct</code> out to a file when you don’t know where the padding will end up. </p>
+<p>How do we fix this? Hold that thought—we’ll look at some ways to do this after looking at another related problem.</p>
+<p> Numbers!</p>
+<p>Turns out all architectures don’t represent numbers in memory the same way.</p>
+<p>Let’s look at a simple <code>fwrite()</code> of a 2-byte number. We’ll write it in hex so each byte is clear. The most significant byte will have the value <code>0x12</code> and the least significant will have the value <code>0x34</code>.</p>
+<div class="sourceCode" id="cb157"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb157-1"><a href="file-inputoutput.html#cb157-1" aria-hidden="true" tabindex="-1"></a><span class="dt">unsigned</span> <span class="dt">short</span> v <span class="op">=</span> <span class="bn">0x1234</span><span class="op">;</span>  <span class="co">// Two bytes, 0x12 and 0x34</span></span>
+<span id="cb157-2"><a href="file-inputoutput.html#cb157-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb157-3"><a href="file-inputoutput.html#cb157-3" aria-hidden="true" tabindex="-1"></a>fwrite<span class="op">(&amp;</span>v<span class="op">,</span> <span class="kw">sizeof</span> v<span class="op">,</span> <span class="dv">1</span><span class="op">,</span> fp<span class="op">);</span></span></code></pre></div>
+<p>What ends up in the stream?</p>
+<p>Well, it seems like it should be <code>0x12</code> followed by <code>0x34</code>, right?</p>
+<p>But if I run this on my machine and hex dump the result, I get:</p>
+<div class="sourceCode" id="cb158"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb158-1"><a href="file-inputoutput.html#cb158-1" aria-hidden="true" tabindex="-1"></a>34 12</span></code></pre></div>
+<p>They’re reversed! What gives?</p>
+<p>This has something to do with what’s called the <a href="https://en.wikipedia.org/wiki/Endianess"><em>endianess</em></a><a href="footnotes.html#fn78" class="footnote-ref" id="fnref78" role="doc-noteref"><sup>78</sup></a> of the architecture. Some write the most significant bytes first, and some the least significant bytes first.</p>
+<p>This means that if you write a multibyte number out straight from memory, you can’t do it in a portable way<a href="footnotes.html#fn79" class="footnote-ref" id="fnref79" role="doc-noteref"><sup>79</sup></a>.</p>
+<p>A similar problem exists with floating point. Most systems use the same format for their floating point numbers, but some do not. No guarantees!</p>
+<p> So… how can we fix all these problems with numbers and <code>struct</code>s to get our data written in a portable way?</p>
+<p>The summary is to <em>serialize</em> the data, which is a general term that means to take all the data and write it out in a format that you control, that is well-known, and programmable to work the same way on all platforms.</p>
+<p>As you might imagine, this is a solved problem. There are a bunch of serialization libraries you can take advantage of, such as Google’s <a href="https://en.wikipedia.org/wiki/Protocol_buffers"><em>protocol buffers</em></a><a href="footnotes.html#fn80" class="footnote-ref" id="fnref80" role="doc-noteref"><sup>80</sup></a>, out there and ready to use. They will take care of all the gritty details for you, and even will allow data from your C programs to interoperate with other languages that support the same serialization methods.</p>
+<p>Do yourself and everyone a favor! Serialize your binary data when you write it to a stream! This will keep things nice and portable, even if you transfer data files from one architecture to another. </p>
+<!-- Beej's guide to C
+
+# vim: ts=4:sw=4:nosi:et:tw=72
+-->
+<hr><div style="text-align:center"><span><a href="structs.html">Prev</a> | </span><a href="index.html">Contents</a><span> | <a href="typedef-making-new-types.html">Next</a></span></div></body>
+</html>

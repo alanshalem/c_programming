@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Beej's Guide to C Programming</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Mono&display=swap" rel="stylesheet"> 
+
+  <!-- BG custom styling -->
+  <style type="text/css">
+  /* Fix for line numbers not visible */
+  pre.numberSource code > span {
+      left: -1em;
+  }
+  pre.numberSource {
+      margin-left: initial;
+  }
+
+  /* Put some space after the section numbers */
+  span.toc-section-number::after {
+      content: "\a0\a0\a0";  /* non-breaking whitespace */
+  }
+
+  /* Hide underlines on code number links */
+  pre > code.sourceCode > span > a:first-child::before {
+      text-decoration: none;
+  }
+
+  /* Color the source blocks */
+  div.sourceCode {
+      background-color: #f0f0f0;
+  }
+
+  /* Fix iOS big text rendering issue */
+  pre > code.sourceCode > span {
+      display: initial;
+  }
+
+
+  /* Color the inline code */
+  code:not(.sourceCode) {
+      background: #f0f0f0;
+      padding-left: 0.2em;
+      padding-right: 0.2em;
+      border-radius: 0.2em;
+  }
+
+  /* Keep code tags from wrapping in tables */
+  tbody code {
+      white-space: nowrap;
+  }
+
+  td {
+      vertical-align: top;
+  }
+
+  body {
+      font-size: 12pt;
+      max-width: 43em;
+  }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<div style="text-align:center"><span><a href="types-ii-way-more-types.html">Prev</a> | </span><a href="index.html">Contents</a><span> | <a href="types-iv-qualifiers-and-specifiers.html">Next</a></span></div><hr>
+<h1 data-number="15" id="types-iii-conversions"><span class="header-section-number">15</span> Types III: Conversions</h1>
+<p></p>
+<p>In this chapter, we want to talk all about converting from one type to another. C has a variety of ways of doing this, and some might be a little different that you’re used to in other languages.</p>
+<p>Before we talk about how to make conversions happen, let’s talk about how they work when they <em>do</em> happen.</p>
+<h2 data-number="15.1" id="string-conversions"><span class="header-section-number">15.1</span> String Conversions</h2>
+<p></p>
+<p>Unlike many languages, C doesn’t do string-to-number (and vice-versa) conversions in quite as streamlined a manner as it does numeric conversions.</p>
+<p>For these, we’ll have to call functions to do the dirty work.</p>
+<h3 data-number="15.1.1" id="numeric-value-to-string"><span class="header-section-number">15.1.1</span> Numeric Value to String</h3>
+<p>When we want to convert a number to a string, we can use either <code>sprintf()</code> (pronounced <em>SPRINT-f</em>) or <code>snprintf()</code> (<em>s-n-print-f</em>)<a href="footnotes.html#fn105" class="footnote-ref" id="fnref105" role="doc-noteref"><sup>105</sup></a></p>
+<p>These basically work like <code>printf()</code>, except they output to a string instead, and you can print that string later, or whatever.</p>
+<p>For example, turning part of the value π into a string:</p>
+<div class="sourceCode" id="cb238"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb238-1"><a href="types-iii-conversions.html#cb238-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb238-2"><a href="types-iii-conversions.html#cb238-2"></a></span>
+<span id="cb238-3"><a href="types-iii-conversions.html#cb238-3"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb238-4"><a href="types-iii-conversions.html#cb238-4"></a><span class="op">{</span></span>
+<span id="cb238-5"><a href="types-iii-conversions.html#cb238-5"></a>    <span class="dt">char</span> s<span class="op">[</span><span class="dv">10</span><span class="op">];</span></span>
+<span id="cb238-6"><a href="types-iii-conversions.html#cb238-6"></a>    <span class="dt">float</span> f <span class="op">=</span> <span class="fl">3.14159</span><span class="op">;</span></span>
+<span id="cb238-7"><a href="types-iii-conversions.html#cb238-7"></a></span>
+<span id="cb238-8"><a href="types-iii-conversions.html#cb238-8"></a>    <span class="co">// Convert &quot;f&quot; to string, storing in &quot;s&quot;, writing at most 10 characters</span></span>
+<span id="cb238-9"><a href="types-iii-conversions.html#cb238-9"></a>    <span class="co">// including the NUL terminator</span></span>
+<span id="cb238-10"><a href="types-iii-conversions.html#cb238-10"></a></span>
+<span id="cb238-11"><a href="types-iii-conversions.html#cb238-11"></a>    snprintf<span class="op">(</span>s<span class="op">,</span> <span class="dv">10</span><span class="op">,</span> <span class="st">&quot;</span><span class="sc">%f</span><span class="st">&quot;</span><span class="op">,</span> f<span class="op">);</span></span>
+<span id="cb238-12"><a href="types-iii-conversions.html#cb238-12"></a></span>
+<span id="cb238-13"><a href="types-iii-conversions.html#cb238-13"></a>    printf<span class="op">(</span><span class="st">&quot;String value: </span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> s<span class="op">);</span>  <span class="co">// String value: 3.141590</span></span>
+<span id="cb238-14"><a href="types-iii-conversions.html#cb238-14"></a><span class="op">}</span></span></code></pre></div>
+<p>So you can use <code>%d</code> or <code>%u</code> like you’re used to for integers.</p>
+<h3 data-number="15.1.2" id="string-to-numeric-value"><span class="header-section-number">15.1.2</span> String to Numeric Value</h3>
+<p>There are a couple families of functions to do this in C. We’ll call these the <code>atoi</code> (pronounced <em>a-to-i</em>) family and the <code>strtol</code> (<em>stir-to-long</em>) family.</p>
+<p>For basic conversion from a string to a number, try the <code>atoi</code> functions from <code>&lt;stdlib.h&gt;</code>. These have bad error-handling characteristics (including undefined behavior if you pass in a bad string), so use them carefully.</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Function</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>atoi</code></td>
+<td style="text-align: left;">String to <code>int</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>atof</code></td>
+<td style="text-align: left;">String to <code>float</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>atol</code></td>
+<td style="text-align: left;">String to <code>long int</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>atoll</code></td>
+<td style="text-align: left;">String to <code>long long int</code></td>
+</tr>
+</tbody>
+</table>
+<p>Though the spec doesn’t cop to it, the <code>a</code> at the beginning of the function stands for <a href="https://en.wikipedia.org/wiki/ASCII">ASCII</a><a href="footnotes.html#fn106" class="footnote-ref" id="fnref106" role="doc-noteref"><sup>106</sup></a>, so really <code>atoi()</code> is “ASCII-to-integer”, but saying so today is a bit ASCII-centric.</p>
+<p>Here’s an example converting a string to a <code>float</code>:</p>
+<div class="sourceCode" id="cb239"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb239-1"><a href="types-iii-conversions.html#cb239-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb239-2"><a href="types-iii-conversions.html#cb239-2"></a><span class="pp">#include </span><span class="im">&lt;stdlib.h&gt;</span></span>
+<span id="cb239-3"><a href="types-iii-conversions.html#cb239-3"></a></span>
+<span id="cb239-4"><a href="types-iii-conversions.html#cb239-4"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb239-5"><a href="types-iii-conversions.html#cb239-5"></a><span class="op">{</span></span>
+<span id="cb239-6"><a href="types-iii-conversions.html#cb239-6"></a>    <span class="dt">char</span> <span class="op">*</span>pi <span class="op">=</span> <span class="st">&quot;3.14159&quot;</span><span class="op">;</span></span>
+<span id="cb239-7"><a href="types-iii-conversions.html#cb239-7"></a>    <span class="dt">float</span> f<span class="op">;</span></span>
+<span id="cb239-8"><a href="types-iii-conversions.html#cb239-8"></a></span>
+<span id="cb239-9"><a href="types-iii-conversions.html#cb239-9"></a>    f <span class="op">=</span> atof<span class="op">(</span>pi<span class="op">);</span></span>
+<span id="cb239-10"><a href="types-iii-conversions.html#cb239-10"></a></span>
+<span id="cb239-11"><a href="types-iii-conversions.html#cb239-11"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%f\n</span><span class="st">&quot;</span><span class="op">,</span> f<span class="op">);</span></span>
+<span id="cb239-12"><a href="types-iii-conversions.html#cb239-12"></a><span class="op">}</span></span></code></pre></div>
+<p>But, like I said, we get undefined behavior from weird things like this:</p>
+<div class="sourceCode" id="cb240"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb240-1"><a href="types-iii-conversions.html#cb240-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> x <span class="op">=</span> atoi<span class="op">(</span><span class="st">&quot;what&quot;</span><span class="op">);</span>  <span class="co">// &quot;What&quot; ain&#39;t no number I ever heard of</span></span></code></pre></div>
+<p>(When I run that, I get <code>0</code> back, but you really shouldn’t count on that in any way. You could get something completely different.)</p>
+<p>For better error handling characteristics, let’s check out all those <code>strtol</code> functions, also in <code>&lt;stdlib.h&gt;</code>. Not only that, but they convert to more types and more bases, too!</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Function</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>strtol</code></td>
+<td style="text-align: left;">String to <code>long int</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>strtoll</code></td>
+<td style="text-align: left;">String to <code>long long int</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>strtoul</code></td>
+<td style="text-align: left;">String to <code>unsigned long int</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>strtoull</code></td>
+<td style="text-align: left;">String to <code>unsigned long long int</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>strtof</code></td>
+<td style="text-align: left;">String to <code>float</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>strtod</code></td>
+<td style="text-align: left;">String to <code>double</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>strtold</code></td>
+<td style="text-align: left;">String to <code>long double</code></td>
+</tr>
+</tbody>
+</table>
+<p>These functions all follow a similar pattern of use, and are a lot of people’s first experience with pointers to pointers! But never fret—it’s easier than it looks.</p>
+<p>Let’s do an example where we convert a string to an <code>unsigned long</code>, discarding error information (i.e. information about bad characters in the input string):</p>
+<div class="sourceCode" id="cb241"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb241-1"><a href="types-iii-conversions.html#cb241-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb241-2"><a href="types-iii-conversions.html#cb241-2"></a><span class="pp">#include </span><span class="im">&lt;stdlib.h&gt;</span></span>
+<span id="cb241-3"><a href="types-iii-conversions.html#cb241-3"></a></span>
+<span id="cb241-4"><a href="types-iii-conversions.html#cb241-4"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb241-5"><a href="types-iii-conversions.html#cb241-5"></a><span class="op">{</span></span>
+<span id="cb241-6"><a href="types-iii-conversions.html#cb241-6"></a>    <span class="dt">char</span> <span class="op">*</span>s <span class="op">=</span> <span class="st">&quot;3490&quot;</span><span class="op">;</span></span>
+<span id="cb241-7"><a href="types-iii-conversions.html#cb241-7"></a></span>
+<span id="cb241-8"><a href="types-iii-conversions.html#cb241-8"></a>    <span class="co">// Convert string s, a number in base 10, to an unsigned long int.</span></span>
+<span id="cb241-9"><a href="types-iii-conversions.html#cb241-9"></a>    <span class="co">// NULL means we don&#39;t care to learn about any error information.</span></span>
+<span id="cb241-10"><a href="types-iii-conversions.html#cb241-10"></a></span>
+<span id="cb241-11"><a href="types-iii-conversions.html#cb241-11"></a>    <span class="dt">unsigned</span> <span class="dt">long</span> <span class="dt">int</span> x <span class="op">=</span> strtoul<span class="op">(</span>s<span class="op">,</span> NULL<span class="op">,</span> <span class="dv">10</span><span class="op">);</span></span>
+<span id="cb241-12"><a href="types-iii-conversions.html#cb241-12"></a></span>
+<span id="cb241-13"><a href="types-iii-conversions.html#cb241-13"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%lu\n</span><span class="st">&quot;</span><span class="op">,</span> x<span class="op">);</span>  <span class="co">// 3490</span></span>
+<span id="cb241-14"><a href="types-iii-conversions.html#cb241-14"></a><span class="op">}</span></span></code></pre></div>
+<p>Notice a couple things there. Even though we didn’t deign to capture any information about error characters in the string, <code>strtoul()</code> won’t give us undefined behavior; it will just return <code>0</code>.</p>
+<p>Also, we specified that this was a decimal (base 10) number.</p>
+<p>Does this mean we can convert numbers of different bases? Sure! Let’s do binary!</p>
+<div class="sourceCode" id="cb242"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb242-1"><a href="types-iii-conversions.html#cb242-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb242-2"><a href="types-iii-conversions.html#cb242-2"></a><span class="pp">#include </span><span class="im">&lt;stdlib.h&gt;</span></span>
+<span id="cb242-3"><a href="types-iii-conversions.html#cb242-3"></a></span>
+<span id="cb242-4"><a href="types-iii-conversions.html#cb242-4"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb242-5"><a href="types-iii-conversions.html#cb242-5"></a><span class="op">{</span></span>
+<span id="cb242-6"><a href="types-iii-conversions.html#cb242-6"></a>    <span class="dt">char</span> <span class="op">*</span>s <span class="op">=</span> <span class="st">&quot;101010&quot;</span><span class="op">;</span>  <span class="co">// What&#39;s the meaning of this number?</span></span>
+<span id="cb242-7"><a href="types-iii-conversions.html#cb242-7"></a></span>
+<span id="cb242-8"><a href="types-iii-conversions.html#cb242-8"></a>    <span class="co">// Convert string s, a number in base 2, to an unsigned long int.</span></span>
+<span id="cb242-9"><a href="types-iii-conversions.html#cb242-9"></a></span>
+<span id="cb242-10"><a href="types-iii-conversions.html#cb242-10"></a>    <span class="dt">unsigned</span> <span class="dt">long</span> <span class="dt">int</span> x <span class="op">=</span> strtoul<span class="op">(</span>s<span class="op">,</span> NULL<span class="op">,</span> <span class="dv">2</span><span class="op">);</span></span>
+<span id="cb242-11"><a href="types-iii-conversions.html#cb242-11"></a></span>
+<span id="cb242-12"><a href="types-iii-conversions.html#cb242-12"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%lu\n</span><span class="st">&quot;</span><span class="op">,</span> x<span class="op">);</span>  <span class="co">// 42</span></span>
+<span id="cb242-13"><a href="types-iii-conversions.html#cb242-13"></a><span class="op">}</span></span></code></pre></div>
+<p>OK, that’s all fun and games, but what’s with that <code>NULL</code> in there? What’s that for?</p>
+<p>That helps us figure out if an error occurred in the processing of the string. It’s a pointer to a pointer to a <code>char</code>, which sounds scary, but isn’t once you wrap your head around it.</p>
+<p>Let’s do an example where we feed in a deliberately bad number, and we’ll see how <code>strtol()</code> lets us know where the first invalid digit is.</p>
+<div class="sourceCode" id="cb243"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb243-1"><a href="types-iii-conversions.html#cb243-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb243-2"><a href="types-iii-conversions.html#cb243-2"></a><span class="pp">#include </span><span class="im">&lt;stdlib.h&gt;</span></span>
+<span id="cb243-3"><a href="types-iii-conversions.html#cb243-3"></a></span>
+<span id="cb243-4"><a href="types-iii-conversions.html#cb243-4"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb243-5"><a href="types-iii-conversions.html#cb243-5"></a><span class="op">{</span></span>
+<span id="cb243-6"><a href="types-iii-conversions.html#cb243-6"></a>    <span class="dt">char</span> <span class="op">*</span>s <span class="op">=</span> <span class="st">&quot;34x90&quot;</span><span class="op">;</span>  <span class="co">// &quot;x&quot; is not a valid digit in base 10!</span></span>
+<span id="cb243-7"><a href="types-iii-conversions.html#cb243-7"></a>    <span class="dt">char</span> <span class="op">*</span>badchar<span class="op">;</span></span>
+<span id="cb243-8"><a href="types-iii-conversions.html#cb243-8"></a></span>
+<span id="cb243-9"><a href="types-iii-conversions.html#cb243-9"></a>    <span class="co">// Convert string s, a number in base 10, to an unsigned long int.</span></span>
+<span id="cb243-10"><a href="types-iii-conversions.html#cb243-10"></a></span>
+<span id="cb243-11"><a href="types-iii-conversions.html#cb243-11"></a>    <span class="dt">unsigned</span> <span class="dt">long</span> <span class="dt">int</span> x <span class="op">=</span> strtoul<span class="op">(</span>s<span class="op">,</span> <span class="op">&amp;</span>badchar<span class="op">,</span> <span class="dv">10</span><span class="op">);</span></span>
+<span id="cb243-12"><a href="types-iii-conversions.html#cb243-12"></a></span>
+<span id="cb243-13"><a href="types-iii-conversions.html#cb243-13"></a>    <span class="co">// It tries to convert as much as possible, so gets this far:</span></span>
+<span id="cb243-14"><a href="types-iii-conversions.html#cb243-14"></a></span>
+<span id="cb243-15"><a href="types-iii-conversions.html#cb243-15"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%lu\n</span><span class="st">&quot;</span><span class="op">,</span> x<span class="op">);</span>  <span class="co">// 34</span></span>
+<span id="cb243-16"><a href="types-iii-conversions.html#cb243-16"></a></span>
+<span id="cb243-17"><a href="types-iii-conversions.html#cb243-17"></a>    <span class="co">// But we can see the offending bad character because badchar</span></span>
+<span id="cb243-18"><a href="types-iii-conversions.html#cb243-18"></a>    <span class="co">// points to it!</span></span>
+<span id="cb243-19"><a href="types-iii-conversions.html#cb243-19"></a></span>
+<span id="cb243-20"><a href="types-iii-conversions.html#cb243-20"></a>    printf<span class="op">(</span><span class="st">&quot;Invalid character: </span><span class="sc">%c\n</span><span class="st">&quot;</span><span class="op">,</span> <span class="op">*</span>badchar<span class="op">);</span>  <span class="co">// &quot;x&quot;</span></span>
+<span id="cb243-21"><a href="types-iii-conversions.html#cb243-21"></a><span class="op">}</span></span></code></pre></div>
+<p>So there we have <code>strtoul()</code> modifying what <code>badchar</code> points to in order to show us where things went wrong<a href="footnotes.html#fn107" class="footnote-ref" id="fnref107" role="doc-noteref"><sup>107</sup></a>.</p>
+<p>But what if nothing goes wrong? In that case, <code>badchar</code> will point to the <code>NUL</code> terminator at the end of the string. So we can test for it:</p>
+<div class="sourceCode" id="cb244"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb244-1"><a href="types-iii-conversions.html#cb244-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb244-2"><a href="types-iii-conversions.html#cb244-2"></a><span class="pp">#include </span><span class="im">&lt;stdlib.h&gt;</span></span>
+<span id="cb244-3"><a href="types-iii-conversions.html#cb244-3"></a></span>
+<span id="cb244-4"><a href="types-iii-conversions.html#cb244-4"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb244-5"><a href="types-iii-conversions.html#cb244-5"></a><span class="op">{</span></span>
+<span id="cb244-6"><a href="types-iii-conversions.html#cb244-6"></a>    <span class="dt">char</span> <span class="op">*</span>s <span class="op">=</span> <span class="st">&quot;3490&quot;</span><span class="op">;</span>  <span class="co">// &quot;x&quot; is not a valid digit in base 10!</span></span>
+<span id="cb244-7"><a href="types-iii-conversions.html#cb244-7"></a>    <span class="dt">char</span> <span class="op">*</span>badchar<span class="op">;</span></span>
+<span id="cb244-8"><a href="types-iii-conversions.html#cb244-8"></a></span>
+<span id="cb244-9"><a href="types-iii-conversions.html#cb244-9"></a>    <span class="co">// Convert string s, a number in base 10, to an unsigned long int.</span></span>
+<span id="cb244-10"><a href="types-iii-conversions.html#cb244-10"></a></span>
+<span id="cb244-11"><a href="types-iii-conversions.html#cb244-11"></a>    <span class="dt">unsigned</span> <span class="dt">long</span> <span class="dt">int</span> x <span class="op">=</span> strtoul<span class="op">(</span>s<span class="op">,</span> <span class="op">&amp;</span>badchar<span class="op">,</span> <span class="dv">10</span><span class="op">);</span></span>
+<span id="cb244-12"><a href="types-iii-conversions.html#cb244-12"></a></span>
+<span id="cb244-13"><a href="types-iii-conversions.html#cb244-13"></a>    <span class="co">// Check if things went well</span></span>
+<span id="cb244-14"><a href="types-iii-conversions.html#cb244-14"></a></span>
+<span id="cb244-15"><a href="types-iii-conversions.html#cb244-15"></a>    <span class="cf">if</span> <span class="op">(*</span>badchar <span class="op">==</span> <span class="ch">&#39;</span><span class="sc">\0</span><span class="ch">&#39;</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb244-16"><a href="types-iii-conversions.html#cb244-16"></a>        printf<span class="op">(</span><span class="st">&quot;Success! </span><span class="sc">%lu\n</span><span class="st">&quot;</span><span class="op">,</span> x<span class="op">);</span></span>
+<span id="cb244-17"><a href="types-iii-conversions.html#cb244-17"></a>    <span class="op">}</span> <span class="cf">else</span>  <span class="op">{</span></span>
+<span id="cb244-18"><a href="types-iii-conversions.html#cb244-18"></a>        printf<span class="op">(</span><span class="st">&quot;Partial conversion: </span><span class="sc">%lu\n</span><span class="st">&quot;</span><span class="op">,</span> x<span class="op">);</span></span>
+<span id="cb244-19"><a href="types-iii-conversions.html#cb244-19"></a>        printf<span class="op">(</span><span class="st">&quot;Invalid character: </span><span class="sc">%c\n</span><span class="st">&quot;</span><span class="op">,</span> <span class="op">*</span>badchar<span class="op">);</span></span>
+<span id="cb244-20"><a href="types-iii-conversions.html#cb244-20"></a>    <span class="op">}</span></span>
+<span id="cb244-21"><a href="types-iii-conversions.html#cb244-21"></a><span class="op">}</span></span></code></pre></div>
+<p>So there you have it. The <code>atoi()</code>-style functions are good in a controlled pinch, but the <code>strtol()</code>-style functions give you far more control over error handling and the base of the input.</p>
+<p></p>
+<h2 data-number="15.2" id="char-conversions"><span class="header-section-number">15.2</span> <code>char</code> Conversions</h2>
+<p></p>
+<p>What if you have a single character with a digit in it, like <code>'5'</code>… Is that the same as the value <code>5</code>?</p>
+<p>Let’s try it and see.</p>
+<div class="sourceCode" id="cb245"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb245-1"><a href="types-iii-conversions.html#cb245-1" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d</span><span class="st"> </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> <span class="dv">5</span><span class="op">,</span> <span class="ch">&#39;5&#39;</span><span class="op">);</span></span></code></pre></div>
+<p>On my UTF-8 system, this prints:</p>
+<div class="sourceCode" id="cb246"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb246-1"><a href="types-iii-conversions.html#cb246-1" aria-hidden="true" tabindex="-1"></a>5 53</span></code></pre></div>
+<p>So… no. And 53? What is that? That’s the UTF-8 (and ASCII) code point for the character symbol <code>'5'</code><a href="footnotes.html#fn108" class="footnote-ref" id="fnref108" role="doc-noteref"><sup>108</sup></a></p>
+<p>So how do we convert the character <code>'5'</code> (which apparently has value 53) into the value <code>5</code>?</p>
+<p>With one clever trick, that’s how!</p>
+<p>The C Standard guarantees that these character will have code points that are in sequence and in this order:</p>
+<div class="sourceCode" id="cb247"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb247-1"><a href="types-iii-conversions.html#cb247-1" aria-hidden="true" tabindex="-1"></a>0  1  2  3  4  5  6  7  8  9</span></code></pre></div>
+<p>Ponder for a second–how can we use that? Spoilers ahead…</p>
+<p>Let’s take a look at the characters and their code points in UTF-8:</p>
+<div class="sourceCode" id="cb248"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb248-1"><a href="types-iii-conversions.html#cb248-1" aria-hidden="true" tabindex="-1"></a>0  1  2  3  4  5  6  7  8  9</span>
+<span id="cb248-2"><a href="types-iii-conversions.html#cb248-2" aria-hidden="true" tabindex="-1"></a>48 49 50 51 52 53 54 55 56 57</span></code></pre></div>
+<p>You see there that <code>'5'</code> is <code>53</code>, just like we were getting. And <code>'0'</code> is <code>48</code>.</p>
+<p>So we can subtract <code>'0'</code> from any digit character to get its numeric value:</p>
+<div class="sourceCode" id="cb249"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb249-1"><a href="types-iii-conversions.html#cb249-1" aria-hidden="true" tabindex="-1"></a><span class="dt">char</span> c <span class="op">=</span> <span class="ch">&#39;6&#39;</span><span class="op">;</span></span>
+<span id="cb249-2"><a href="types-iii-conversions.html#cb249-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb249-3"><a href="types-iii-conversions.html#cb249-3" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> x <span class="op">=</span> c<span class="op">;</span>  <span class="co">// x has value 54, the code point for &#39;6&#39;</span></span>
+<span id="cb249-4"><a href="types-iii-conversions.html#cb249-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb249-5"><a href="types-iii-conversions.html#cb249-5" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> y <span class="op">=</span> c <span class="op">-</span> <span class="ch">&#39;0&#39;</span><span class="op">;</span> <span class="co">// y has value 6, just like we want</span></span></code></pre></div>
+<p>And we can convert the other way, too, just by adding the value on.</p>
+<div class="sourceCode" id="cb250"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb250-1"><a href="types-iii-conversions.html#cb250-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> x <span class="op">=</span> <span class="dv">6</span><span class="op">;</span></span>
+<span id="cb250-2"><a href="types-iii-conversions.html#cb250-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb250-3"><a href="types-iii-conversions.html#cb250-3" aria-hidden="true" tabindex="-1"></a><span class="dt">char</span> c <span class="op">=</span> x <span class="op">+</span> <span class="ch">&#39;0&#39;</span><span class="op">;</span>  <span class="co">// c has value 54</span></span>
+<span id="cb250-4"><a href="types-iii-conversions.html#cb250-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb250-5"><a href="types-iii-conversions.html#cb250-5" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> c<span class="op">);</span>  <span class="co">// prints 54</span></span>
+<span id="cb250-6"><a href="types-iii-conversions.html#cb250-6" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%c\n</span><span class="st">&quot;</span><span class="op">,</span> c<span class="op">);</span>  <span class="co">// prints 6 with %c</span></span></code></pre></div>
+<p>You might think this is a weird way to do this conversion, and by today’s standards, it certainly is. But back in the olden days when computers were made literally out of wood, this was the method for doing this conversion. And it wasn’t broke, so C never fixed it.</p>
+<p></p>
+<h2 data-number="15.3" id="numeric-conversions"><span class="header-section-number">15.3</span> Numeric Conversions</h2>
+<p></p>
+<h3 data-number="15.3.1" id="boolean"><span class="header-section-number">15.3.1</span> Boolean</h3>
+<p></p>
+<p>If you convert a zero to <code>bool</code>, the result is <code>0</code>. Otherwise it’s <code>1</code>.</p>
+<h3 data-number="15.3.2" id="integer-to-integer-conversions"><span class="header-section-number">15.3.2</span> Integer to Integer Conversions</h3>
+<p></p>
+<p>If an integer type is converted to unsigned and doesn’t fit in it, the unsigned result wraps around odometer-style until it fits in the unsigned<a href="footnotes.html#fn109" class="footnote-ref" id="fnref109" role="doc-noteref"><sup>109</sup></a>.</p>
+<p>If an integer type is converted to a signed number and doesn’t fit, the result is implementation-defined! Something documented will happen, but you’ll have to look it up<a href="footnotes.html#fn110" class="footnote-ref" id="fnref110" role="doc-noteref"><sup>110</sup></a></p>
+<h3 data-number="15.3.3" id="integer-and-floating-point-conversions"><span class="header-section-number">15.3.3</span> Integer and Floating Point Conversions</h3>
+<p></p>
+<p>If a floating point type is converted to an integer type, the fractional part is discarded with prejudice<a href="footnotes.html#fn111" class="footnote-ref" id="fnref111" role="doc-noteref"><sup>111</sup></a>.</p>
+<p>But—and here’s the catch—if the number is too large to fit in the integer, you get undefined behavior. So don’t do that.</p>
+<p>Going From integer or floating point to floating point, C makes a best effort to find the closest floating point number to the integer that it can.</p>
+<p>Again, though, if the original value can’t be represented, it’s undefined behavior.</p>
+<p> </p>
+<h2 data-number="15.4" id="implicit-conversions"><span class="header-section-number">15.4</span> Implicit Conversions</h2>
+<p></p>
+<p>These are conversions the compiler does automatically for you when you mix and match types.</p>
+<h3 data-number="15.4.1" id="integer-promotions"><span class="header-section-number">15.4.1</span> The Integer Promotions</h3>
+<p>In a number of places, if an <code>int</code> can be used to represent a value from <code>char</code> or <code>short</code> (signed or unsigned), that value is <em>promoted</em> up to <code>int</code>. If it doesn’t fit in an <code>int</code>, it’s promoted to <code>unsigned int</code>.</p>
+<p>This is how we can do something like this:</p>
+<div class="sourceCode" id="cb251"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb251-1"><a href="types-iii-conversions.html#cb251-1" aria-hidden="true" tabindex="-1"></a><span class="dt">char</span> x <span class="op">=</span> <span class="dv">10</span><span class="op">,</span> y <span class="op">=</span> <span class="dv">20</span><span class="op">;</span></span>
+<span id="cb251-2"><a href="types-iii-conversions.html#cb251-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> i <span class="op">=</span> x <span class="op">+</span> y<span class="op">;</span></span></code></pre></div>
+<p>In that case, <code>x</code> and <code>y</code> get promoted to <code>int</code> by C before the math takes place.</p>
+<p>The integer promotions take place during The Usual Arithmetic Conversions, with variadic functions<a href="footnotes.html#fn112" class="footnote-ref" id="fnref112" role="doc-noteref"><sup>112</sup></a>, unary <code>+</code> and <code>-</code> operators, or when passing values to functions without prototypes<a href="footnotes.html#fn113" class="footnote-ref" id="fnref113" role="doc-noteref"><sup>113</sup></a>.</p>
+<h3 data-number="15.4.2" id="usual-arithmetic-conversions"><span class="header-section-number">15.4.2</span> The Usual Arithmetic Conversions</h3>
+<p>These are automatic conversions that C does around numeric operations that you ask for. (That’s actually what they’re called, by the way, by C11 §6.3.1.8.) Note that for this section, we’re just talking about numeric types—strings will come later.</p>
+<p>These conversions answer questions about what happens when you mix types, like this:</p>
+<div class="sourceCode" id="cb252"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb252-1"><a href="types-iii-conversions.html#cb252-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> x <span class="op">=</span> <span class="dv">3</span> <span class="op">+</span> <span class="fl">1.2</span><span class="op">;</span>   <span class="co">// Mixing int and double</span></span>
+<span id="cb252-2"><a href="types-iii-conversions.html#cb252-2" aria-hidden="true" tabindex="-1"></a>                   <span class="co">// 4.2 is converted to int</span></span>
+<span id="cb252-3"><a href="types-iii-conversions.html#cb252-3" aria-hidden="true" tabindex="-1"></a>                   <span class="co">// 4 is stored in x</span></span>
+<span id="cb252-4"><a href="types-iii-conversions.html#cb252-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb252-5"><a href="types-iii-conversions.html#cb252-5" aria-hidden="true" tabindex="-1"></a><span class="dt">float</span> y <span class="op">=</span> <span class="dv">12</span> <span class="op">*</span> <span class="dv">2</span><span class="op">;</span>  <span class="co">// Mixing float and int</span></span>
+<span id="cb252-6"><a href="types-iii-conversions.html#cb252-6" aria-hidden="true" tabindex="-1"></a>                   <span class="co">// 24 is converted to float</span></span>
+<span id="cb252-7"><a href="types-iii-conversions.html#cb252-7" aria-hidden="true" tabindex="-1"></a>                   <span class="co">// 24.0 is stored in y</span></span></code></pre></div>
+<p>Do they become <code>int</code>s? Do they become <code>float</code>s? How does it work?</p>
+<p>Here are the steps, paraphrased for easy consumption.</p>
+<ol type="1">
+<li><p>If one thing in the expression is a floating type, convert the other things to that floating type.</p></li>
+<li><p>Otherwise, if both types are integer types, perform the integer promotions on each, then make the operand types as big as they need to be hold the common largest value. Sometimes this involves changing signed to unsigned.</p></li>
+</ol>
+<p>If you want to know the gritty details, check out C11 §6.3.1.8. But you probably don’t.</p>
+<p>Just generally remember that int types become float types if there’s a floating point type anywhere in there, and the compiler makes an effort to make sure mixed integer types don’t overflow.</p>
+<p>Finally, if you convert from one floating point type to another, the compiler will try to make an exact conversion. If it can’t, it’ll do the best approximation it can. If the number is too large to fit in the type you’re converting into, <em>boom</em>: undefined behavior!</p>
+<h3 data-number="15.4.3" id="void"><span class="header-section-number">15.4.3</span> <code>void*</code></h3>
+<p>The <code>void*</code> type is interesting because it can be converted from or to any pointer type.</p>
+<div class="sourceCode" id="cb253"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb253-1"><a href="types-iii-conversions.html#cb253-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> x <span class="op">=</span> <span class="dv">10</span><span class="op">;</span></span>
+<span id="cb253-2"><a href="types-iii-conversions.html#cb253-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb253-3"><a href="types-iii-conversions.html#cb253-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> <span class="op">*</span>p <span class="op">=</span> <span class="op">&amp;</span>x<span class="op">;</span>  <span class="co">// &amp;x is type int*, but we store it in a void*</span></span>
+<span id="cb253-4"><a href="types-iii-conversions.html#cb253-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb253-5"><a href="types-iii-conversions.html#cb253-5" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> <span class="op">*</span>q <span class="op">=</span> p<span class="op">;</span>    <span class="co">// p is void*, but we store it in an int*</span></span></code></pre></div>
+<p></p>
+<h2 data-number="15.5" id="explicit-conversions"><span class="header-section-number">15.5</span> Explicit Conversions</h2>
+<p></p>
+<p>These are conversions from type to type that you have to ask for; the compiler won’t do it for you.</p>
+<p>You can convert from one type to another by assigning one type to another with an <code>=</code>.</p>
+<p>You can also convert explicitly with a <em>cast</em>.</p>
+<p></p>
+<h3 data-number="15.5.1" id="casting"><span class="header-section-number">15.5.1</span> Casting</h3>
+<p></p>
+<p>You can explicitly change the type of an expression by putting a new type in parentheses in front of it. Some C devs frown on the practice unless absolutely necessary, but it’s likely you’ll come across some C code with these in it.</p>
+<p>Let’s do an example where we want to convert an <code>int</code> into a <code>long</code> so that we can store it in a <code>long</code>.</p>
+<p>Note: this example is contrived and the cast in this case is completely unnecessary because the <code>x + 12</code> expression would automatically be changed to <code>long int</code> to match the wider type of <code>y</code>.</p>
+<div class="sourceCode" id="cb254"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb254-1"><a href="types-iii-conversions.html#cb254-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> x <span class="op">=</span> <span class="dv">10</span><span class="op">;</span></span>
+<span id="cb254-2"><a href="types-iii-conversions.html#cb254-2" aria-hidden="true" tabindex="-1"></a><span class="dt">long</span> <span class="dt">int</span> y <span class="op">=</span> <span class="op">(</span><span class="dt">long</span> <span class="dt">int</span><span class="op">)</span>x <span class="op">+</span> <span class="dv">12</span><span class="op">;</span></span></code></pre></div>
+<p>In that example, even those <code>x</code> was type <code>int</code> before, the expression <code>(long int)x</code> has type <code>long int</code>. We say, “We cast <code>x</code> to <code>long int</code>.”</p>
+<p>More commonly, you might see a cast being used to convert a <code>void*</code> into a specific pointer type so it can be dereferenced.</p>
+<p>A callback from the built-in <code>qsort()</code> function might display this behavior since it has <code>void*</code>s passed into it:</p>
+<div class="sourceCode" id="cb255"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb255-1"><a href="types-iii-conversions.html#cb255-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> compar<span class="op">(</span><span class="dt">const</span> <span class="dt">void</span> <span class="op">*</span>elem1<span class="op">,</span> <span class="dt">const</span> <span class="dt">void</span> <span class="op">*</span>elem2<span class="op">)</span></span>
+<span id="cb255-2"><a href="types-iii-conversions.html#cb255-2" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb255-3"><a href="types-iii-conversions.html#cb255-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(*((</span><span class="dt">const</span> <span class="dt">int</span><span class="op">*)</span>elem2<span class="op">)</span> <span class="op">&gt;</span> <span class="op">*((</span><span class="dt">const</span> <span class="dt">int</span><span class="op">*)</span>elem1<span class="op">))</span> <span class="cf">return</span> <span class="dv">1</span><span class="op">;</span></span>
+<span id="cb255-4"><a href="types-iii-conversions.html#cb255-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(*((</span><span class="dt">const</span> <span class="dt">int</span><span class="op">*)</span>elem2<span class="op">)</span> <span class="op">&lt;</span> <span class="op">*((</span><span class="dt">const</span> <span class="dt">int</span><span class="op">*)</span>elem1<span class="op">))</span> <span class="cf">return</span> <span class="op">-</span><span class="dv">1</span><span class="op">;</span></span>
+<span id="cb255-5"><a href="types-iii-conversions.html#cb255-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb255-6"><a href="types-iii-conversions.html#cb255-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>But you could also clearly write it with an assignment:</p>
+<div class="sourceCode" id="cb256"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb256-1"><a href="types-iii-conversions.html#cb256-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> compar<span class="op">(</span><span class="dt">const</span> <span class="dt">void</span> <span class="op">*</span>elem1<span class="op">,</span> <span class="dt">const</span> <span class="dt">void</span> <span class="op">*</span>elem2<span class="op">)</span></span>
+<span id="cb256-2"><a href="types-iii-conversions.html#cb256-2" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb256-3"><a href="types-iii-conversions.html#cb256-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">const</span> <span class="dt">int</span> <span class="op">*</span>e1 <span class="op">=</span> elem1<span class="op">;</span></span>
+<span id="cb256-4"><a href="types-iii-conversions.html#cb256-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">const</span> <span class="dt">int</span> <span class="op">*</span>e2 <span class="op">=</span> elem2<span class="op">;</span></span>
+<span id="cb256-5"><a href="types-iii-conversions.html#cb256-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb256-6"><a href="types-iii-conversions.html#cb256-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="op">*</span>e2 <span class="op">-</span> <span class="op">*</span>e1<span class="op">;</span></span>
+<span id="cb256-7"><a href="types-iii-conversions.html#cb256-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>One place you’ll see casts more commonly is to avoid a warning when printing pointer values with the rarely-used <code>%p</code> which gets picky with anything other than a <code>void*</code>:</p>
+<div class="sourceCode" id="cb257"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb257-1"><a href="types-iii-conversions.html#cb257-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> x <span class="op">=</span> <span class="dv">3490</span><span class="op">;</span></span>
+<span id="cb257-2"><a href="types-iii-conversions.html#cb257-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> <span class="op">*</span>p <span class="op">=</span> <span class="op">&amp;</span>x<span class="op">;</span></span>
+<span id="cb257-3"><a href="types-iii-conversions.html#cb257-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb257-4"><a href="types-iii-conversions.html#cb257-4" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%p\n</span><span class="st">&quot;</span><span class="op">,</span> p<span class="op">);</span></span></code></pre></div>
+<p>generates this warning:</p>
+<div class="sourceCode" id="cb258"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb258-1"><a href="types-iii-conversions.html#cb258-1" aria-hidden="true" tabindex="-1"></a>warning: format ‘%p’ expects argument of type ‘void *’, but argument</span>
+<span id="cb258-2"><a href="types-iii-conversions.html#cb258-2" aria-hidden="true" tabindex="-1"></a>         2 has type ‘int *’</span></code></pre></div>
+<p>You can fix it with a cast:</p>
+<div class="sourceCode" id="cb259"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb259-1"><a href="types-iii-conversions.html#cb259-1" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%p\n</span><span class="st">&quot;</span><span class="op">,</span> <span class="op">(</span><span class="dt">void</span> <span class="op">*)</span>p<span class="op">);</span></span></code></pre></div>
+<p>Another place is with explicit pointer changes, if you don’t want to use an intervening <code>void*</code>, but these are also pretty uncommon:</p>
+<div class="sourceCode" id="cb260"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb260-1"><a href="types-iii-conversions.html#cb260-1" aria-hidden="true" tabindex="-1"></a><span class="dt">long</span> x <span class="op">=</span> <span class="dv">3490</span><span class="op">;</span></span>
+<span id="cb260-2"><a href="types-iii-conversions.html#cb260-2" aria-hidden="true" tabindex="-1"></a><span class="dt">long</span> <span class="op">*</span>p <span class="op">=</span> <span class="op">&amp;</span>x<span class="op">;</span></span>
+<span id="cb260-3"><a href="types-iii-conversions.html#cb260-3" aria-hidden="true" tabindex="-1"></a><span class="dt">unsigned</span> <span class="dt">char</span> <span class="op">*</span>c <span class="op">=</span> <span class="op">(</span><span class="dt">unsigned</span> <span class="dt">char</span> <span class="op">*)</span>p<span class="op">;</span></span></code></pre></div>
+<p>A third place it’s often required is with the character conversion functions in <a href="https://beej.us/guide/bgclr/html/split/ctype.html"><code>&lt;ctype.h&gt;</code></a><a href="footnotes.html#fn114" class="footnote-ref" id="fnref114" role="doc-noteref"><sup>114</sup></a> where you should cast questionably-signed values to <code>unsigned char</code> to avoid undefined behavior.</p>
+<p>Again, casting is rarely <em>needed</em> in practice. If you find yourself casting, there might be another way to do the same thing, or maybe you’re casting unnecessarily.</p>
+<p>Or maybe it is necessary. Personally, I try to avoid it, but am not afraid to use it if I have to.</p>
+<p> </p>
+<!-- Beej's guide to C
+
+# vim: ts=4:sw=4:nosi:et:tw=72
+-->
+<hr><div style="text-align:center"><span><a href="types-ii-way-more-types.html">Prev</a> | </span><a href="index.html">Contents</a><span> | <a href="types-iv-qualifiers-and-specifiers.html">Next</a></span></div></body>
+</html>

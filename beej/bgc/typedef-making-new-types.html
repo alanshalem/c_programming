@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Beej's Guide to C Programming</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Mono&display=swap" rel="stylesheet"> 
+
+  <!-- BG custom styling -->
+  <style type="text/css">
+  /* Fix for line numbers not visible */
+  pre.numberSource code > span {
+      left: -1em;
+  }
+  pre.numberSource {
+      margin-left: initial;
+  }
+
+  /* Put some space after the section numbers */
+  span.toc-section-number::after {
+      content: "\a0\a0\a0";  /* non-breaking whitespace */
+  }
+
+  /* Hide underlines on code number links */
+  pre > code.sourceCode > span > a:first-child::before {
+      text-decoration: none;
+  }
+
+  /* Color the source blocks */
+  div.sourceCode {
+      background-color: #f0f0f0;
+  }
+
+  /* Fix iOS big text rendering issue */
+  pre > code.sourceCode > span {
+      display: initial;
+  }
+
+
+  /* Color the inline code */
+  code:not(.sourceCode) {
+      background: #f0f0f0;
+      padding-left: 0.2em;
+      padding-right: 0.2em;
+      border-radius: 0.2em;
+  }
+
+  /* Keep code tags from wrapping in tables */
+  tbody code {
+      white-space: nowrap;
+  }
+
+  td {
+      vertical-align: top;
+  }
+
+  body {
+      font-size: 12pt;
+      max-width: 43em;
+  }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<div style="text-align:center"><span><a href="file-inputoutput.html">Prev</a> | </span><a href="index.html">Contents</a><span> | <a href="pointers2.html">Next</a></span></div><hr>
+<h1 data-number="10" id="typedef-making-new-types"><span class="header-section-number">10</span> <code>typedef</code>: Making New Types</h1>
+<p> Well, not so much making <em>new</em> types as getting new names for existing types. Sounds kinda pointless on the surface, but we can really use this to make our code cleaner.</p>
+<h2 data-number="10.1" id="typedef-in-theory"><span class="header-section-number">10.1</span> <code>typedef</code> in Theory</h2>
+<p>Basically, you take an existing type and you make an alias for it with <code>typedef</code>.</p>
+<p>Like this:</p>
+<div class="sourceCode" id="cb159"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb159-1"><a href="typedef-making-new-types.html#cb159-1" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="dt">int</span> antelope<span class="op">;</span>  <span class="co">// Make &quot;antelope&quot; an alias for &quot;int&quot;</span></span>
+<span id="cb159-2"><a href="typedef-making-new-types.html#cb159-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb159-3"><a href="typedef-making-new-types.html#cb159-3" aria-hidden="true" tabindex="-1"></a>antelope x <span class="op">=</span> <span class="dv">10</span><span class="op">;</span>       <span class="co">// Type &quot;antelope&quot; is the same as type &quot;int&quot;</span></span></code></pre></div>
+<p>You can take any existing type and do it. You can even make a number of types with a comma list:</p>
+<div class="sourceCode" id="cb160"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb160-1"><a href="typedef-making-new-types.html#cb160-1" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="dt">int</span> antelope<span class="op">,</span> bagel<span class="op">,</span> mushroom<span class="op">;</span>  <span class="co">// These are all &quot;int&quot;</span></span></code></pre></div>
+<p>That’s really useful, right? That you can type <code>mushroom</code> instead of <code>int</code>? You must be <em>super excited</em> about this feature!</p>
+<p>OK, Professor Sarcasm—we’ll get to some more common applications of this in a moment.</p>
+<h3 data-number="10.1.1" id="scoping"><span class="header-section-number">10.1.1</span> Scoping</h3>
+<p> <code>typedef</code> follows regular <a href="scope.html#scope">scoping rules</a>.</p>
+<p>For this reason, it’s quite common to find <code>typedef</code> at file scope (“global”) so that all functions can use the new types at will.</p>
+<h2 data-number="10.2" id="typedef-in-practice"><span class="header-section-number">10.2</span> <code>typedef</code> in Practice</h2>
+<p>So renaming <code>int</code> to something else isn’t that exciting. Let’s see where <code>typedef</code> commonly makes an appearance.</p>
+<h3 data-number="10.2.1" id="typedef-struct"><span class="header-section-number">10.2.1</span> <code>typedef</code> and <code>struct</code>s</h3>
+<p> Sometimes a <code>struct</code> will be <code>typedef</code>’d to a new name so you don’t have to type the word <code>struct</code> over and over.</p>
+<div class="sourceCode" id="cb161"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb161-1"><a href="typedef-making-new-types.html#cb161-1" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> animal <span class="op">{</span></span>
+<span id="cb161-2"><a href="typedef-making-new-types.html#cb161-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">char</span> <span class="op">*</span>name<span class="op">;</span></span>
+<span id="cb161-3"><a href="typedef-making-new-types.html#cb161-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> leg_count<span class="op">,</span> speed<span class="op">;</span></span>
+<span id="cb161-4"><a href="typedef-making-new-types.html#cb161-4" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb161-5"><a href="typedef-making-new-types.html#cb161-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb161-6"><a href="typedef-making-new-types.html#cb161-6" aria-hidden="true" tabindex="-1"></a><span class="co">//  original name      new name</span></span>
+<span id="cb161-7"><a href="typedef-making-new-types.html#cb161-7" aria-hidden="true" tabindex="-1"></a><span class="co">//            |         |</span></span>
+<span id="cb161-8"><a href="typedef-making-new-types.html#cb161-8" aria-hidden="true" tabindex="-1"></a><span class="co">//            v         v</span></span>
+<span id="cb161-9"><a href="typedef-making-new-types.html#cb161-9" aria-hidden="true" tabindex="-1"></a><span class="co">//      |-----------| |----|</span></span>
+<span id="cb161-10"><a href="typedef-making-new-types.html#cb161-10" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="kw">struct</span> animal animal<span class="op">;</span></span>
+<span id="cb161-11"><a href="typedef-making-new-types.html#cb161-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb161-12"><a href="typedef-making-new-types.html#cb161-12" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> animal y<span class="op">;</span>  <span class="co">// This works</span></span>
+<span id="cb161-13"><a href="typedef-making-new-types.html#cb161-13" aria-hidden="true" tabindex="-1"></a>animal z<span class="op">;</span>         <span class="co">// This also works because &quot;animal&quot; is an alias</span></span></code></pre></div>
+<p>Personally, I don’t care for this practice. I like the clarity the code has when you add the word <code>struct</code> to the type; programmers know what they’re getting. But it’s really common so I’m including it here.</p>
+<p>Now I want to run the exact same example in a way that you might commonly see. We’re going to put the <code>struct animal</code> <em>in</em> the <code>typedef</code>. You can mash it all together like this:</p>
+<div class="sourceCode" id="cb162"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb162-1"><a href="typedef-making-new-types.html#cb162-1" aria-hidden="true" tabindex="-1"></a><span class="co">//  original name</span></span>
+<span id="cb162-2"><a href="typedef-making-new-types.html#cb162-2" aria-hidden="true" tabindex="-1"></a><span class="co">//            |</span></span>
+<span id="cb162-3"><a href="typedef-making-new-types.html#cb162-3" aria-hidden="true" tabindex="-1"></a><span class="co">//            v</span></span>
+<span id="cb162-4"><a href="typedef-making-new-types.html#cb162-4" aria-hidden="true" tabindex="-1"></a><span class="co">//      |-----------|</span></span>
+<span id="cb162-5"><a href="typedef-making-new-types.html#cb162-5" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="kw">struct</span> animal <span class="op">{</span></span>
+<span id="cb162-6"><a href="typedef-making-new-types.html#cb162-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">char</span> <span class="op">*</span>name<span class="op">;</span></span>
+<span id="cb162-7"><a href="typedef-making-new-types.html#cb162-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> leg_count<span class="op">,</span> speed<span class="op">;</span></span>
+<span id="cb162-8"><a href="typedef-making-new-types.html#cb162-8" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> animal<span class="op">;</span>                         <span class="co">// &lt;-- new name</span></span>
+<span id="cb162-9"><a href="typedef-making-new-types.html#cb162-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb162-10"><a href="typedef-making-new-types.html#cb162-10" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> animal y<span class="op">;</span>  <span class="co">// This works</span></span>
+<span id="cb162-11"><a href="typedef-making-new-types.html#cb162-11" aria-hidden="true" tabindex="-1"></a>animal z<span class="op">;</span>         <span class="co">// This also works because &quot;animal&quot; is an alias</span></span></code></pre></div>
+<p>That’s exactly the same as the previous example, just more concise.</p>
+<p> But that’s not all! There’s another common shortcut that you might see in code using what are called <em>anonymous structures</em><a href="footnotes.html#fn81" class="footnote-ref" id="fnref81" role="doc-noteref"><sup>81</sup></a>. It turns out you don’t actually need to name the structure in a variety of places, and with <code>typedef</code> is one of them.</p>
+<p>Let’s do the same example with an anonymous structure:</p>
+<div class="sourceCode" id="cb163"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb163-1"><a href="typedef-making-new-types.html#cb163-1" aria-hidden="true" tabindex="-1"></a><span class="co">//  Anonymous struct! It has no name!</span></span>
+<span id="cb163-2"><a href="typedef-making-new-types.html#cb163-2" aria-hidden="true" tabindex="-1"></a><span class="co">//         |</span></span>
+<span id="cb163-3"><a href="typedef-making-new-types.html#cb163-3" aria-hidden="true" tabindex="-1"></a><span class="co">//         v</span></span>
+<span id="cb163-4"><a href="typedef-making-new-types.html#cb163-4" aria-hidden="true" tabindex="-1"></a><span class="co">//      |----|</span></span>
+<span id="cb163-5"><a href="typedef-making-new-types.html#cb163-5" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="kw">struct</span> <span class="op">{</span></span>
+<span id="cb163-6"><a href="typedef-making-new-types.html#cb163-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">char</span> <span class="op">*</span>name<span class="op">;</span></span>
+<span id="cb163-7"><a href="typedef-making-new-types.html#cb163-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> leg_count<span class="op">,</span> speed<span class="op">;</span></span>
+<span id="cb163-8"><a href="typedef-making-new-types.html#cb163-8" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> animal<span class="op">;</span>                         <span class="co">// &lt;-- new name</span></span>
+<span id="cb163-9"><a href="typedef-making-new-types.html#cb163-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb163-10"><a href="typedef-making-new-types.html#cb163-10" aria-hidden="true" tabindex="-1"></a><span class="co">//struct animal y;  // ERROR: this no longer works--no such struct!</span></span>
+<span id="cb163-11"><a href="typedef-making-new-types.html#cb163-11" aria-hidden="true" tabindex="-1"></a>animal z<span class="op">;</span>           <span class="co">// This works because &quot;animal&quot; is an alias</span></span></code></pre></div>
+<p>As another example, we might find something like this:</p>
+<div class="sourceCode" id="cb164"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb164-1"><a href="typedef-making-new-types.html#cb164-1" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="kw">struct</span> <span class="op">{</span></span>
+<span id="cb164-2"><a href="typedef-making-new-types.html#cb164-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> x<span class="op">,</span> y<span class="op">;</span></span>
+<span id="cb164-3"><a href="typedef-making-new-types.html#cb164-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> point<span class="op">;</span></span>
+<span id="cb164-4"><a href="typedef-making-new-types.html#cb164-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb164-5"><a href="typedef-making-new-types.html#cb164-5" aria-hidden="true" tabindex="-1"></a>point p <span class="op">=</span> <span class="op">{.</span>x<span class="op">=</span><span class="dv">20</span><span class="op">,</span> <span class="op">.</span>y<span class="op">=</span><span class="dv">40</span><span class="op">};</span></span>
+<span id="cb164-6"><a href="typedef-making-new-types.html#cb164-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb164-7"><a href="typedef-making-new-types.html#cb164-7" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d</span><span class="st">, </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> p<span class="op">.</span>x<span class="op">,</span> p<span class="op">.</span>y<span class="op">);</span>  <span class="co">// 20, 40</span></span></code></pre></div>
+<p> </p>
+<h3 data-number="10.2.2" id="typedef-and-other-types"><span class="header-section-number">10.2.2</span> <code>typedef</code> and Other Types</h3>
+<p>It’s not that using <code>typedef</code> with a simple type like <code>int</code> is completely useless… it helps you abstract the types to make it easier to change them later.</p>
+<p>For example, if you have <code>float</code> all over your code in 100 zillion places, it’s going to be painful to change them all to <code>double</code> if you find you have to do that later for some reason.</p>
+<p>But if you prepared a little with:</p>
+<div class="sourceCode" id="cb165"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb165-1"><a href="typedef-making-new-types.html#cb165-1" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="dt">float</span> app_float<span class="op">;</span></span>
+<span id="cb165-2"><a href="typedef-making-new-types.html#cb165-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb165-3"><a href="typedef-making-new-types.html#cb165-3" aria-hidden="true" tabindex="-1"></a><span class="co">// and</span></span>
+<span id="cb165-4"><a href="typedef-making-new-types.html#cb165-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb165-5"><a href="typedef-making-new-types.html#cb165-5" aria-hidden="true" tabindex="-1"></a>app_float f1<span class="op">,</span> f2<span class="op">,</span> f3<span class="op">;</span></span></code></pre></div>
+<p>Then if later you want to change to another type, like <code>long double</code>, you just need to change the <code>typedef</code>:</p>
+<div class="sourceCode" id="cb166"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb166-1"><a href="typedef-making-new-types.html#cb166-1" aria-hidden="true" tabindex="-1"></a><span class="co">//        voila!</span></span>
+<span id="cb166-2"><a href="typedef-making-new-types.html#cb166-2" aria-hidden="true" tabindex="-1"></a><span class="co">//      |---------|</span></span>
+<span id="cb166-3"><a href="typedef-making-new-types.html#cb166-3" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="dt">long</span> <span class="dt">double</span> app_float<span class="op">;</span></span>
+<span id="cb166-4"><a href="typedef-making-new-types.html#cb166-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb166-5"><a href="typedef-making-new-types.html#cb166-5" aria-hidden="true" tabindex="-1"></a><span class="co">// and no need to change this line:</span></span>
+<span id="cb166-6"><a href="typedef-making-new-types.html#cb166-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb166-7"><a href="typedef-making-new-types.html#cb166-7" aria-hidden="true" tabindex="-1"></a>app_float f1<span class="op">,</span> f2<span class="op">,</span> f3<span class="op">;</span>  <span class="co">// Now these are all long doubles</span></span></code></pre></div>
+<h3 data-number="10.2.3" id="typedef-and-pointers"><span class="header-section-number">10.2.3</span> <code>typedef</code> and Pointers</h3>
+<p> You can make a type that is a pointer.</p>
+<div class="sourceCode" id="cb167"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb167-1"><a href="typedef-making-new-types.html#cb167-1" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="dt">int</span> <span class="op">*</span>intptr<span class="op">;</span></span>
+<span id="cb167-2"><a href="typedef-making-new-types.html#cb167-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb167-3"><a href="typedef-making-new-types.html#cb167-3" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> a <span class="op">=</span> <span class="dv">10</span><span class="op">;</span></span>
+<span id="cb167-4"><a href="typedef-making-new-types.html#cb167-4" aria-hidden="true" tabindex="-1"></a>intptr x <span class="op">=</span> <span class="op">&amp;</span>a<span class="op">;</span>  <span class="co">// &quot;intptr&quot; is type &quot;int*&quot;</span></span></code></pre></div>
+<p>I really don’t like this practice. It hides the fact that <code>x</code> is a pointer type because you don’t see a <code>*</code> in the declaration.</p>
+<p>IMHO, it’s better to explicitly show that you’re declaring a pointer type so that other devs can clearly see it and don’t mistake <code>x</code> for having a non-pointer type.</p>
+<p>But at last count, say, 832,007 people had a different opinion. </p>
+<h3 data-number="10.2.4" id="typedef-and-capitalization"><span class="header-section-number">10.2.4</span> <code>typedef</code> and Capitalization</h3>
+<p>I’ve seen all kinds of capitalization on <code>typedef</code>.</p>
+<div class="sourceCode" id="cb168"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb168-1"><a href="typedef-making-new-types.html#cb168-1" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="kw">struct</span> <span class="op">{</span></span>
+<span id="cb168-2"><a href="typedef-making-new-types.html#cb168-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> x<span class="op">,</span> y<span class="op">;</span></span>
+<span id="cb168-3"><a href="typedef-making-new-types.html#cb168-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> my_point<span class="op">;</span>          <span class="co">// lower snake case</span></span>
+<span id="cb168-4"><a href="typedef-making-new-types.html#cb168-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb168-5"><a href="typedef-making-new-types.html#cb168-5" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="kw">struct</span> <span class="op">{</span></span>
+<span id="cb168-6"><a href="typedef-making-new-types.html#cb168-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> x<span class="op">,</span> y<span class="op">;</span></span>
+<span id="cb168-7"><a href="typedef-making-new-types.html#cb168-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> MyPoint<span class="op">;</span>          <span class="co">// CamelCase</span></span>
+<span id="cb168-8"><a href="typedef-making-new-types.html#cb168-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb168-9"><a href="typedef-making-new-types.html#cb168-9" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="kw">struct</span> <span class="op">{</span></span>
+<span id="cb168-10"><a href="typedef-making-new-types.html#cb168-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> x<span class="op">,</span> y<span class="op">;</span></span>
+<span id="cb168-11"><a href="typedef-making-new-types.html#cb168-11" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> Mypoint<span class="op">;</span>          <span class="co">// Leading uppercase</span></span>
+<span id="cb168-12"><a href="typedef-making-new-types.html#cb168-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb168-13"><a href="typedef-making-new-types.html#cb168-13" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="kw">struct</span> <span class="op">{</span></span>
+<span id="cb168-14"><a href="typedef-making-new-types.html#cb168-14" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> x<span class="op">,</span> y<span class="op">;</span></span>
+<span id="cb168-15"><a href="typedef-making-new-types.html#cb168-15" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> MY_POINT<span class="op">;</span>          <span class="co">// UPPER SNAKE CASE</span></span></code></pre></div>
+<p>The C11 specification doesn’t dictate one way or another, and shows examples in all uppercase and all lowercase.</p>
+<p>K&amp;R2 uses leading uppercase predominantly, but show some examples in uppercase and snake case (with <code>_t</code>).</p>
+<p>If you have a style guide in use, stick with it. If you don’t, grab one and stick with it.</p>
+<h2 data-number="10.3" id="arrays-and-typedef"><span class="header-section-number">10.3</span> Arrays and <code>typedef</code></h2>
+<p> The syntax is a little weird, and this is rarely seen in my experience, but you can <code>typedef</code> an array of some number of items.</p>
+<div class="sourceCode" id="cb169"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb169-1"><a href="typedef-making-new-types.html#cb169-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Make type five_ints an array of 5 ints</span></span>
+<span id="cb169-2"><a href="typedef-making-new-types.html#cb169-2" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="dt">int</span> five_ints<span class="op">[</span><span class="dv">5</span><span class="op">];</span></span>
+<span id="cb169-3"><a href="typedef-making-new-types.html#cb169-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb169-4"><a href="typedef-making-new-types.html#cb169-4" aria-hidden="true" tabindex="-1"></a>five_ints x <span class="op">=</span> <span class="op">{</span><span class="dv">11</span><span class="op">,</span> <span class="dv">22</span><span class="op">,</span> <span class="dv">33</span><span class="op">,</span> <span class="dv">44</span><span class="op">,</span> <span class="dv">55</span><span class="op">};</span></span></code></pre></div>
+<p>I don’t like it because it hides the array nature of the variable, but it’s possible to do. </p>
+<!-- Beej's guide to C
+
+# vim: ts=4:sw=4:nosi:et:tw=72
+-->
+<hr><div style="text-align:center"><span><a href="file-inputoutput.html">Prev</a> | </span><a href="index.html">Contents</a><span> | <a href="pointers2.html">Next</a></span></div></body>
+</html>

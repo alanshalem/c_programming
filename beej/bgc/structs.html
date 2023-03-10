@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Beej's Guide to C Programming</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Mono&display=swap" rel="stylesheet"> 
+
+  <!-- BG custom styling -->
+  <style type="text/css">
+  /* Fix for line numbers not visible */
+  pre.numberSource code > span {
+      left: -1em;
+  }
+  pre.numberSource {
+      margin-left: initial;
+  }
+
+  /* Put some space after the section numbers */
+  span.toc-section-number::after {
+      content: "\a0\a0\a0";  /* non-breaking whitespace */
+  }
+
+  /* Hide underlines on code number links */
+  pre > code.sourceCode > span > a:first-child::before {
+      text-decoration: none;
+  }
+
+  /* Color the source blocks */
+  div.sourceCode {
+      background-color: #f0f0f0;
+  }
+
+  /* Fix iOS big text rendering issue */
+  pre > code.sourceCode > span {
+      display: initial;
+  }
+
+
+  /* Color the inline code */
+  code:not(.sourceCode) {
+      background: #f0f0f0;
+      padding-left: 0.2em;
+      padding-right: 0.2em;
+      border-radius: 0.2em;
+  }
+
+  /* Keep code tags from wrapping in tables */
+  tbody code {
+      white-space: nowrap;
+  }
+
+  td {
+      vertical-align: top;
+  }
+
+  body {
+      font-size: 12pt;
+      max-width: 43em;
+  }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<div style="text-align:center"><span><a href="strings.html">Prev</a> | </span><a href="index.html">Contents</a><span> | <a href="file-inputoutput.html">Next</a></span></div><hr>
+<h1 data-number="8" id="structs"><span class="header-section-number">8</span> Structs</h1>
+<p> In C, we have something called a <code>struct</code>, which is a user-definable type that holds multiple pieces of data, potentially of different types.</p>
+<p>It’s a convenient way to bundle multiple variables into a single one. This can be beneficial for passing variables to functions (so you just have to pass one instead of many), and useful for organizing data and making code more readable.</p>
+<p>If you’ve come from another language, you might be familiar with the idea of <em>classes</em> and <em>objects</em>. These don’t exist in C, natively<a href="footnotes.html#fn67" class="footnote-ref" id="fnref67" role="doc-noteref"><sup>67</sup></a>. You can think of a <code>struct</code> as a class with only data members, and no methods.</p>
+<h2 data-number="8.1" id="declaring-a-struct"><span class="header-section-number">8.1</span> Declaring a Struct</h2>
+<p> You can declare a <code>struct</code> in your code like so:</p>
+<div class="sourceCode" id="cb127"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb127-1"><a href="structs.html#cb127-1" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> car <span class="op">{</span></span>
+<span id="cb127-2"><a href="structs.html#cb127-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">char</span> <span class="op">*</span>name<span class="op">;</span></span>
+<span id="cb127-3"><a href="structs.html#cb127-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">float</span> price<span class="op">;</span></span>
+<span id="cb127-4"><a href="structs.html#cb127-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> speed<span class="op">;</span></span>
+<span id="cb127-5"><a href="structs.html#cb127-5" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span></code></pre></div>
+<p>This is often done at the global scope outside any functions so that the <code>struct</code> is globally available.</p>
+<p>When you do this, you’re making a new <em>type</em>. The full type name is <code>struct car</code>. (Not just <code>car</code>—that won’t work.)</p>
+<p>There aren’t any variables of that type yet, but we can declare some:</p>
+<div class="sourceCode" id="cb128"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb128-1"><a href="structs.html#cb128-1" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> car saturn<span class="op">;</span>  <span class="co">// Variable &quot;saturn&quot; of type &quot;struct car&quot;</span></span></code></pre></div>
+<p>And now we have an uninitialized variable <code>saturn</code><a href="footnotes.html#fn68" class="footnote-ref" id="fnref68" role="doc-noteref"><sup>68</sup></a> of type <code>struct car</code>.</p>
+<p>We should initialize it! But how do we set the values of those individual fields?</p>
+<p>Like in many other languages that stole it from C, we’re going to use the dot operator (<code>.</code>) to access the individual fields.</p>
+<div class="sourceCode" id="cb129"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb129-1"><a href="structs.html#cb129-1" aria-hidden="true" tabindex="-1"></a>saturn<span class="op">.</span>name <span class="op">=</span> <span class="st">&quot;Saturn SL/2&quot;</span><span class="op">;</span></span>
+<span id="cb129-2"><a href="structs.html#cb129-2" aria-hidden="true" tabindex="-1"></a>saturn<span class="op">.</span>price <span class="op">=</span> <span class="fl">15999.99</span><span class="op">;</span></span>
+<span id="cb129-3"><a href="structs.html#cb129-3" aria-hidden="true" tabindex="-1"></a>saturn<span class="op">.</span>speed <span class="op">=</span> <span class="dv">175</span><span class="op">;</span></span>
+<span id="cb129-4"><a href="structs.html#cb129-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb129-5"><a href="structs.html#cb129-5" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;Name:           </span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> saturn<span class="op">.</span>name<span class="op">);</span></span>
+<span id="cb129-6"><a href="structs.html#cb129-6" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;Price (USD):    </span><span class="sc">%f\n</span><span class="st">&quot;</span><span class="op">,</span> saturn<span class="op">.</span>price<span class="op">);</span></span>
+<span id="cb129-7"><a href="structs.html#cb129-7" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;Top Speed (km): </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> saturn<span class="op">.</span>speed<span class="op">);</span></span></code></pre></div>
+<p>There on the first lines, we set the values in the <code>struct car</code>, and then in the next bit, we print those values out. </p>
+<h2 data-number="8.2" id="struct-initializers"><span class="header-section-number">8.2</span> Struct Initializers</h2>
+<p> That example in the previous section was a little unwieldy. There must be a better way to initialize that <code>struct</code> variable!</p>
+<p>You can do it with an initializer by putting values in for the fields <em>in the order they appear in the <code>struct</code></em> when you define the variable. (This won’t work after the variable has been defined—it has to happen in the definition).</p>
+<div class="sourceCode" id="cb130"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb130-1"><a href="structs.html#cb130-1" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> car <span class="op">{</span></span>
+<span id="cb130-2"><a href="structs.html#cb130-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">char</span> <span class="op">*</span>name<span class="op">;</span></span>
+<span id="cb130-3"><a href="structs.html#cb130-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">float</span> price<span class="op">;</span></span>
+<span id="cb130-4"><a href="structs.html#cb130-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> speed<span class="op">;</span></span>
+<span id="cb130-5"><a href="structs.html#cb130-5" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb130-6"><a href="structs.html#cb130-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb130-7"><a href="structs.html#cb130-7" aria-hidden="true" tabindex="-1"></a><span class="co">// Now with an initializer! Same field order as in the struct declaration:</span></span>
+<span id="cb130-8"><a href="structs.html#cb130-8" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> car saturn <span class="op">=</span> <span class="op">{</span><span class="st">&quot;Saturn SL/2&quot;</span><span class="op">,</span> <span class="fl">16000.99</span><span class="op">,</span> <span class="dv">175</span><span class="op">};</span></span>
+<span id="cb130-9"><a href="structs.html#cb130-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb130-10"><a href="structs.html#cb130-10" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;Name:      </span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> saturn<span class="op">.</span>name<span class="op">);</span></span>
+<span id="cb130-11"><a href="structs.html#cb130-11" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;Price:     </span><span class="sc">%f\n</span><span class="st">&quot;</span><span class="op">,</span> saturn<span class="op">.</span>price<span class="op">);</span></span>
+<span id="cb130-12"><a href="structs.html#cb130-12" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;Top Speed: </span><span class="sc">%d</span><span class="st"> km</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">,</span> saturn<span class="op">.</span>speed<span class="op">);</span></span></code></pre></div>
+<p>The fact that the fields in the initializer need to be in the same order is a little freaky. If someone changes the order in <code>struct car</code>, it could break all the other code!</p>
+<p>We can be more specific with our initializers:</p>
+<div class="sourceCode" id="cb131"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb131-1"><a href="structs.html#cb131-1" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> car saturn <span class="op">=</span> <span class="op">{.</span>speed<span class="op">=</span><span class="dv">175</span><span class="op">,</span> <span class="op">.</span>name<span class="op">=</span><span class="st">&quot;Saturn SL/2&quot;</span><span class="op">};</span></span></code></pre></div>
+<p>Now it’s independent of the order in the <code>struct</code> declaration. Which is safer code, for sure.</p>
+<p>Similar to array initializers, any missing field designators are initialized to zero (in this case, that would be <code>.price</code>, which I’ve omitted). </p>
+<h2 data-number="8.3" id="passing-structs-to-functions"><span class="header-section-number">8.3</span> Passing Structs to Functions</h2>
+<p> You can do a couple things to pass a <code>struct</code> to a function.</p>
+<ol type="1">
+<li>Pass the <code>struct</code>.</li>
+<li>Pass a pointer to the <code>struct</code>.</li>
+</ol>
+<p>Recall that when you pass something to a function, a <em>copy</em> of that thing gets made for the function to operate on, whether it’s a copy of a pointer, an <code>int</code>, a <code>struct</code>, or anything.</p>
+<p>There are basically two cases when you’d want to pass a pointer to the <code>struct</code>:</p>
+<ol type="1">
+<li>You need the function to be able to make changes to the <code>struct</code> that was passed in, and have those changes show in the caller.</li>
+<li>The <code>struct</code> is somewhat large and it’s more expensive to copy that onto the stack than it is to just copy a pointer<a href="footnotes.html#fn69" class="footnote-ref" id="fnref69" role="doc-noteref"><sup>69</sup></a>.</li>
+</ol>
+<p>For those two reasons, it’s far more common to pass a pointer to a <code>struct</code> to a function, though its by no means illegal to pass the <code>struct</code> itself.</p>
+<p>Let’s try passing in a pointer, making a function that will allow you to set the <code>.price</code> field of the <code>struct car</code>:</p>
+<div class="sourceCode" id="cb132"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb132-1"><a href="structs.html#cb132-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb132-2"><a href="structs.html#cb132-2"></a></span>
+<span id="cb132-3"><a href="structs.html#cb132-3"></a><span class="kw">struct</span> car <span class="op">{</span></span>
+<span id="cb132-4"><a href="structs.html#cb132-4"></a>    <span class="dt">char</span> <span class="op">*</span>name<span class="op">;</span></span>
+<span id="cb132-5"><a href="structs.html#cb132-5"></a>    <span class="dt">float</span> price<span class="op">;</span></span>
+<span id="cb132-6"><a href="structs.html#cb132-6"></a>    <span class="dt">int</span> speed<span class="op">;</span></span>
+<span id="cb132-7"><a href="structs.html#cb132-7"></a><span class="op">};</span></span>
+<span id="cb132-8"><a href="structs.html#cb132-8"></a></span>
+<span id="cb132-9"><a href="structs.html#cb132-9"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb132-10"><a href="structs.html#cb132-10"></a><span class="op">{</span></span>
+<span id="cb132-11"><a href="structs.html#cb132-11"></a>    <span class="kw">struct</span> car saturn <span class="op">=</span> <span class="op">{.</span>speed<span class="op">=</span><span class="dv">175</span><span class="op">,</span> <span class="op">.</span>name<span class="op">=</span><span class="st">&quot;Saturn SL/2&quot;</span><span class="op">};</span></span>
+<span id="cb132-12"><a href="structs.html#cb132-12"></a></span>
+<span id="cb132-13"><a href="structs.html#cb132-13"></a>    <span class="co">// Pass a pointer to this struct car, along with a new,</span></span>
+<span id="cb132-14"><a href="structs.html#cb132-14"></a>    <span class="co">// more realistic, price:</span></span>
+<span id="cb132-15"><a href="structs.html#cb132-15"></a>    set_price<span class="op">(&amp;</span>saturn<span class="op">,</span> <span class="fl">799.99</span><span class="op">);</span></span>
+<span id="cb132-16"><a href="structs.html#cb132-16"></a></span>
+<span id="cb132-17"><a href="structs.html#cb132-17"></a>    printf<span class="op">(</span><span class="st">&quot;Price: </span><span class="sc">%f\n</span><span class="st">&quot;</span><span class="op">,</span> saturn<span class="op">.</span>price<span class="op">);</span></span>
+<span id="cb132-18"><a href="structs.html#cb132-18"></a><span class="op">}</span></span></code></pre></div>
+<p>You should be able to come up with the function signature for <code>set_price()</code> just by looking at the types of the arguments we have there.</p>
+<p><code>saturn</code> is a <code>struct car</code>, so <code>&amp;saturn</code> must be the address of the <code>struct car</code>, AKA a pointer to a <code>struct car</code>, namely a <code>struct car*</code>.</p>
+<p>And <code>799.99</code> is a <code>float</code>.</p>
+<p>So the function declaration must look like this:</p>
+<div class="sourceCode" id="cb133"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb133-1"><a href="structs.html#cb133-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> set_price<span class="op">(</span><span class="kw">struct</span> car <span class="op">*</span>c<span class="op">,</span> <span class="dt">float</span> new_price<span class="op">)</span></span></code></pre></div>
+<p>We just need to write the body. One attempt might be:</p>
+<div class="sourceCode" id="cb134"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb134-1"><a href="structs.html#cb134-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> set_price<span class="op">(</span><span class="kw">struct</span> car <span class="op">*</span>c<span class="op">,</span> <span class="dt">float</span> new_price<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb134-2"><a href="structs.html#cb134-2" aria-hidden="true" tabindex="-1"></a>    c<span class="op">.</span>price <span class="op">=</span> new_price<span class="op">;</span>  <span class="co">// ERROR!!</span></span>
+<span id="cb134-3"><a href="structs.html#cb134-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>That won’t work because the dot operator only works on <code>struct</code>s… it doesn’t work on <em>pointers</em> to <code>struct</code>s.</p>
+<p>Ok, so we can dereference the <code>struct</code> to de-pointer it to get to the <code>struct</code> itself. Dereferencing a <code>struct car*</code> results in the <code>struct car</code> that the pointer points to, which we should be able to use the dot operator on:</p>
+<div class="sourceCode" id="cb135"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb135-1"><a href="structs.html#cb135-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> set_price<span class="op">(</span><span class="kw">struct</span> car <span class="op">*</span>c<span class="op">,</span> <span class="dt">float</span> new_price<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb135-2"><a href="structs.html#cb135-2" aria-hidden="true" tabindex="-1"></a>    <span class="op">(*</span>c<span class="op">).</span>price <span class="op">=</span> new_price<span class="op">;</span>  <span class="co">// Works, but is ugly and non-idiomatic :(</span></span>
+<span id="cb135-3"><a href="structs.html#cb135-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>And that works! But it’s a little clunky to type all those parens and the asterisk. C has some syntactic sugar called the <em>arrow operator</em> that helps with that. </p>
+<h2 data-number="8.4" id="the-arrow-operator"><span class="header-section-number">8.4</span> The Arrow Operator</h2>
+<p> The arrow operator helps refer to fields in pointers to <code>struct</code>s.</p>
+<div class="sourceCode" id="cb136"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb136-1"><a href="structs.html#cb136-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> set_price<span class="op">(</span><span class="kw">struct</span> car <span class="op">*</span>c<span class="op">,</span> <span class="dt">float</span> new_price<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb136-2"><a href="structs.html#cb136-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">// (*c).price = new_price;  // Works, but non-idiomatic :(</span></span>
+<span id="cb136-3"><a href="structs.html#cb136-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">//</span></span>
+<span id="cb136-4"><a href="structs.html#cb136-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">// The line above is 100% equivalent to the one below:</span></span>
+<span id="cb136-5"><a href="structs.html#cb136-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb136-6"><a href="structs.html#cb136-6" aria-hidden="true" tabindex="-1"></a>    c<span class="op">-&gt;</span>price <span class="op">=</span> new_price<span class="op">;</span>  <span class="co">// That&#39;s the one!</span></span>
+<span id="cb136-7"><a href="structs.html#cb136-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>So when accessing fields, when do we use dot and when do we use arrow?</p>
+<ul>
+<li>If you have a <code>struct</code>, use dot (<code>.</code>).</li>
+<li>If you have a pointer to a <code>struct</code>, use arrow (<code>-&gt;</code>). </li>
+</ul>
+<h2 data-number="8.5" id="copying-and-returning-structs"><span class="header-section-number">8.5</span> Copying and Returning <code>struct</code>s</h2>
+<p> Here’s an easy one for you!</p>
+<p>Just assign from one to the other!</p>
+<div class="sourceCode" id="cb137"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb137-1"><a href="structs.html#cb137-1" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> car a<span class="op">,</span> b<span class="op">;</span></span>
+<span id="cb137-2"><a href="structs.html#cb137-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb137-3"><a href="structs.html#cb137-3" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> a<span class="op">;</span>  <span class="co">// Copy the struct</span></span></code></pre></div>
+<p>And returning a <code>struct</code> (as opposed to a pointer to one) from a function also makes a similar copy to the receiving variable.</p>
+<p>This is not a “deep copy”<a href="footnotes.html#fn70" class="footnote-ref" id="fnref70" role="doc-noteref"><sup>70</sup></a>. All fields are copied as-is, including pointers to things. </p>
+<h2 data-number="8.6" id="comparing-structs"><span class="header-section-number">8.6</span> Comparing <code>struct</code>s</h2>
+<p> There’s only one safe way to do it: compare each field one at a time.</p>
+<p>You might think you could use <a href="https://beej.us/guide/bgclr/html/split/stringref.html#man-strcmp"><code>memcmp()</code></a><a href="footnotes.html#fn71" class="footnote-ref" id="fnref71" role="doc-noteref"><sup>71</sup></a>, but that doesn’t handle the case of the possible <a href="structs-ii-more-fun-with-structs.html#struct-padding-bytes">padding bytes</a> that might be in there.</p>
+<p>If you clear the <code>struct</code> to zero first with <a href="https://beej.us/guide/bgclr/html/split/stringref.html#man-memset"><code>memset()</code></a><a href="footnotes.html#fn72" class="footnote-ref" id="fnref72" role="doc-noteref"><sup>72</sup></a>, then it <em>might</em> work, though there could be weird elements that <a href="https://stackoverflow.com/questions/141720/how-do-you-compare-structs-for-equality-in-c">might not compare as you expect</a><a href="footnotes.html#fn73" class="footnote-ref" id="fnref73" role="doc-noteref"><sup>73</sup></a>. </p>
+<!-- Beej's guide to C
+
+# vim: ts=4:sw=4:nosi:et:tw=72
+-->
+<hr><div style="text-align:center"><span><a href="strings.html">Prev</a> | </span><a href="index.html">Contents</a><span> | <a href="file-inputoutput.html">Next</a></span></div></body>
+</html>

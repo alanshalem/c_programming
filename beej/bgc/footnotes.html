@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Beej's Guide to C Programming</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Mono&display=swap" rel="stylesheet"> 
+
+  <!-- BG custom styling -->
+  <style type="text/css">
+  /* Fix for line numbers not visible */
+  pre.numberSource code > span {
+      left: -1em;
+  }
+  pre.numberSource {
+      margin-left: initial;
+  }
+
+  /* Put some space after the section numbers */
+  span.toc-section-number::after {
+      content: "\a0\a0\a0";  /* non-breaking whitespace */
+  }
+
+  /* Hide underlines on code number links */
+  pre > code.sourceCode > span > a:first-child::before {
+      text-decoration: none;
+  }
+
+  /* Color the source blocks */
+  div.sourceCode {
+      background-color: #f0f0f0;
+  }
+
+  /* Fix iOS big text rendering issue */
+  pre > code.sourceCode > span {
+      display: initial;
+  }
+
+
+  /* Color the inline code */
+  code:not(.sourceCode) {
+      background: #f0f0f0;
+      padding-left: 0.2em;
+      padding-right: 0.2em;
+      border-radius: 0.2em;
+  }
+
+  /* Keep code tags from wrapping in tables */
+  tbody code {
+      white-space: nowrap;
+  }
+
+  td {
+      vertical-align: top;
+  }
+
+  body {
+      font-size: 12pt;
+      max-width: 43em;
+  }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<div style="text-align:center"><span><a href="function-specifiers-alignment-specifiersoperators.html">Prev</a> | </span><a href="index.html">Contents</a><span style="visibility: hidden"> | <a href="">Next</a></span></div><hr>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+
+<ol>
+<li id="fn1"><p>https://www.ioccc.org/<a href="foreword.html#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>https://en.wikipedia.org/wiki/Python_(programming_language)<a href="foreword.html#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>https://en.wikipedia.org/wiki/JavaScript<a href="foreword.html#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>https://en.wikipedia.org/wiki/Java_(programming_language)<a href="foreword.html#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>https://en.wikipedia.org/wiki/Rust_(programming_language)<a href="foreword.html#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6"><p>https://en.wikipedia.org/wiki/Go_(programming_language)<a href="foreword.html#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn7"><p>https://en.wikipedia.org/wiki/Swift_(programming_language)<a href="foreword.html#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn8"><p>https://en.wikipedia.org/wiki/Objective-C<a href="foreword.html#fnref8" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn9"><p>https://beej.us/guide/bgclr/<a href="foreword.html#fnref9" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn10"><p>https://en.wikipedia.org/wiki/ANSI_C<a href="foreword.html#fnref10" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn11"><p>https://en.wikipedia.org/wiki/POSIX<a href="foreword.html#fnref11" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn12"><p>https://visualstudio.microsoft.com/vs/community/<a href="foreword.html#fnref12" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn13"><p>https://docs.microsoft.com/en-us/windows/wsl/install-win10<a href="foreword.html#fnref13" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn14"><p>https://developer.apple.com/xcode/<a href="foreword.html#fnref14" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn15"><p>https://beej.us/guide/bgc/<a href="foreword.html#fnref15" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn16"><p>https://en.cppreference.com/<a href="foreword.html#fnref16" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn17"><p>https://groups.google.com/g/comp.lang.c<a href="foreword.html#fnref17" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn18"><p>https://www.reddit.com/r/C_Programming/<a href="foreword.html#fnref18" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn19"><p>https://en.wikipedia.org/wiki/Assembly_language<a href="hello-world.html#fnref19" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn20"><p>https://en.wikipedia.org/wiki/Bare_machine<a href="hello-world.html#fnref20" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn21"><p>https://en.wikipedia.org/wiki/Operating_system<a href="hello-world.html#fnref21" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn22"><p>https://en.wikipedia.org/wiki/Embedded_system<a href="hello-world.html#fnref22" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn23"><p>https://en.wikipedia.org/wiki/Rust_(programming_language)<a href="hello-world.html#fnref23" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn24"><p>https://en.wikipedia.org/wiki/Grok<a href="hello-world.html#fnref24" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn25"><p>I know someone will fight me on that, but it’s gotta be at least in the top three, right?<a href="hello-world.html#fnref25" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn26"><p>Well, technically there are more than two, but hey, let’s pretend there are two—ignorance is bliss, right?<a href="hello-world.html#fnref26" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn27"><p>https://en.wikipedia.org/wiki/Assembly_language<a href="hello-world.html#fnref27" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn28"><p>https://en.wikipedia.org/wiki/Machine_code<a href="hello-world.html#fnref28" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn29"><p>Technically, it contains preprocessor directives and function prototypes (more on that later) for common input and output needs.<a href="hello-world.html#fnref29" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn30"><p>https://en.wikipedia.org/wiki/Unix<a href="hello-world.html#fnref30" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn31"><p>If you don’t give it an output filename, it will export to a file called <code>a.out</code> by default—this filename has its roots deep in Unix history.<a href="hello-world.html#fnref31" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn32"><p>https://formulae.brew.sh/formula/gcc<a href="hello-world.html#fnref32" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn33"><p>A “byte” is typically an 8-bit binary number. Think of it as an integer that can only hold the values from 0 to 255, inclusive. Technically, C allows bytes to be any number of bits and if you want to unambiguously refer to an 8-bit number, you should use the term <em>octet</em>. But programmers are going assume you mean 8-bits when you say “byte” unless you specify otherwise.<a href="variables-and-statements.html#fnref33" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn34"><p>I’m seriously oversimplifying how modern memory works, here. But the mental model works, so please forgive me.<a href="variables-and-statements.html#fnref34" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn35"><p>I’m lying here a little. Technically <code>3.14159</code> is of type <code>double</code>, but we’re not there yet and I want you to associate <code>float</code> with “Floating Point”, and C will happily coerce that type into a <code>float</code>. In short, don’t worry about it until later.<a href="variables-and-statements.html#fnref35" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn36"><p>Read this as “pointer to a char” or “char pointer”. “Char” for character. Though I can’t find a study, it seems anecdotally most people pronounce this as “char”, a minority say “car”, and a handful say “care”. We’ll talk more about pointers later.<a href="variables-and-statements.html#fnref36" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn37"><p>Colloquially, we say they have “random” values, but they aren’t truly—or even pseudo-truly—random numbers.<a href="variables-and-statements.html#fnref37" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn38"><p>This isn’t strictly 100% true. When we get to learning about static storage duration, you’ll find the some variables are initialized to zero automatically. But the safe thing to do is always initialize them.<a href="variables-and-statements.html#fnref38" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn39"><p>The <code>_t</code> is short for <code>type</code>.<a href="variables-and-statements.html#fnref39" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn40"><p>Except for with variable length arrays—but that’s a story for another time.<a href="variables-and-statements.html#fnref40" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn41"><p>https://beej.us/guide/bgclr/html/split/stdlib.html#man-srand<a href="variables-and-statements.html#fnref41" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn42"><p>This was considered such a hazard that the designers of the Go Programming Language made <code>break</code> the default; you have to explicitly use Go’s <code>fallthrough</code> statement if you want to fall into the next case.<a href="variables-and-statements.html#fnref42" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn43"><p>Never say “never”.<a href="functions.html#fnref43" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn44"><p>Typically. I’m sure there are exceptions out there in the dark corridors of computing history.<a href="pointers.html#fnref44" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn45"><p>A byte is a number made up of no more than 8 binary digits, or <em>bits</em> for short. This means in decimal digits just like grandma used to use, it can hold an unsigned number between 0 and 255, inclusive.<a href="pointers.html#fnref45" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn46"><p>The order that bytes come in is referred to as the <em>endianness</em> of the number. The usual suspects are <em>big-endian</em> (with the most significant byte first) and <em>little-endian</em> (with the most-significant byte last), or, uncommonly now, <em>mixed-endian</em> (with the most-significant bytes somewhere else).<a href="pointers.html#fnref46" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn47"><p>That is, base 16 with digits 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, A, B, C, D, E, and F.<a href="pointers.html#fnref47" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn48"><p>That’s not all! It’s used in <code>/*comments*/</code> and multiplication and in function prototypes with variable length arrays! It’s all the same <code>*</code>, but the context gives it different meaning.<a href="pointers.html#fnref48" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn49"><p>https://en.wikipedia.org/wiki/Null_pointer#History<a href="pointers.html#fnref49" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn50"><p>https://en.wikipedia.org/wiki/Sentinel_value<a href="pointers.html#fnref50" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn51"><p>The pointer type variables are <code>a</code>, <code>d</code>, <code>f</code>, and <code>i</code>, because those are the ones with <code>*</code> in front of them.<a href="pointers.html#fnref51" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn52"><p>These days, anyway.<a href="arrays.html#fnref52" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn53"><p>Again, not really, but variable-length arrays—of which I’m not really a fan—are a story for another time.<a href="arrays.html#fnref53" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn54"><p>Since arrays are just pointers to the first element of the array under the hood, there’s no additional information recording the length.<a href="arrays.html#fnref54" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn55"><p>Because when you pass an array to a function, you’re actually just passing a pointer to the first element of that array, not the “entire” array.<a href="arrays.html#fnref55" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn56"><p>In the good old MS-DOS days before memory protection was a thing, I was writing some particularly abusive C code that deliberately engaged in all kinds of undefined behavior. But I knew what I was doing, and things were working pretty well. Until I made a misstep that caused a lockup and, as I found upon reboot, nuked all my BIOS settings. That was fun. (Shout-out to <span class="citation" data-cites="man">@man</span> for those fun times.)<a href="arrays.html#fnref56" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn57"><p>There are a lot of things that cause undefined behavior, not just out-of-bounds array accesses. This is what makes the C language so <em>exciting</em>.<a href="arrays.html#fnref57" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn58"><p>https://en.wikipedia.org/wiki/Row-_and_column-major_order<a href="arrays.html#fnref58" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn59"><p>This is technically incorrect, as a pointer to an array and a pointer to the first element of an array have different types. But we can burn that bridge when we get to it.<a href="arrays.html#fnref59" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn60"><p>C11 §6.7.6.2¶1 requires it be greater than zero. But you might see code out there with arrays declared of zero length at the end of <code>struct</code>s and GCC is particularly lenient about it unless you compile with <code>-pedantic</code>. This zero-length array was a hackish mechanism for making variable-length structures. Unfortunately, it’s technically undefined behavior to access such an array even though it basically worked everywhere. C99 codified a well-defined replacement for it called <em>flexible array members</em>, which we’ll chat about later.<a href="arrays.html#fnref60" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn61"><p>This is also equivalent: <code>void print_2D_array(int (*a)[3])</code>, but that’s more than I want to get into right now.<a href="arrays.html#fnref61" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn62"><p>Though it is true that C doesn’t track the length of strings.<a href="strings.html#fnref62" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn63"><p>If you’re using the basic character set or an 8-bit character set, you’re used to one character being one byte. This isn’t true in all character encodings, though.<a href="strings.html#fnref63" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn64"><p>This is different than the <code>NULL</code> pointer, and I’ll abbreviate it <code>NUL</code> when talking about the character versus <code>NULL</code> for the pointer.<a href="strings.html#fnref64" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn65"><p>Later we’ll learn a neater way to do it with pointer arithmetic.<a href="strings.html#fnref65" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn66"><p>There’s a safer function called <code>strncpy()</code> that you should probably use instead, but we’ll get to that later.<a href="strings.html#fnref66" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn67"><p>Although in C individual items in memory like <code>int</code>s are referred to as “objects”, they’re not objects in an object-oriented programming sense.<a href="structs.html#fnref67" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn68"><p>The Saturn was a popular brand of economy car in the United States until it was put out of business by the 2008 crash, sadly so to us fans.<a href="structs.html#fnref68" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn69"><p>A pointer is likely 8 bytes on a 64-bit system.<a href="structs.html#fnref69" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn70"><p>A <em>deep copy</em> follows pointer in the <code>struct</code> and copies the data they point to, as well. A <em>shallow copy</em> just copies the pointers, but not the things they point to. C doesn’t come with any built-in deep copy functionality.<a href="structs.html#fnref70" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn71"><p>https://beej.us/guide/bgclr/html/split/stringref.html#man-strcmp<a href="structs.html#fnref71" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn72"><p>https://beej.us/guide/bgclr/html/split/stringref.html#man-memset<a href="structs.html#fnref72" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn73"><p>https://stackoverflow.com/questions/141720/how-do-you-compare-structs-for-equality-in-c<a href="structs.html#fnref73" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn74"><p>We used to have three different newlines in broad effect: Carriage Return (CR, used on old Macs), Linefeed (LF, used on Unix systems), and Carriage Return/Linefeed (CRLF, used on Windows systems). Thankfully the introduction of OS X, being Unix-based, reduced this number to two.<a href="file-inputoutput.html#fnref74" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn75"><p>If the buffer’s not big enough to read in an entire line, it’ll just stop reading mid-line, and the next call to <code>fgets()</code> will continue reading the rest of the line.<a href="file-inputoutput.html#fnref75" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn76"><p>Normally the second program would read all the bytes at once, and <em>then</em> print them out in a loop. That would be more efficient. But we’re going for demo value, here.<a href="file-inputoutput.html#fnref76" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn77"><p>https://en.wikipedia.org/wiki/Hex_dump<a href="file-inputoutput.html#fnref77" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn78"><p>https://en.wikipedia.org/wiki/Endianess<a href="file-inputoutput.html#fnref78" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn79"><p>And this is why I used individual bytes in my <code>fwrite()</code> and <code>fread()</code> examples, above, shrewdly.<a href="file-inputoutput.html#fnref79" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn80"><p>https://en.wikipedia.org/wiki/Protocol_buffers<a href="file-inputoutput.html#fnref80" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn81"><p>We’ll talk more about these later.<a href="typedef-making-new-types.html#fnref81" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn82"><p>Recall that the <code>sizeof</code> operator tells you the size in bytes of an object in memory.<a href="pointers2.html#fnref82" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn83"><p>Or string, which is really an array of <code>char</code>s. Somewhat peculiarly, you can also have a pointer that references <em>one past</em> the end of the array without a problem and still do math on it. You just can’t dereference it when it’s out there.<a href="pointers2.html#fnref83" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn84"><p>https://beej.us/guide/bgclr/html/split/stdlib.html#man-qsort<a href="pointers2.html#fnref84" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn85"><p>https://beej.us/guide/bgclr/html/split/stdlib.html#man-bsearch<a href="pointers2.html#fnref85" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn86"><p>Because remember that array notation is just a dereference and some pointer math, and you can’t dereference a <code>void*</code>!<a href="pointers2.html#fnref86" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn87"><p>You can also <em>cast</em> the <code>void*</code> to another type, but we haven’t gotten to casts yet.<a href="pointers2.html#fnref87" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn88"><p>Or until the program exits, in which case all the memory allocated by it is freed. Asterisk: some systems allow you to allocate memory that persists after a program exits, but it’s system dependent, out of scope for this guide, and you’ll certainly never do it on accident.<a href="manual-memory-allocation.html#fnref88" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn89"><p>http://www.open-std.org/jtc1/sc22/wg14/www/docs/summary.htm#dr_460<a href="manual-memory-allocation.html#fnref89" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn90"><p>https://en.wikipedia.org/wiki/Bit_bucket<a href="scope.html#fnref90" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn91"><p>“Bit” is short for <em>binary digit</em>. Binary is just another way of representing numbers. Instead of digits 0-9 like we’re used to, it’s digits 0-1.<a href="types-ii-way-more-types.html#fnref91" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn92"><p>https://en.wikipedia.org/wiki/Two%27s_complement<a href="types-ii-way-more-types.html#fnref92" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn93"><p>The industry term for a sequence of exactly, indisputably 8 bits is an <em>octet</em>.<a href="types-ii-way-more-types.html#fnref93" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn94"><p>In general, f you have an <span class="math inline">\(n\)</span> bit two’s complement number, the signed range is <span class="math inline">\(-2^{n-1}\)</span> to <span class="math inline">\(2^{n-1}-1\)</span>. And the unsigned range is <span class="math inline">\(0\)</span> to <span class="math inline">\(2^n-1\)</span>.<a href="types-ii-way-more-types.html#fnref94" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn95"><p>https://en.wikipedia.org/wiki/ASCII<a href="types-ii-way-more-types.html#fnref95" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn96"><p>https://en.wikipedia.org/wiki/List_of_information_system_character_sets<a href="types-ii-way-more-types.html#fnref96" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn97"><p>https://en.wikipedia.org/wiki/Unicode<a href="types-ii-way-more-types.html#fnref97" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn98"><p>Depends on if a <code>char</code> defaults to <code>signed char</code> or <code>unsigned char</code><a href="types-ii-way-more-types.html#fnref98" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn99"><p>https://en.wikipedia.org/wiki/Signed_number_representations#Signed_magnitude_representation<a href="types-ii-way-more-types.html#fnref99" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn100"><p>My <code>char</code> is signed.<a href="types-ii-way-more-types.html#fnref100" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn101"><p>https://en.wikipedia.org/wiki/IEEE_754<a href="types-ii-way-more-types.html#fnref101" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn102"><p>This program runs as its comments indicate on a system with <code>FLT_DIG</code> of <code>6</code> that uses IEEE-754 base-2 floating point numbers. Otherwise, you might get different output.<a href="types-ii-way-more-types.html#fnref102" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn103"><p>It’s really surprising to me that C doesn’t have this in the spec yet. In the C99 Rationale document, they write, “A proposal to add binary constants was rejected due to lack of precedent and insufficient utility.” Which seems kind of silly in light of some of the other features they kitchen-sinked in there! I’ll bet one of the next releases has it.<a href="types-ii-way-more-types.html#fnref103" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn104"><p>https://en.wikipedia.org/wiki/Scientific_notation<a href="types-ii-way-more-types.html#fnref104" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn105"><p>They’re the same except <code>snprintf()</code> allows you to specify a maximum number of bytes to output, preventing the overrunning of the end of your string. So it’s safer.<a href="types-iii-conversions.html#fnref105" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn106"><p>https://en.wikipedia.org/wiki/ASCII<a href="types-iii-conversions.html#fnref106" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn107"><p>We have to pass a pointer to <code>badchar</code> to <code>strtoul()</code> or it won’t be able to modify it in any way we can see, analogous to why you have to pass a pointer to an <code>int</code> to a function if you want that function to be able to change that value of that <code>int</code>.<a href="types-iii-conversions.html#fnref107" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn108"><p>Each character has a value associated with it for any given character encoding scheme.<a href="types-iii-conversions.html#fnref108" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn109"><p>In practice, what’s probably happening on your implementation is that the high-order bits are just being dropped from the result, so a 16-bit number <code>0x1234</code> being converted to an 8-bit number ends up as <code>0x0034</code>, or just <code>0x34</code>.<a href="types-iii-conversions.html#fnref109" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn110"><p>Again, in practice, what will likely happen on your system is that the bit pattern for the original will be truncated and then just used to represent the signed number, two’s complement. For example, my system takes an <code>unsigned char</code> of <code>192</code> and converts it to <code>signed char</code> <code>-64</code>. In two’s complement, the bit pattern for both these numbers is binary <code>11000000</code>.<a href="types-iii-conversions.html#fnref110" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn111"><p>Not really—it’s just discarded regularly.<a href="types-iii-conversions.html#fnref111" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn112"><p>Functions with a variable number of arguments.<a href="types-iii-conversions.html#fnref112" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn113"><p>This is rarely done because the compiler will complain and having a prototype is the <em>Right Thing</em> to do. I think this still works for historic reasons, before prototypes were a thing.<a href="types-iii-conversions.html#fnref113" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn114"><p>https://beej.us/guide/bgclr/html/split/ctype.html<a href="types-iii-conversions.html#fnref114" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn115"><p>https://gustedt.wordpress.com/2010/08/17/a-common-misconsception-the-register-keyword/<a href="types-iv-qualifiers-and-specifiers.html#fnref115" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn116"><p>https://en.wikipedia.org/wiki/Processor_register<a href="types-iv-qualifiers-and-specifiers.html#fnref116" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn117"><p>https://en.wikipedia.org/wiki/Boids<a href="multifile-projects.html#fnref117" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn118"><p>Historially, MS-DOS and Windows programs would do this differently than Unix. In Unix, the shell would <em>expand</em> the wildcard into all matching files before your program saw it, whereas the Microsoft variants would pass the wildcard expression into the program to deal with. In any case, there are arguments that get passed into the program.<a href="the-outside-environment.html#fnref118" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn119"><p>Since they’re just regular parameter names, you don’t actually have to call them <code>argc</code> and <code>argv</code>. But it’s so very idiomatic to use those names, if you get creative, other C programmers will look at you with a suspicious eye, indeed!<a href="the-outside-environment.html#fnref119" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn120"><p><code>ps</code>, Process Status, is a Unix command to see what processes are running at the moment.<a href="the-outside-environment.html#fnref120" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn121"><p>https://en.wikipedia.org/wiki/Inception<a href="the-outside-environment.html#fnref121" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn122"><p>https://en.wikipedia.org/wiki/Shell_(computing)<a href="the-outside-environment.html#fnref122" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn123"><p>In Windows <code>cmd.exe</code>, type <code>echo %errorlevel%</code>. In PowerShell, type <code>$LastExitCode</code>.<a href="the-outside-environment.html#fnref123" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn124"><p>If you need a numeric value, convert the string with something like <code>atoi()</code> or <code>strtol()</code>.<a href="the-outside-environment.html#fnref124" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn125"><p>In Windows CMD.EXE, use <code>set FROTZ=value</code>. In PowerShell, use <code>$Env:FROTZ=value</code>.<a href="the-outside-environment.html#fnref125" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn126"><p>https://pubs.opengroup.org/onlinepubs/9699919799/functions/exec.html<a href="the-outside-environment.html#fnref126" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn127"><p>You can’t always just wrap the code in <code>/*</code> <code>*/</code> comments because those won’t nest.<a href="the-c-preprocessor.html#fnref127" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn128"><p>This isn’t really a macro—it’s technically an identifier. But it’s the only predefined identifier and it feels very macro-like, so I’m including it here. Like a rebel.<a href="the-c-preprocessor.html#fnref128" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn129"><p>A hosted implementation basically means you’re running the full C standard, probably on an operating system of some kind. Which you probably are. If you’re running on bare metal in some kind of embedded system, you’re probably on a <em>standalone implementation</em>.<a href="the-c-preprocessor.html#fnref129" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn130"><p>OK, I know that was a cop-out answer. Basically there’s an optional extension compilers can implement wherein they agree to limit certain types of undefined behavior so that the C code is more amenable to static code analysis. It is unlikely you’ll need to use this.<a href="the-c-preprocessor.html#fnref130" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn131"><p><em>Breakin’ the law… breakin’ the law…</em><a href="the-c-preprocessor.html#fnref131" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn132"><p>https://www.openmp.org/<a href="the-c-preprocessor.html#fnref132" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn133"><p>Technically we say that it has an <em>incomplete type</em>.<a href="structs-ii-more-fun-with-structs.html#fnref133" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn134"><p>Though some compilers have options to force this to occur—search for <code>__attribute__((packed))</code> to see how to do this with GCC.<a href="structs-ii-more-fun-with-structs.html#fnref134" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn135"><p><code>super</code> isn’t a keyword, incidentally. I’m just stealing some OOP terminology.<a href="structs-ii-more-fun-with-structs.html#fnref135" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn136"><p>Assuming 8-bit <code>char</code>s, i.e. <code>CHAR_BIT == 8</code>.<a href="structs-ii-more-fun-with-structs.html#fnref136" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn137"><p>https://en.wikipedia.org/wiki/Type_punning<a href="structs-ii-more-fun-with-structs.html#fnref137" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn138"><p>I just made up that number, but it’s probably not far off<a href="characters-and-strings-ii.html#fnref138" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn139"><p>There’s some devil in the details with values that are stored in registers only, but we can safely ignore that for our purposes here. Also the C spec makes no stance on these “register” things beyond the <code>register</code> keyword, the description for which doesn’t mention registers.<a href="pointers-iii-pointers-to-pointers-and-more.html#fnref139" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn140"><p>You’re very likely to get different numbers on yours.<a href="pointers-iii-pointers-to-pointers-and-more.html#fnref140" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn141"><p>There is absolutely nothing in the spec that says this will always work this way, but it happens to work this way on my system.<a href="pointers-iii-pointers-to-pointers-and-more.html#fnref141" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn142"><p>Even if <code>E</code> is <code>NULL</code>, it turns out, weirdly.<a href="pointers-iii-pointers-to-pointers-and-more.html#fnref142" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn143"><p>https://beej.us/guide/bgclr/html/split/stringref.html#man-memcpy<a href="pointers-iii-pointers-to-pointers-and-more.html#fnref143" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn144"><p>Your C compiler is not required to add padding bytes, and the values of any padding bytes that are added are indeterminate.<a href="pointers-iii-pointers-to-pointers-and-more.html#fnref144" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn145"><p>This will vary depending on the architecture, but my system is <em>little endian</em>, which means the least-significant byte of the number is stored first. <em>Big endian</em> systems will have the <code>12</code> first and the <code>78</code> last. But the spec doesn’t dictate anything about this representation.<a href="pointers-iii-pointers-to-pointers-and-more.html#fnref145" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn146"><p>It’s an optional feature, so it might not be there—but it probably is.<a href="pointers-iii-pointers-to-pointers-and-more.html#fnref146" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn147"><p>I’m printing out the 16-bit values reversed since I’m on a little-endian machine and it makes it easier to read here.<a href="pointers-iii-pointers-to-pointers-and-more.html#fnref147" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn148"><p>Assuming they point to the same array object.<a href="pointers-iii-pointers-to-pointers-and-more.html#fnref148" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn149"><p>The Go Programming Language drew its type declaration syntax inspiration from the opposite of what C does.<a href="pointers-iii-pointers-to-pointers-and-more.html#fnref149" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn150"><p>Not that other languages don’t do this—they do. It is interesting how many modern languages use the same operators for bitwise that C does.<a href="bitwise-operations.html#fnref150" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn151"><p>https://en.wikipedia.org/wiki/Bitwise_operation<a href="bitwise-operations.html#fnref151" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn152"><p>That is, us lowly developers aren’t supposed to know what’s in there or what it means. The spec doesn’t dictate what it is in detail.<a href="variadic-functions.html#fnref152" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn153"><p>Honestly, it would be possible to remove that limitation from the language, but the idea is that the macros <code>va_start()</code>, <code>va_arg()</code>, and <code>va_end()</code> should be able to be written in C. And to make that happen, we need some way to initialize a pointer to the location of the first parameter. And to do that, we need the <em>name</em> of the first parameter. It would require a language extension to make this possible, and so far the committee hasn’t found a rationale for doing so.<a href="variadic-functions.html#fnref153" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn154"><p>“This planet has—or rather had—a problem, which was this: most of the people living on it were unhappy for pretty much of the time. Many solutions were suggested for this problem, but most of these were largely concerned with the movement of small green pieces of paper, which was odd because on the whole it wasn’t the small green pieces of paper that were unhappy.” —The Hitchhiker’s Guide to the Galaxy, Douglas Adams<a href="locale-and-internationalization.html#fnref154" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn155"><p>Remember that <code>char</code> is just a byte-sized integer.<a href="locale-and-internationalization.html#fnref155" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn156"><p>Except for <code>isdigit()</code> and <code>isxdigit()</code>.<a href="locale-and-internationalization.html#fnref156" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn157"><p>For example, we could store the code point in a big-endian 32-bit integer. Straightforward! We just invented an encoding! Actually not; that’s what UTF-32BE encoding is. Oh well—back to the grind!<a href="unicode-wide-characters-and-all-that.html#fnref157" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn158"><p>Ish. Technically, it’s variable width—there’s a way to represent code points higher than <span class="math inline">\(2^{16}\)</span> by putting two UTF-16 characters together.<a href="unicode-wide-characters-and-all-that.html#fnref158" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn159"><p>There’s a special character called the <em>Byte Order Mark</em> (BOM), code point 0xFEFF, that can optionally precede the data stream and indicate the endianess. It is not required, however.<a href="unicode-wide-characters-and-all-that.html#fnref159" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn160"><p>Again, this is only true in UTF-16 for characters that fit in two bytes.<a href="unicode-wide-characters-and-all-that.html#fnref160" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn161"><p>https://en.wikipedia.org/wiki/UTF-8<a href="unicode-wide-characters-and-all-that.html#fnref161" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn162"><p>https://www.youtube.com/watch?v=MijmeoH9LT4<a href="unicode-wide-characters-and-all-that.html#fnref162" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn163"><p>Presumably the compiler makes the best effort to translate the code point to whatever the output encoding is, but I can’t find any guarantees in the spec.<a href="unicode-wide-characters-and-all-that.html#fnref163" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn164"><p>With a format specifier like <code>"%.12s"</code>, for example.<a href="unicode-wide-characters-and-all-that.html#fnref164" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn165"><p><code>wcscoll()</code> is the same as <code>wcsxfrm()</code> followed by <code>wcscmp()</code>.<a href="unicode-wide-characters-and-all-that.html#fnref165" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn166"><p>Ish—things get funky with multi-<code>char16_t</code> UTF-16 encodings.<a href="unicode-wide-characters-and-all-that.html#fnref166" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn167"><p>https://en.wikipedia.org/wiki/Iconv<a href="unicode-wide-characters-and-all-that.html#fnref167" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn168"><p>http://site.icu-project.org/<a href="unicode-wide-characters-and-all-that.html#fnref168" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn169"><p>https://en.wikipedia.org/wiki/Core_dump<a href="exiting-a-program.html#fnref169" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn170"><p>Apparently it doesn’t do Unix-style signals at all deep down, and they’re simulated for console apps.<a href="signal-handling.html#fnref170" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn171"><p>Confusingly, <code>sig_atomic_t</code> predates the lock-free atomics and is not the same thing.<a href="signal-handling.html#fnref171" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn172"><p>If <code>sig_action_t</code> is signed, the range will be at least <code>-127</code> to <code>127</code>. If unsigned, at least <code>0</code> to <code>255</code>.<a href="signal-handling.html#fnref172" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn173"><p>This is due to how VLAs are typically allocated on the stack, whereas <code>static</code> variables are on the heap. And the whole idea with VLAs is they’ll be automatically dellocated when the stack frame is popped at the end of the function.<a href="variable-length-arrays-vlas.html#fnref173" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn174"><p>https://en.wikipedia.org/wiki/Goto#Criticism<a href="goto.html#fnref174" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn175"><p>I’d like to point out that using <code>goto</code> in all these cases is avoidable. You can use variables and loops instead. It’s just that some people think <code>goto</code> produces the <em>best</em> code in those circumstances.<a href="goto.html#fnref175" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn176"><p>https://en.wikipedia.org/wiki/Tail_call<a href="goto.html#fnref176" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn177"><p>Which isn’t quite the same, since it’s an array, not a pointer to an <code>int</code>.<a href="types-part-v-compound-literals-and-generic-selections.html#fnref177" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn178"><p>A variable used here <em>is</em> an expression.<a href="types-part-v-compound-literals-and-generic-selections.html#fnref178" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn179"><p>Both “stack pointer” and “program counter” are related to the underlying architecture and C implementation, and are not part of the spec.<a href="setjmp-longjmp.html#fnref179" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn180"><p>The rationale here is that the program might store a value temporarily in a <em>CPU register</em> while it’s doing work on it. In that timeframe, the register holds the correct value, and the value on the stack might be out of date. Then later the register values would get overwritten and the changes to the variable lost.<a href="setjmp-longjmp.html#fnref180" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn181"><p>That is, remain allocated until the program ends with no way to free it.<a href="setjmp-longjmp.html#fnref181" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn182"><p>This works because in C, pointers are the same size regardless of the type of data they point to. So the compiler doesn’t need to know the size of the <code>struct node</code> at this point; it just needs to know the size of a pointer.<a href="incomplete-types.html#fnref182" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn183"><p>https://en.wikipedia.org/wiki/Complex_number<a href="complex-numbers.html#fnref183" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn184"><p>This was a harder one to research, and I’ll take any more information anyone can give me. <code>I</code> could be defined as <code>_Complex_I</code> or <code>_Imaginary_I</code>, if the latter exists. <code>_Imaginary_I</code> will handle signed zeros, but <code>_Complex_I</code> <em>might</em> not. This has implications with branch cuts and other complex-numbery-mathy things. Maybe. Can you tell I’m really getting out of my element here? In any case, the <code>CMPLX()</code> macros behave as if <code>I</code> were defined as <code>_Imaginary_I</code>, with signed zeros, even if <code>_Imaginary_I</code> doesn’t exist on the system.<a href="complex-numbers.html#fnref184" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn185"><p>The simplicity of this statement doesn’t do justice to the incredible amount of work that goes into simply understanding how floating point actually functions. https://randomascii.wordpress.com/2012/02/25/comparing-floating-point-numbers-2012-edition/<a href="complex-numbers.html#fnref185" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn186"><p>This is the only one that doesn’t begin with an extra leading <code>c</code>, strangely.<a href="complex-numbers.html#fnref186" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn187"><p>Some architectures have different sized data that the CPU and RAM can operate with at a faster rate than others. In those cases, if you need the fastest 8-bit number, it might give you have a 16- or 32-bit type instead because that’s just faster. So with this, you won’t know how big the type is, but it will be least as big as you say.<a href="fixed-width-integer-types.html#fnref187" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn188"><p>Namely, the system has 8, 16, 32, or 64 bit integers with no padding that use two’s complement representation, in which case the <code>intN_t</code> variant for that particular number of bits <em>must</em> be defined.<a href="fixed-width-integer-types.html#fnref188" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn189"><p>On Earth, anyway. Who know what crazy systems they use <em>out there</em>…<a href="date-and-time-functionality.html#fnref189" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn190"><p>OK, don’t murder me! GMT is technically a time zone while UTC is a global time system. Also some countries might adjust GMT for daylight saving time, whereas UTC is never adjusted for daylight saving time.<a href="date-and-time-functionality.html#fnref190" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn191"><p>Admittedly, there are more than two.<a href="date-and-time-functionality.html#fnref191" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn192"><p>https://en.wikipedia.org/wiki/Unix_time<a href="date-and-time-functionality.html#fnref192" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn193"><p>https://beej.us/guide/bgclr/html/split/time.html#man-strftime<a href="date-and-time-functionality.html#fnref193" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn194"><p>You will on POSIX, where <code>time_t</code> is definitely an integer. Unfortunately the entire world isn’t POSIX, so there we are.<a href="date-and-time-functionality.html#fnref194" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn195"><p>https://en.wikipedia.org/wiki/POSIX_Threads<a href="multithreading.html#fnref195" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn196"><p>I’m more a fan of shared-nothing, myself, and my skills with classic multithreading constructs are rusty, to say the least.<a href="multithreading.html#fnref196" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn197"><p>Yes, <code>pthreads</code> with a “<code>p</code>”. It’s short for POSIX threads, a library that C11 borrowed liberally from for its threads implementation.<a href="multithreading.html#fnref197" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn198"><p>Per §7.1.4¶5.<a href="multithreading.html#fnref198" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn199"><p>Unless you <code>thrd_detach()</code>. More on this later.<a href="multithreading.html#fnref199" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn200"><p>Though I don’t think they have to be. It’s just that the threads don’t seem to get rescheduled until some system call like might happen with a <code>printf()</code>… which is why I have the <code>printf()</code> in there.<a href="multithreading.html#fnref200" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn201"><p>Short for “mutual exclusion”, AKA a “lock” on a section of code that only one thread is permitted to execute.<a href="multithreading.html#fnref201" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn202"><p>That is, your process will go to sleep.<a href="multithreading.html#fnref202" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn203"><p>You might have expected it to be “time from now”, but you’d just like to think that, wouldn’t you!<a href="multithreading.html#fnref203" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn204"><p>And that’s why they’re called <em>condition variables</em>!<a href="multithreading.html#fnref204" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn205"><p>I’m not saying it’s aliens… but it’s aliens. OK, really more likely another thread might have been woken up and gotten to the work first.<a href="multithreading.html#fnref205" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn206"><p>Survival of the fittest! Right? I admit it’s actually nothing like that.<a href="multithreading.html#fnref206" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn207"><p>The <code>__STDC_VERSION__</code> macro didn’t exist in early C89, so if you’re worried about that, check it with <code>#ifdef</code>.<a href="chapter-atomics.html#fnref207" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn208"><p>The reason for this is when optimized, my compiler has put the value of <code>x</code> in a register to make the <code>while</code> loop fast. But the register has no way of knowing that the variable was updated in another thread, so it never sees the <code>3490</code>. This isn’t really related to the <em>all-or-nothing</em> part of atomicity, but is more related to the synchronization aspects in the next section.<a href="chapter-atomics.html#fnref208" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn209"><p>Until I say otherwise, I’m speaking generally about <em>sequentially consistent</em> operations. More on what that means soon.<a href="chapter-atomics.html#fnref209" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn210"><p>Sanest from a programmer perspective.<a href="chapter-atomics.html#fnref210" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn211"><p>Apparently C++23 is adding this as a macro.<a href="chapter-atomics.html#fnref211" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn212"><p>The spec notes that they might differ in size, representation, and alignment.<a href="chapter-atomics.html#fnref212" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn213"><p>I just pulled that example out of nowhere. Maybe it doesn’t matter on Intel/AMD, but it could matter somewhere, dangit!<a href="chapter-atomics.html#fnref213" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn214"><p>C++ elaborates that if the signal is the result of a call to <code>raise()</code>, it is sequenced <em>after</em> the <code>raise()</code>.<a href="chapter-atomics.html#fnref214" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn215"><p>https://en.wikipedia.org/wiki/Test-and-set<a href="chapter-atomics.html#fnref215" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn216"><p>Because consume is all about the operations that are dependent on the value of the acquired atomic variable, and there is no atomic variable with a fence.<a href="chapter-atomics.html#fnref216" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn217"><p>https://www.youtube.com/watch?v=A8eCGOqgvH4<a href="chapter-atomics.html#fnref217" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn218"><p>https://www.youtube.com/watch?v=KeLBd2EJLOU<a href="chapter-atomics.html#fnref218" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn219"><p>https://preshing.com/archives/<a href="chapter-atomics.html#fnref219" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn220"><p>https://preshing.com/20120612/an-introduction-to-lock-free-programming/<a href="chapter-atomics.html#fnref220" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn221"><p>https://preshing.com/20120913/acquire-and-release-semantics/<a href="chapter-atomics.html#fnref221" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn222"><p>https://preshing.com/20130702/the-happens-before-relation/<a href="chapter-atomics.html#fnref222" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn223"><p>https://preshing.com/20130823/the-synchronizes-with-relation/<a href="chapter-atomics.html#fnref223" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn224"><p>https://preshing.com/20140709/the-purpose-of-memory_order_consume-in-cpp11/<a href="chapter-atomics.html#fnref224" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn225"><p>https://preshing.com/20150402/you-can-do-any-kind-of-atomic-read-modify-write-operation/<a href="chapter-atomics.html#fnref225" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn226"><p>https://en.cppreference.com/w/c/atomic/memory_order<a href="chapter-atomics.html#fnref226" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn227"><p>https://en.cppreference.com/w/c/language/atomic<a href="chapter-atomics.html#fnref227" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn228"><p>https://docs.microsoft.com/en-us/windows/win32/dxtecharts/lockless-programming<a href="chapter-atomics.html#fnref228" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn229"><p>https://www.reddit.com/r/C_Programming/<a href="chapter-atomics.html#fnref229" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn230"><p>You can do this with <code>-O</code> on the command line.<a href="function-specifiers-alignment-specifiersoperators.html#fnref230" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn231"><p>https://beej.us/guide/bgclr/html/split/stdlib.html#man-exit<a href="function-specifiers-alignment-specifiersoperators.html#fnref231" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn232"><p>https://beej.us/guide/bgclr/html/split/stdlib.html#man-abort<a href="function-specifiers-alignment-specifiersoperators.html#fnref232" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn233"><p>https://en.wikipedia.org/wiki/Data_structure_alignment<a href="function-specifiers-alignment-specifiersoperators.html#fnref233" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+</body>
+<hr><div style="text-align:center"><span><a href="function-specifiers-alignment-specifiersoperators.html">Prev</a> | </span><a href="index.html">Contents</a><span style="visibility: hidden"> | <a href="">Next</a></span></div></body>
+</html>

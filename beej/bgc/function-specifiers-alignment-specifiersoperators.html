@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Beej's Guide to C Programming</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Mono&display=swap" rel="stylesheet"> 
+
+  <!-- BG custom styling -->
+  <style type="text/css">
+  /* Fix for line numbers not visible */
+  pre.numberSource code > span {
+      left: -1em;
+  }
+  pre.numberSource {
+      margin-left: initial;
+  }
+
+  /* Put some space after the section numbers */
+  span.toc-section-number::after {
+      content: "\a0\a0\a0";  /* non-breaking whitespace */
+  }
+
+  /* Hide underlines on code number links */
+  pre > code.sourceCode > span > a:first-child::before {
+      text-decoration: none;
+  }
+
+  /* Color the source blocks */
+  div.sourceCode {
+      background-color: #f0f0f0;
+  }
+
+  /* Fix iOS big text rendering issue */
+  pre > code.sourceCode > span {
+      display: initial;
+  }
+
+
+  /* Color the inline code */
+  code:not(.sourceCode) {
+      background: #f0f0f0;
+      padding-left: 0.2em;
+      padding-right: 0.2em;
+      border-radius: 0.2em;
+  }
+
+  /* Keep code tags from wrapping in tables */
+  tbody code {
+      white-space: nowrap;
+  }
+
+  td {
+      vertical-align: top;
+  }
+
+  body {
+      font-size: 12pt;
+      max-width: 43em;
+  }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<div style="text-align:center"><span><a href="chapter-atomics.html">Prev</a> | </span><a href="index.html">Contents</a><span> | <a href="footnotes.html">Next</a></span></div><hr>
+<h1 data-number="41" id="function-specifiers-alignment-specifiersoperators"><span class="header-section-number">41</span> Function Specifiers, Alignment Specifiers/Operators</h1>
+<p>These don’t see a heck of a lot of use in my experience, but we’ll cover them here for the sake of completeness.</p>
+<h2 data-number="41.1" id="function-specifiers"><span class="header-section-number">41.1</span> Function Specifiers</h2>
+<p></p>
+<p>When you declare a function, you can give the compiler a couple tips about how the functions could or will be used. This enables or encourages the compiler to make certain optimizations.</p>
+<h3 data-number="41.1.1" id="inline-for-speedmaybe"><span class="header-section-number">41.1.1</span> <code>inline</code> for Speed—Maybe</h3>
+<p></p>
+<p>You can declare a function to be inline like this:</p>
+<div class="sourceCode" id="cb769"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb769-1"><a href="function-specifiers-alignment-specifiersoperators.html#cb769-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="kw">inline</span> <span class="dt">int</span> add<span class="op">(</span><span class="dt">int</span> x<span class="op">,</span> <span class="dt">int</span> y<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb769-2"><a href="function-specifiers-alignment-specifiersoperators.html#cb769-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> x <span class="op">+</span> y<span class="op">;</span></span>
+<span id="cb769-3"><a href="function-specifiers-alignment-specifiersoperators.html#cb769-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>This is meant to encourage the compiler to make this function call as fast as possible. And, historically, one way to do this was <em>inlining</em>, which means that the body of the function would be embedded in its entirety where the call was made. This would avoid all the overhead of setting up the function call and tearing it down at the expense of larger code size as the function was copied all over the place instead of being reused.</p>
+<p>That would seem to be the end of the story, but it’s not. <code>inline</code> comes with a whole pile of rules that make for <em>interesting times</em>. I’m not sure I even understand them all, and behavior seems to vary from compiler to compiler.</p>
+<p>The short answer is define the <code>inline</code> function as <code>static</code> in the file that you need it. And then use it in that one file. And you never have to worry about the rest of it.</p>
+<p>But if you’re wondering, here are more fun times.</p>
+<p>Let’s try leaving the <code>static</code> off.</p>
+<div class="sourceCode" id="cb770"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb770-1"><a href="function-specifiers-alignment-specifiersoperators.html#cb770-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb770-2"><a href="function-specifiers-alignment-specifiersoperators.html#cb770-2"></a></span>
+<span id="cb770-3"><a href="function-specifiers-alignment-specifiersoperators.html#cb770-3"></a><span class="kw">inline</span> <span class="dt">int</span> add<span class="op">(</span><span class="dt">int</span> x<span class="op">,</span> <span class="dt">int</span> y<span class="op">)</span></span>
+<span id="cb770-4"><a href="function-specifiers-alignment-specifiersoperators.html#cb770-4"></a><span class="op">{</span></span>
+<span id="cb770-5"><a href="function-specifiers-alignment-specifiersoperators.html#cb770-5"></a>    <span class="cf">return</span> x <span class="op">+</span> y<span class="op">;</span></span>
+<span id="cb770-6"><a href="function-specifiers-alignment-specifiersoperators.html#cb770-6"></a><span class="op">}</span></span>
+<span id="cb770-7"><a href="function-specifiers-alignment-specifiersoperators.html#cb770-7"></a></span>
+<span id="cb770-8"><a href="function-specifiers-alignment-specifiersoperators.html#cb770-8"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb770-9"><a href="function-specifiers-alignment-specifiersoperators.html#cb770-9"></a><span class="op">{</span></span>
+<span id="cb770-10"><a href="function-specifiers-alignment-specifiersoperators.html#cb770-10"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> add<span class="op">(</span><span class="dv">1</span><span class="op">,</span> <span class="dv">2</span><span class="op">));</span></span>
+<span id="cb770-11"><a href="function-specifiers-alignment-specifiersoperators.html#cb770-11"></a><span class="op">}</span></span></code></pre></div>
+<p><code>gcc</code> gives a linker error on <code>add()</code>… unless you compile with optimizations on (probably)!</p>
+<p>See, a compiler can choose to inline or not, but if it chooses not to, you’re left with no function at all. <code>gcc</code> doesn’t inline unless you’re doing an optimized build.</p>
+<p>One way around this is to define a non-<code>inline</code> external linkage version of the function elsewhere, and that one will be used when the <code>inline</code> one isn’t. But you as the programmer can’t determine which, portably. If both are available, it’s unspecified which one the compiler chooses. With <code>gcc</code> the inline function will be used if you’re compiling with optimizations, and the non-inline one will be used otherwise. Even if the bodies of these functions are completely different. Zany!</p>
+<p>Another way is to declare the function as <code>extern inline</code>. This will attempt to inline in this file, but will also create a version with external linkage. And so <code>gcc</code> will use one or the other depending on optimizations, but at least they’re the same function.</p>
+<p>Unless, of course, you have another source file with an <code>inline</code> function of the same name; it will use its <code>inline</code> function or the one with external linkage depending on optimizations.</p>
+<p>But let’s say you’re doing a build where the compiler <em>is</em> inlining the function. In that case, you can just use a plain <code>inline</code> in the definition. However, there are now additional restrictions.</p>
+<p>You can’t refer to any <code>static</code> globals:</p>
+<div class="sourceCode" id="cb771"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb771-1"><a href="function-specifiers-alignment-specifiersoperators.html#cb771-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">int</span> b <span class="op">=</span> <span class="dv">13</span><span class="op">;</span></span>
+<span id="cb771-2"><a href="function-specifiers-alignment-specifiersoperators.html#cb771-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb771-3"><a href="function-specifiers-alignment-specifiersoperators.html#cb771-3" aria-hidden="true" tabindex="-1"></a><span class="kw">inline</span> <span class="dt">int</span> add<span class="op">(</span><span class="dt">int</span> x<span class="op">,</span> <span class="dt">int</span> y<span class="op">)</span></span>
+<span id="cb771-4"><a href="function-specifiers-alignment-specifiersoperators.html#cb771-4" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb771-5"><a href="function-specifiers-alignment-specifiersoperators.html#cb771-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> x <span class="op">+</span> y <span class="op">+</span> b<span class="op">;</span>  <span class="co">// BAD -- can&#39;t refer to b</span></span>
+<span id="cb771-6"><a href="function-specifiers-alignment-specifiersoperators.html#cb771-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>And you can’t define any non-<code>const</code> <code>static</code> local variables:</p>
+<div class="sourceCode" id="cb772"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb772-1"><a href="function-specifiers-alignment-specifiersoperators.html#cb772-1" aria-hidden="true" tabindex="-1"></a><span class="kw">inline</span> <span class="dt">int</span> add<span class="op">(</span><span class="dt">int</span> x<span class="op">,</span> <span class="dt">int</span> y<span class="op">)</span></span>
+<span id="cb772-2"><a href="function-specifiers-alignment-specifiersoperators.html#cb772-2" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb772-3"><a href="function-specifiers-alignment-specifiersoperators.html#cb772-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">static</span> <span class="dt">int</span> b <span class="op">=</span> <span class="dv">13</span><span class="op">;</span>  <span class="co">// BAD -- can&#39;t define static</span></span>
+<span id="cb772-4"><a href="function-specifiers-alignment-specifiersoperators.html#cb772-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb772-5"><a href="function-specifiers-alignment-specifiersoperators.html#cb772-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> x <span class="op">+</span> y <span class="op">+</span> b<span class="op">;</span></span>
+<span id="cb772-6"><a href="function-specifiers-alignment-specifiersoperators.html#cb772-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>But making it <code>const</code> is OK:</p>
+<div class="sourceCode" id="cb773"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb773-1"><a href="function-specifiers-alignment-specifiersoperators.html#cb773-1" aria-hidden="true" tabindex="-1"></a><span class="kw">inline</span> <span class="dt">int</span> add<span class="op">(</span><span class="dt">int</span> x<span class="op">,</span> <span class="dt">int</span> y<span class="op">)</span></span>
+<span id="cb773-2"><a href="function-specifiers-alignment-specifiersoperators.html#cb773-2" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb773-3"><a href="function-specifiers-alignment-specifiersoperators.html#cb773-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">static</span> <span class="dt">const</span> <span class="dt">int</span> b <span class="op">=</span> <span class="dv">13</span><span class="op">;</span>  <span class="co">// OK -- static const</span></span>
+<span id="cb773-4"><a href="function-specifiers-alignment-specifiersoperators.html#cb773-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb773-5"><a href="function-specifiers-alignment-specifiersoperators.html#cb773-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> x <span class="op">+</span> y <span class="op">+</span> b<span class="op">;</span></span>
+<span id="cb773-6"><a href="function-specifiers-alignment-specifiersoperators.html#cb773-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>Now, you know the functions are <code>extern</code> by default, so we should be able to call <code>add()</code> from another file. You’d like to think that, wouldn’t you!</p>
+<p>But you can’t! If it’s just a plain <code>inline</code>, it’s similar to <code>static</code>: it’s only visible in that file.</p>
+<p>Okay, so what if you throw an <code>extern</code> on there? Now we’re coming full circle to when we discussed having <code>inline</code> mixed with functions with external linkage.</p>
+<p>If both are visible, the compiler can choose which to use.</p>
+<p>Let’s do a demo of this behavior. We’ll have two files, <code>foo.c</code> and <code>bar.c</code>. They’ll both call <code>func()</code> which is <code>inline</code> in <code>foo.c</code> and external linkage in <code>bar.c</code>.</p>
+<p>Here’s <code>foo.c</code> with the <code>inline</code>.</p>
+<div class="sourceCode" id="cb774"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb774-1"><a href="function-specifiers-alignment-specifiersoperators.html#cb774-1"></a><span class="co">// foo.c</span></span>
+<span id="cb774-2"><a href="function-specifiers-alignment-specifiersoperators.html#cb774-2"></a></span>
+<span id="cb774-3"><a href="function-specifiers-alignment-specifiersoperators.html#cb774-3"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb774-4"><a href="function-specifiers-alignment-specifiersoperators.html#cb774-4"></a></span>
+<span id="cb774-5"><a href="function-specifiers-alignment-specifiersoperators.html#cb774-5"></a><span class="kw">inline</span> <span class="dt">char</span> <span class="op">*</span>func<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb774-6"><a href="function-specifiers-alignment-specifiersoperators.html#cb774-6"></a><span class="op">{</span></span>
+<span id="cb774-7"><a href="function-specifiers-alignment-specifiersoperators.html#cb774-7"></a>    <span class="cf">return</span> <span class="st">&quot;foo&#39;s function&quot;</span><span class="op">;</span></span>
+<span id="cb774-8"><a href="function-specifiers-alignment-specifiersoperators.html#cb774-8"></a><span class="op">}</span></span>
+<span id="cb774-9"><a href="function-specifiers-alignment-specifiersoperators.html#cb774-9"></a></span>
+<span id="cb774-10"><a href="function-specifiers-alignment-specifiersoperators.html#cb774-10"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb774-11"><a href="function-specifiers-alignment-specifiersoperators.html#cb774-11"></a><span class="op">{</span></span>
+<span id="cb774-12"><a href="function-specifiers-alignment-specifiersoperators.html#cb774-12"></a>    printf<span class="op">(</span><span class="st">&quot;foo.c: </span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> func<span class="op">());</span></span>
+<span id="cb774-13"><a href="function-specifiers-alignment-specifiersoperators.html#cb774-13"></a></span>
+<span id="cb774-14"><a href="function-specifiers-alignment-specifiersoperators.html#cb774-14"></a>    <span class="dt">void</span> bar<span class="op">(</span><span class="dt">void</span><span class="op">);</span></span>
+<span id="cb774-15"><a href="function-specifiers-alignment-specifiersoperators.html#cb774-15"></a>    bar<span class="op">();</span></span>
+<span id="cb774-16"><a href="function-specifiers-alignment-specifiersoperators.html#cb774-16"></a><span class="op">}</span></span></code></pre></div>
+<p>Recall that unless we’re doing an optimized build with <code>gcc</code>. <code>func()</code> will vanish and we’ll get a linker error. Unless, or course, we have a version with external linkage defined elsewhere.</p>
+<p>And we do. In <code>bar.c</code>.</p>
+<div class="sourceCode" id="cb775"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb775-1"><a href="function-specifiers-alignment-specifiersoperators.html#cb775-1"></a><span class="co">// bar.c</span></span>
+<span id="cb775-2"><a href="function-specifiers-alignment-specifiersoperators.html#cb775-2"></a></span>
+<span id="cb775-3"><a href="function-specifiers-alignment-specifiersoperators.html#cb775-3"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb775-4"><a href="function-specifiers-alignment-specifiersoperators.html#cb775-4"></a></span>
+<span id="cb775-5"><a href="function-specifiers-alignment-specifiersoperators.html#cb775-5"></a><span class="dt">char</span> <span class="op">*</span>func<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb775-6"><a href="function-specifiers-alignment-specifiersoperators.html#cb775-6"></a><span class="op">{</span></span>
+<span id="cb775-7"><a href="function-specifiers-alignment-specifiersoperators.html#cb775-7"></a>    <span class="cf">return</span> <span class="st">&quot;bar&#39;s function&quot;</span><span class="op">;</span></span>
+<span id="cb775-8"><a href="function-specifiers-alignment-specifiersoperators.html#cb775-8"></a><span class="op">}</span></span>
+<span id="cb775-9"><a href="function-specifiers-alignment-specifiersoperators.html#cb775-9"></a></span>
+<span id="cb775-10"><a href="function-specifiers-alignment-specifiersoperators.html#cb775-10"></a><span class="dt">void</span> bar<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb775-11"><a href="function-specifiers-alignment-specifiersoperators.html#cb775-11"></a><span class="op">{</span></span>
+<span id="cb775-12"><a href="function-specifiers-alignment-specifiersoperators.html#cb775-12"></a>    printf<span class="op">(</span><span class="st">&quot;bar.c: </span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> func<span class="op">());</span></span>
+<span id="cb775-13"><a href="function-specifiers-alignment-specifiersoperators.html#cb775-13"></a><span class="op">}</span></span></code></pre></div>
+<p>So the question is, what is the output?</p>
+<p>Seems like when we call <code>func()</code> from <code>foo.c</code>, it should print “<code>foo's function</code>”. And from <code>bar.c</code>, that <code>func()</code> should print “<code>bar's function</code>”.</p>
+<p>And if I compile with <code>gcc</code> with optimizations<a href="footnotes.html#fn230" class="footnote-ref" id="fnref230" role="doc-noteref"><sup>230</sup></a> it will use inline functions, and we’ll get the expected:</p>
+<div class="sourceCode" id="cb776"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb776-1"><a href="function-specifiers-alignment-specifiersoperators.html#cb776-1" aria-hidden="true" tabindex="-1"></a>foo.c: foo&#39;s function</span>
+<span id="cb776-2"><a href="function-specifiers-alignment-specifiersoperators.html#cb776-2" aria-hidden="true" tabindex="-1"></a>bar.c: bar&#39;s function</span></code></pre></div>
+<p>Great!</p>
+<p>But if we compile in <code>gcc</code> without optimizations, it ignores the inline function and uses the external linkage <code>func()</code> from <code>bar.c</code>! And we get this:</p>
+<div class="sourceCode" id="cb777"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb777-1"><a href="function-specifiers-alignment-specifiersoperators.html#cb777-1" aria-hidden="true" tabindex="-1"></a>foo.c: bar&#39;s function</span>
+<span id="cb777-2"><a href="function-specifiers-alignment-specifiersoperators.html#cb777-2" aria-hidden="true" tabindex="-1"></a>bar.c: bar&#39;s function</span></code></pre></div>
+<p>In short, the rules are surprisingly complex. I give myself a good 30% chance of having described them correctly.</p>
+<p></p>
+<h3 data-number="41.1.2" id="noreturn"><span class="header-section-number">41.1.2</span> <code>noreturn</code> and <code>_Noreturn</code></h3>
+<p> </p>
+<p>This indicates to the compiler that a particular function will not ever return to its caller, i.e. the program will exit by some mechanism before the function returns.</p>
+<p>It allows the compiler to perhaps perform some optimizations around the function call.</p>
+<p>It also allows you to indicate to other devs that some program logic depends on a function <em>not</em> returning.</p>
+<p>You’ll likely never need to use this, but you’ll see it on some library calls like <a href="https://beej.us/guide/bgclr/html/split/stdlib.html#man-exit"><code>exit()</code></a><a href="footnotes.html#fn231" class="footnote-ref" id="fnref231" role="doc-noteref"><sup>231</sup></a> and <a href="https://beej.us/guide/bgclr/html/split/stdlib.html#man-abort"><code>abort()</code></a><a href="footnotes.html#fn232" class="footnote-ref" id="fnref232" role="doc-noteref"><sup>232</sup></a>.</p>
+<p>The built-in keyword is <code>_Noreturn</code>, but if it doesn’t break your existing code, everyone would recommend including <code>&lt;stdnoreturn.h&gt;</code> and using the easier-to-read <code>noreturn</code> instead.</p>
+<p>It’s undefined behavior if a function specified as <code>noreturn</code> actually does return. It’s computationally dishonest, see.</p>
+<p>Here’s an example of using <code>noreturn</code> correctly:</p>
+<div class="sourceCode" id="cb778"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb778-1"><a href="function-specifiers-alignment-specifiersoperators.html#cb778-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb778-2"><a href="function-specifiers-alignment-specifiersoperators.html#cb778-2"></a><span class="pp">#include </span><span class="im">&lt;stdlib.h&gt;</span></span>
+<span id="cb778-3"><a href="function-specifiers-alignment-specifiersoperators.html#cb778-3"></a><span class="pp">#include </span><span class="im">&lt;stdnoreturn.h&gt;</span></span>
+<span id="cb778-4"><a href="function-specifiers-alignment-specifiersoperators.html#cb778-4"></a></span>
+<span id="cb778-5"><a href="function-specifiers-alignment-specifiersoperators.html#cb778-5"></a>noreturn <span class="dt">void</span> foo<span class="op">(</span><span class="dt">void</span><span class="op">)</span> <span class="co">// This function should never return!</span></span>
+<span id="cb778-6"><a href="function-specifiers-alignment-specifiersoperators.html#cb778-6"></a><span class="op">{</span></span>
+<span id="cb778-7"><a href="function-specifiers-alignment-specifiersoperators.html#cb778-7"></a>    printf<span class="op">(</span><span class="st">&quot;Happy days</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb778-8"><a href="function-specifiers-alignment-specifiersoperators.html#cb778-8"></a></span>
+<span id="cb778-9"><a href="function-specifiers-alignment-specifiersoperators.html#cb778-9"></a>    exit<span class="op">(</span><span class="dv">1</span><span class="op">);</span>            <span class="co">// And it doesn&#39;t return--it exits here!</span></span>
+<span id="cb778-10"><a href="function-specifiers-alignment-specifiersoperators.html#cb778-10"></a><span class="op">}</span></span>
+<span id="cb778-11"><a href="function-specifiers-alignment-specifiersoperators.html#cb778-11"></a></span>
+<span id="cb778-12"><a href="function-specifiers-alignment-specifiersoperators.html#cb778-12"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb778-13"><a href="function-specifiers-alignment-specifiersoperators.html#cb778-13"></a><span class="op">{</span></span>
+<span id="cb778-14"><a href="function-specifiers-alignment-specifiersoperators.html#cb778-14"></a>    foo<span class="op">();</span></span>
+<span id="cb778-15"><a href="function-specifiers-alignment-specifiersoperators.html#cb778-15"></a><span class="op">}</span></span></code></pre></div>
+<p>If the compiler detects that a <code>noreturn</code> function could return, it might warn you, helpfully.</p>
+<p>Replacing the <code>foo()</code> function with this:</p>
+<div class="sourceCode" id="cb779"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb779-1"><a href="function-specifiers-alignment-specifiersoperators.html#cb779-1" aria-hidden="true" tabindex="-1"></a>noreturn <span class="dt">void</span> foo<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb779-2"><a href="function-specifiers-alignment-specifiersoperators.html#cb779-2" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb779-3"><a href="function-specifiers-alignment-specifiersoperators.html#cb779-3" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;Breakin&#39; the law</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb779-4"><a href="function-specifiers-alignment-specifiersoperators.html#cb779-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>gets me a warning:</p>
+<div class="sourceCode" id="cb780"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb780-1"><a href="function-specifiers-alignment-specifiersoperators.html#cb780-1" aria-hidden="true" tabindex="-1"></a>foo.c:7:1: warning: function declared &#39;noreturn&#39; should not return</span></code></pre></div>
+<p> </p>
+<h2 data-number="41.2" id="alignment-specifiers-and-operators"><span class="header-section-number">41.2</span> Alignment Specifiers and Operators</h2>
+<p></p>
+<p><a href="https://en.wikipedia.org/wiki/Data_structure_alignment"><em>Alignment</em></a><a href="footnotes.html#fn233" class="footnote-ref" id="fnref233" role="doc-noteref"><sup>233</sup></a> is all about multiples of addresses on which objects can be stored. Can you store this at any address? Or must it be a starting address that’s divisible by 2? Or 8? Or 16?</p>
+<p>If you’re coding up something low-level like a memory allocator that interfaces with your OS, you might need to consider this. Most devs go their careers without using this functionality in C.</p>
+<h3 data-number="41.2.1" id="alignas-and-_alignas"><span class="header-section-number">41.2.1</span> <code>alignas</code> and <code>_Alignas</code></h3>
+<p> </p>
+<p>This isn’t a function. Rather, it’s an <em>alignment specifier</em> that you can use with a variable declaration.</p>
+<p>The built-in specifier is <code>_Alignas</code>, but the header <code>&lt;stdalign.h&gt;</code> defines it as <code>alignas</code> for something better looking.</p>
+<p>If you need your <code>char</code> to be aligned like an <code>int</code>, you can force it like this when you declare it:</p>
+<div class="sourceCode" id="cb781"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb781-1"><a href="function-specifiers-alignment-specifiersoperators.html#cb781-1" aria-hidden="true" tabindex="-1"></a><span class="dt">char</span> alignas<span class="op">(</span><span class="dt">int</span><span class="op">)</span> c<span class="op">;</span></span></code></pre></div>
+<p>You can also pass a constant value or expression in for the alignment. This has to be something supported by the system, but the spec stops short of dictating what values you can put in there. Small powers of 2 (1, 2, 4, 8, and 16) are generally safe bets.</p>
+<div class="sourceCode" id="cb782"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb782-1"><a href="function-specifiers-alignment-specifiersoperators.html#cb782-1" aria-hidden="true" tabindex="-1"></a><span class="dt">char</span> alignas<span class="op">(</span><span class="dv">8</span><span class="op">)</span> c<span class="op">;</span>   <span class="co">// align on 8-byte boundaries</span></span></code></pre></div>
+<p>If you want to align at the maximum used alignment by your system, include <code>&lt;stddef.h&gt;</code> and use the type <code>max_align_t</code>, like so:</p>
+<div class="sourceCode" id="cb783"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb783-1"><a href="function-specifiers-alignment-specifiersoperators.html#cb783-1" aria-hidden="true" tabindex="-1"></a><span class="dt">char</span> alignas<span class="op">(</span><span class="dt">max_align_t</span><span class="op">)</span> c<span class="op">;</span></span></code></pre></div>
+<p>You could potentially <em>over-align</em> by specifying an alignment more than that of <code>max_align_t</code>, but whether or not such things are allowed is system dependent.</p>
+<p> </p>
+<h3 data-number="41.2.2" id="alignof-and-_alignof"><span class="header-section-number">41.2.2</span> <code>alignof</code> and <code>_Alignof</code></h3>
+<p> </p>
+<p>This operator will return the address multiple a particular type uses for alignment on this system. For example, maybe <code>char</code>s are aligned every 1 address, and <code>int</code>s are aligned every 4 addresses.</p>
+<p>The built-in operator is <code>_Alignof</code>, but the header <code>&lt;stdalign.h&gt;</code> defines it as <code>alignof</code> if you want to look cooler.</p>
+<p>Here’s a program that will print out the alignments of a variety of different types. Again, these will vary from system to system. Note that the type <code>max_align_t</code> will give you the maximum alignment used by the system.</p>
+<div class="sourceCode" id="cb784"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb784-1"><a href="function-specifiers-alignment-specifiersoperators.html#cb784-1"></a><span class="pp">#include </span><span class="im">&lt;stdalign.h&gt;</span></span>
+<span id="cb784-2"><a href="function-specifiers-alignment-specifiersoperators.html#cb784-2"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span><span class="pp">     </span><span class="co">// for printf()</span></span>
+<span id="cb784-3"><a href="function-specifiers-alignment-specifiersoperators.html#cb784-3"></a><span class="pp">#include </span><span class="im">&lt;stddef.h&gt;</span><span class="pp">    </span><span class="co">// for max_align_t</span></span>
+<span id="cb784-4"><a href="function-specifiers-alignment-specifiersoperators.html#cb784-4"></a></span>
+<span id="cb784-5"><a href="function-specifiers-alignment-specifiersoperators.html#cb784-5"></a><span class="kw">struct</span> t <span class="op">{</span></span>
+<span id="cb784-6"><a href="function-specifiers-alignment-specifiersoperators.html#cb784-6"></a>    <span class="dt">int</span> a<span class="op">;</span></span>
+<span id="cb784-7"><a href="function-specifiers-alignment-specifiersoperators.html#cb784-7"></a>    <span class="dt">char</span> b<span class="op">;</span></span>
+<span id="cb784-8"><a href="function-specifiers-alignment-specifiersoperators.html#cb784-8"></a>    <span class="dt">float</span> c<span class="op">;</span></span>
+<span id="cb784-9"><a href="function-specifiers-alignment-specifiersoperators.html#cb784-9"></a><span class="op">};</span></span>
+<span id="cb784-10"><a href="function-specifiers-alignment-specifiersoperators.html#cb784-10"></a></span>
+<span id="cb784-11"><a href="function-specifiers-alignment-specifiersoperators.html#cb784-11"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb784-12"><a href="function-specifiers-alignment-specifiersoperators.html#cb784-12"></a><span class="op">{</span></span>
+<span id="cb784-13"><a href="function-specifiers-alignment-specifiersoperators.html#cb784-13"></a>    printf<span class="op">(</span><span class="st">&quot;char       : </span><span class="sc">%zu\n</span><span class="st">&quot;</span><span class="op">,</span> alignof<span class="op">(</span><span class="dt">char</span><span class="op">));</span></span>
+<span id="cb784-14"><a href="function-specifiers-alignment-specifiersoperators.html#cb784-14"></a>    printf<span class="op">(</span><span class="st">&quot;short      : </span><span class="sc">%zu\n</span><span class="st">&quot;</span><span class="op">,</span> alignof<span class="op">(</span><span class="dt">short</span><span class="op">));</span></span>
+<span id="cb784-15"><a href="function-specifiers-alignment-specifiersoperators.html#cb784-15"></a>    printf<span class="op">(</span><span class="st">&quot;int        : </span><span class="sc">%zu\n</span><span class="st">&quot;</span><span class="op">,</span> alignof<span class="op">(</span><span class="dt">int</span><span class="op">));</span></span>
+<span id="cb784-16"><a href="function-specifiers-alignment-specifiersoperators.html#cb784-16"></a>    printf<span class="op">(</span><span class="st">&quot;long       : </span><span class="sc">%zu\n</span><span class="st">&quot;</span><span class="op">,</span> alignof<span class="op">(</span><span class="dt">long</span><span class="op">));</span></span>
+<span id="cb784-17"><a href="function-specifiers-alignment-specifiersoperators.html#cb784-17"></a>    printf<span class="op">(</span><span class="st">&quot;long long  : </span><span class="sc">%zu\n</span><span class="st">&quot;</span><span class="op">,</span> alignof<span class="op">(</span><span class="dt">long</span> <span class="dt">long</span><span class="op">));</span></span>
+<span id="cb784-18"><a href="function-specifiers-alignment-specifiersoperators.html#cb784-18"></a>    printf<span class="op">(</span><span class="st">&quot;double     : </span><span class="sc">%zu\n</span><span class="st">&quot;</span><span class="op">,</span> alignof<span class="op">(</span><span class="dt">double</span><span class="op">));</span></span>
+<span id="cb784-19"><a href="function-specifiers-alignment-specifiersoperators.html#cb784-19"></a>    printf<span class="op">(</span><span class="st">&quot;long double: </span><span class="sc">%zu\n</span><span class="st">&quot;</span><span class="op">,</span> alignof<span class="op">(</span><span class="dt">long</span> <span class="dt">double</span><span class="op">));</span></span>
+<span id="cb784-20"><a href="function-specifiers-alignment-specifiersoperators.html#cb784-20"></a>    printf<span class="op">(</span><span class="st">&quot;struct t   : </span><span class="sc">%zu\n</span><span class="st">&quot;</span><span class="op">,</span> alignof<span class="op">(</span><span class="kw">struct</span> t<span class="op">));</span></span>
+<span id="cb784-21"><a href="function-specifiers-alignment-specifiersoperators.html#cb784-21"></a>    printf<span class="op">(</span><span class="st">&quot;max_align_t: </span><span class="sc">%zu\n</span><span class="st">&quot;</span><span class="op">,</span> alignof<span class="op">(</span><span class="dt">max_align_t</span><span class="op">));</span></span>
+<span id="cb784-22"><a href="function-specifiers-alignment-specifiersoperators.html#cb784-22"></a><span class="op">}</span></span></code></pre></div>
+<p>Output on my system:</p>
+<div class="sourceCode" id="cb785"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb785-1"><a href="function-specifiers-alignment-specifiersoperators.html#cb785-1" aria-hidden="true" tabindex="-1"></a>char       : 1</span>
+<span id="cb785-2"><a href="function-specifiers-alignment-specifiersoperators.html#cb785-2" aria-hidden="true" tabindex="-1"></a>short      : 2</span>
+<span id="cb785-3"><a href="function-specifiers-alignment-specifiersoperators.html#cb785-3" aria-hidden="true" tabindex="-1"></a>int        : 4</span>
+<span id="cb785-4"><a href="function-specifiers-alignment-specifiersoperators.html#cb785-4" aria-hidden="true" tabindex="-1"></a>long       : 8</span>
+<span id="cb785-5"><a href="function-specifiers-alignment-specifiersoperators.html#cb785-5" aria-hidden="true" tabindex="-1"></a>long long  : 8</span>
+<span id="cb785-6"><a href="function-specifiers-alignment-specifiersoperators.html#cb785-6" aria-hidden="true" tabindex="-1"></a>double     : 8</span>
+<span id="cb785-7"><a href="function-specifiers-alignment-specifiersoperators.html#cb785-7" aria-hidden="true" tabindex="-1"></a>long double: 16</span>
+<span id="cb785-8"><a href="function-specifiers-alignment-specifiersoperators.html#cb785-8" aria-hidden="true" tabindex="-1"></a>struct t   : 16</span>
+<span id="cb785-9"><a href="function-specifiers-alignment-specifiersoperators.html#cb785-9" aria-hidden="true" tabindex="-1"></a>max_align_t: 16</span></code></pre></div>
+<p>And there you have it. Alignment!</p>
+<p> </p>
+<hr><div style="text-align:center"><span><a href="chapter-atomics.html">Prev</a> | </span><a href="index.html">Contents</a><span> | <a href="footnotes.html">Next</a></span></div></body>
+</html>

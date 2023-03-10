@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Beej's Guide to C Programming</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Mono&display=swap" rel="stylesheet"> 
+
+  <!-- BG custom styling -->
+  <style type="text/css">
+  /* Fix for line numbers not visible */
+  pre.numberSource code > span {
+      left: -1em;
+  }
+  pre.numberSource {
+      margin-left: initial;
+  }
+
+  /* Put some space after the section numbers */
+  span.toc-section-number::after {
+      content: "\a0\a0\a0";  /* non-breaking whitespace */
+  }
+
+  /* Hide underlines on code number links */
+  pre > code.sourceCode > span > a:first-child::before {
+      text-decoration: none;
+  }
+
+  /* Color the source blocks */
+  div.sourceCode {
+      background-color: #f0f0f0;
+  }
+
+  /* Fix iOS big text rendering issue */
+  pre > code.sourceCode > span {
+      display: initial;
+  }
+
+
+  /* Color the inline code */
+  code:not(.sourceCode) {
+      background: #f0f0f0;
+      padding-left: 0.2em;
+      padding-right: 0.2em;
+      border-radius: 0.2em;
+  }
+
+  /* Keep code tags from wrapping in tables */
+  tbody code {
+      white-space: nowrap;
+  }
+
+  td {
+      vertical-align: top;
+  }
+
+  body {
+      font-size: 12pt;
+      max-width: 43em;
+  }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<div style="text-align:center"><span><a href="hello-world.html">Prev</a> | </span><a href="index.html">Contents</a><span> | <a href="functions.html">Next</a></span></div><hr>
+<h1 data-number="3" id="variables-and-statements"><span class="header-section-number">3</span> Variables and Statements</h1>
+<blockquote>
+<p><em>“It takes all kinds to make a world, does it not, Padre?”</em><br />
+<em>“So it does, my son, so it does.”</em></p>
+<p>—Pirate Captain Thomas Bartholomew Red to the Padre, Pirates</p>
+</blockquote>
+<p>There sure can be lotsa stuff in a C program.</p>
+<p>Yup.</p>
+<p>And for various reasons, it’ll be easier for all of us if we classify some of the types of things you can find in a program, so we can be clear what we’re talking about.</p>
+<h2 data-number="3.1" id="variables"><span class="header-section-number">3.1</span> Variables</h2>
+<p>It’s said that “variables hold values”. But another way to think about it is that a variable is a human-readable name that refers to some data in memory.</p>
+<p>We’re going to take a second here and take a peek down the rabbit hole that is pointers. Don’t worry about it.</p>
+<p>You can think of memory as a big array of bytes<a href="footnotes.html#fn33" class="footnote-ref" id="fnref33" role="doc-noteref"><sup>33</sup></a>. Data is stored in this “array”<a href="footnotes.html#fn34" class="footnote-ref" id="fnref34" role="doc-noteref"><sup>34</sup></a>. If a number is larger than a single byte, it is stored in multiple bytes. Because memory is like an array, each byte of memory can be referred to by its index. This index into memory is also called an <em>address</em>, or a <em>location</em>, or a <em>pointer</em>.</p>
+<p>When you have a variable in C, the value of that variable is in memory <em>somewhere</em>, at some address. Of course. After all, where else would it be? But it’s a pain to refer to a value by its numeric address, so we make a name for it instead, and that’s what the variable is.</p>
+<p>The reason I’m bringing all this up is twofold:</p>
+<ol type="1">
+<li>It’s going to make it easier to understand pointer variables later—they’re variables that hold the address of other variables!</li>
+<li>Also, it’s going to make it easier to understand pointers later.</li>
+</ol>
+<p>So a variable is a name for some data that’s stored in memory at some address.</p>
+<h3 data-number="3.1.1" id="variable-names"><span class="header-section-number">3.1.1</span> Variable Names</h3>
+<p>You can use any characters in the range 0-9, A-Z, a-z, and underscore for variable names, with the following rules:</p>
+<ul>
+<li>You can’t start a variable with a digit 0-9.</li>
+<li>You can’t start a variable name with two underscores.</li>
+<li>You can’t start a variable name with an underscore followed by a capital A-Z.</li>
+</ul>
+<p>For Unicode, just try it. There are some rules in the spec in §D.2 that talk about which Unicode codepoint ranges are allowed in which parts of identifiers, but that’s too much to write about here and is probably something you’ll never have to think about anyway.</p>
+<h3 data-number="3.1.2" id="variable-types"><span class="header-section-number">3.1.2</span> Variable Types</h3>
+<p>Depending on which languages you already have in your toolkit, you might or might not be familiar with the idea of types. But C’s kinda picky about them, so we should do a refresher.</p>
+<p>Some example types, some of the most basic:</p>
+<p></p>
+<table>
+<colgroup>
+<col style="width: 23%" />
+<col style="width: 41%" />
+<col style="width: 35%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Type</th>
+<th style="text-align: right;">Example</th>
+<th style="text-align: left;">C Type</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Integer</td>
+<td style="text-align: right;"><code>3490</code></td>
+<td style="text-align: left;"><code>int</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Floating point</td>
+<td style="text-align: right;"><code>3.14159</code></td>
+<td style="text-align: left;"><code>float</code><a href="footnotes.html#fn35" class="footnote-ref" id="fnref35" role="doc-noteref"><sup>35</sup></a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Character (single)</td>
+<td style="text-align: right;"><code>'c'</code></td>
+<td style="text-align: left;"><code>char</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">String</td>
+<td style="text-align: right;"><code>"Hello, world!"</code></td>
+<td style="text-align: left;"><code>char *</code><a href="footnotes.html#fn36" class="footnote-ref" id="fnref36" role="doc-noteref"><sup>36</sup></a></td>
+</tr>
+</tbody>
+</table>
+<p>C makes an effort to convert automatically between most numeric types when you ask it to. But other than that, all conversions are manual, notably between string and numeric.</p>
+<p>Almost all of the types in C are variants on these types.</p>
+<p>Before you can use a variable, you have to <em>declare</em> that variable and tell C what type the variable holds. Once declared, the type of variable cannot be changed later at runtime. What you set it to is what it is until it falls out of scope and is reabsorbed into the universe.</p>
+<p>Let’s take our previous “Hello, world” code and add a couple variables to it:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb10-1"><a href="variables-and-statements.html#cb10-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb10-2"><a href="variables-and-statements.html#cb10-2"></a></span>
+<span id="cb10-3"><a href="variables-and-statements.html#cb10-3"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb10-4"><a href="variables-and-statements.html#cb10-4"></a><span class="op">{</span></span>
+<span id="cb10-5"><a href="variables-and-statements.html#cb10-5"></a>    <span class="dt">int</span> i<span class="op">;</span>    <span class="co">// Holds signed integers, e.g. -3, -2, 0, 1, 10</span></span>
+<span id="cb10-6"><a href="variables-and-statements.html#cb10-6"></a>    <span class="dt">float</span> f<span class="op">;</span>  <span class="co">// Holds signed floating point numbers, e.g. -3.1416</span></span>
+<span id="cb10-7"><a href="variables-and-statements.html#cb10-7"></a></span>
+<span id="cb10-8"><a href="variables-and-statements.html#cb10-8"></a>    printf<span class="op">(</span><span class="st">&quot;Hello, World!</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span>  <span class="co">// Ah, blessed familiarity</span></span>
+<span id="cb10-9"><a href="variables-and-statements.html#cb10-9"></a><span class="op">}</span></span></code></pre></div>
+<p>There! We’ve declared a couple of variables. We haven’t used them yet, and they’re both uninitialized. One holds an integer number, and the other holds a floating point number (a real number, basically, if you have a math background).</p>
+<p>Uninitialized variables have indeterminate value<a href="footnotes.html#fn37" class="footnote-ref" id="fnref37" role="doc-noteref"><sup>37</sup></a>. They have to be initialized or else you must assume they contain some nonsense number.</p>
+<blockquote>
+<p>This is one of the places C can “get you”. Much of the time, in my experience, the indeterminate value is zero… but it can vary from run to run! Never assume the value will be zero, even if you see it is. <em>Always</em> explicitly initialize variables to some value before you use them<a href="footnotes.html#fn38" class="footnote-ref" id="fnref38" role="doc-noteref"><sup>38</sup></a>.</p>
+</blockquote>
+<p>What’s this? You want to store some numbers in those variables? Insanity!</p>
+<p>Let’s go ahead and do that: </p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb11-1"><a href="variables-and-statements.html#cb11-1"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb11-2"><a href="variables-and-statements.html#cb11-2"></a><span class="op">{</span></span>
+<span id="cb11-3"><a href="variables-and-statements.html#cb11-3"></a>    <span class="dt">int</span> i<span class="op">;</span></span>
+<span id="cb11-4"><a href="variables-and-statements.html#cb11-4"></a></span>
+<span id="cb11-5"><a href="variables-and-statements.html#cb11-5"></a>    i <span class="op">=</span> <span class="dv">2</span><span class="op">;</span> <span class="co">// Assign the value 2 into the variable i</span></span>
+<span id="cb11-6"><a href="variables-and-statements.html#cb11-6"></a></span>
+<span id="cb11-7"><a href="variables-and-statements.html#cb11-7"></a>    printf<span class="op">(</span><span class="st">&quot;Hello, World!</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb11-8"><a href="variables-and-statements.html#cb11-8"></a><span class="op">}</span></span></code></pre></div>
+<p>Killer. We’ve stored a value. Let’s print it.</p>
+<p>We’re going to do that by passing <em>two</em> amazing arguments to the <code>printf()</code> function. The first argument is a string that describes what to print and how to print it (called the <em>format string</em>), and the second is the value to print, namely whatever is in the variable <code>i</code>.</p>
+<p><code>printf()</code> hunts through the format string for a variety of special sequences which start with a percent sign (<code>%</code>) that tell it what to print. For example, if it finds a <code>%d</code>, it looks to the next parameter that was passed, and prints it out as an integer. If it finds a <code>%f</code>, it prints the value out as a float. If it finds a <code>%s</code>, it prints a string.</p>
+<p>As such, we can print out the value of various types like so:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb12-1"><a href="variables-and-statements.html#cb12-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb12-2"><a href="variables-and-statements.html#cb12-2"></a></span>
+<span id="cb12-3"><a href="variables-and-statements.html#cb12-3"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb12-4"><a href="variables-and-statements.html#cb12-4"></a><span class="op">{</span></span>
+<span id="cb12-5"><a href="variables-and-statements.html#cb12-5"></a>    <span class="dt">int</span> i <span class="op">=</span> <span class="dv">2</span><span class="op">;</span></span>
+<span id="cb12-6"><a href="variables-and-statements.html#cb12-6"></a>    <span class="dt">float</span> f <span class="op">=</span> <span class="fl">3.14</span><span class="op">;</span></span>
+<span id="cb12-7"><a href="variables-and-statements.html#cb12-7"></a>    <span class="dt">char</span> <span class="op">*</span>s <span class="op">=</span> <span class="st">&quot;Hello, world!&quot;</span><span class="op">;</span>  <span class="co">// char * (&quot;char pointer&quot;) is the string type</span></span>
+<span id="cb12-8"><a href="variables-and-statements.html#cb12-8"></a></span>
+<span id="cb12-9"><a href="variables-and-statements.html#cb12-9"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%s</span><span class="st">  i = </span><span class="sc">%d</span><span class="st"> and f = </span><span class="sc">%f</span><span class="st">!</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">,</span> s<span class="op">,</span> i<span class="op">,</span> f<span class="op">);</span></span>
+<span id="cb12-10"><a href="variables-and-statements.html#cb12-10"></a><span class="op">}</span></span></code></pre></div>
+<p>And the output will be:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb13-1"><a href="variables-and-statements.html#cb13-1" aria-hidden="true" tabindex="-1"></a>Hello, world!  i = 2 and f = 3.14!</span></code></pre></div>
+<p>In this way, <code>printf()</code> might be similar to various types of format strings or parameterized strings in other languages you’re familiar with. </p>
+<h3 data-number="3.1.3" id="boolean-types"><span class="header-section-number">3.1.3</span> Boolean Types</h3>
+<p>C has Boolean types, true or false?</p>
+<p><code>1</code>!</p>
+<p>Historically, C didn’t have a Boolean type, and some might argue it still doesn’t.</p>
+<p>In C, <code>0</code> means “false”, and non-zero means “true”.</p>
+<p>So <code>1</code> is true. And <code>-37</code> is true. And <code>0</code> is false.</p>
+<p>You can just declare Boolean types as <code>int</code>s:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb14-1"><a href="variables-and-statements.html#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> x <span class="op">=</span> <span class="dv">1</span><span class="op">;</span></span>
+<span id="cb14-2"><a href="variables-and-statements.html#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="variables-and-statements.html#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(</span>x<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb14-4"><a href="variables-and-statements.html#cb14-4" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;x is true!</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb14-5"><a href="variables-and-statements.html#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>If you <code>#include &lt;stdbool.h&gt;</code>, you also get access to some symbolic names that might make things look more familiar, namely a <code>bool</code> type and <code>true</code> and <code>false</code> values:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb15-1"><a href="variables-and-statements.html#cb15-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb15-2"><a href="variables-and-statements.html#cb15-2"></a><span class="pp">#include </span><span class="im">&lt;stdbool.h&gt;</span></span>
+<span id="cb15-3"><a href="variables-and-statements.html#cb15-3"></a></span>
+<span id="cb15-4"><a href="variables-and-statements.html#cb15-4"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb15-5"><a href="variables-and-statements.html#cb15-5"></a>    <span class="dt">bool</span> x <span class="op">=</span> true<span class="op">;</span></span>
+<span id="cb15-6"><a href="variables-and-statements.html#cb15-6"></a></span>
+<span id="cb15-7"><a href="variables-and-statements.html#cb15-7"></a>    <span class="cf">if</span> <span class="op">(</span>x<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb15-8"><a href="variables-and-statements.html#cb15-8"></a>        printf<span class="op">(</span><span class="st">&quot;x is true!</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb15-9"><a href="variables-and-statements.html#cb15-9"></a>    <span class="op">}</span></span>
+<span id="cb15-10"><a href="variables-and-statements.html#cb15-10"></a><span class="op">}</span></span></code></pre></div>
+<p>But these are identical to using integer values for true and false. They’re just a facade to make things look nice.</p>
+<h2 data-number="3.2" id="operators"><span class="header-section-number">3.2</span> Operators and Expressions</h2>
+<p>C operators should be familiar to you from other languages. Let’s blast through some of them here.</p>
+<p>(There are a bunch more details than this, but we’re going to do enough in this section to get started.)</p>
+<h3 data-number="3.2.1" id="arithmetic"><span class="header-section-number">3.2.1</span> Arithmetic</h3>
+<p>Hopefully these are familiar: </p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb16-1"><a href="variables-and-statements.html#cb16-1" aria-hidden="true" tabindex="-1"></a>i <span class="op">=</span> i <span class="op">+</span> <span class="dv">3</span><span class="op">;</span>  <span class="co">// Addition (+) and assignment (=) operators, add 3 to i</span></span>
+<span id="cb16-2"><a href="variables-and-statements.html#cb16-2" aria-hidden="true" tabindex="-1"></a>i <span class="op">=</span> i <span class="op">-</span> <span class="dv">8</span><span class="op">;</span>  <span class="co">// Subtraction, subtract 8 from i</span></span>
+<span id="cb16-3"><a href="variables-and-statements.html#cb16-3" aria-hidden="true" tabindex="-1"></a>i <span class="op">=</span> i <span class="op">*</span> <span class="dv">9</span><span class="op">;</span>  <span class="co">// Multiplication</span></span>
+<span id="cb16-4"><a href="variables-and-statements.html#cb16-4" aria-hidden="true" tabindex="-1"></a>i <span class="op">=</span> i <span class="op">/</span> <span class="dv">2</span><span class="op">;</span>  <span class="co">// Division</span></span>
+<span id="cb16-5"><a href="variables-and-statements.html#cb16-5" aria-hidden="true" tabindex="-1"></a>i <span class="op">=</span> i <span class="op">%</span> <span class="dv">5</span><span class="op">;</span>  <span class="co">// Modulo (division remainder)</span></span></code></pre></div>
+<p>There are shorthand variants for all of the above. Each of those lines could more tersely be written as: </p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb17-1"><a href="variables-and-statements.html#cb17-1" aria-hidden="true" tabindex="-1"></a>i <span class="op">+=</span> <span class="dv">3</span><span class="op">;</span>  <span class="co">// Same as &quot;i = i + 3&quot;, add 3 to i</span></span>
+<span id="cb17-2"><a href="variables-and-statements.html#cb17-2" aria-hidden="true" tabindex="-1"></a>i <span class="op">-=</span> <span class="dv">8</span><span class="op">;</span>  <span class="co">// Same as &quot;i = i - 8&quot;</span></span>
+<span id="cb17-3"><a href="variables-and-statements.html#cb17-3" aria-hidden="true" tabindex="-1"></a>i <span class="op">*=</span> <span class="dv">9</span><span class="op">;</span>  <span class="co">// Same as &quot;i = i * 9&quot;</span></span>
+<span id="cb17-4"><a href="variables-and-statements.html#cb17-4" aria-hidden="true" tabindex="-1"></a>i <span class="op">/=</span> <span class="dv">2</span><span class="op">;</span>  <span class="co">// Same as &quot;i = i / 2&quot;</span></span>
+<span id="cb17-5"><a href="variables-and-statements.html#cb17-5" aria-hidden="true" tabindex="-1"></a>i <span class="op">%=</span> <span class="dv">5</span><span class="op">;</span>  <span class="co">// Same as &quot;i = i % 5&quot;</span></span></code></pre></div>
+<p>There is no exponentiation. You’ll have to use one of the <code>pow()</code> function variants from <code>math.h</code>.</p>
+<p>Let’s get into some of the weirder stuff you might not have in your other languages!</p>
+<h3 data-number="3.2.2" id="ternary-operator"><span class="header-section-number">3.2.2</span> Ternary Operator</h3>
+<p>C also includes the <em>ternary operator</em>. This is an expression whose value depends on the result of a conditional embedded in it.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb18-1"><a href="variables-and-statements.html#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co">// If x &gt; 10, add 17 to y. Otherwise add 37 to y.</span></span>
+<span id="cb18-2"><a href="variables-and-statements.html#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="variables-and-statements.html#cb18-3" aria-hidden="true" tabindex="-1"></a>y <span class="op">+=</span> x <span class="op">&gt;</span> <span class="dv">10</span><span class="op">?</span> <span class="dv">17</span><span class="op">:</span> <span class="dv">37</span><span class="op">;</span></span></code></pre></div>
+<p>What a mess! You’ll get used to it the more you read it. To help out a bit, I’ll rewrite the above expression using <code>if</code> statements:</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb19-1"><a href="variables-and-statements.html#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co">// This expression:</span></span>
+<span id="cb19-2"><a href="variables-and-statements.html#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="variables-and-statements.html#cb19-3" aria-hidden="true" tabindex="-1"></a>y <span class="op">+=</span> x <span class="op">&gt;</span> <span class="dv">10</span><span class="op">?</span> <span class="dv">17</span><span class="op">:</span> <span class="dv">37</span><span class="op">;</span></span>
+<span id="cb19-4"><a href="variables-and-statements.html#cb19-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-5"><a href="variables-and-statements.html#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="co">// is equivalent to this non-expression:</span></span>
+<span id="cb19-6"><a href="variables-and-statements.html#cb19-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-7"><a href="variables-and-statements.html#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(</span>x <span class="op">&gt;</span> <span class="dv">10</span><span class="op">)</span></span>
+<span id="cb19-8"><a href="variables-and-statements.html#cb19-8" aria-hidden="true" tabindex="-1"></a>    y <span class="op">+=</span> <span class="dv">17</span><span class="op">;</span></span>
+<span id="cb19-9"><a href="variables-and-statements.html#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span></span>
+<span id="cb19-10"><a href="variables-and-statements.html#cb19-10" aria-hidden="true" tabindex="-1"></a>    y <span class="op">+=</span> <span class="dv">37</span><span class="op">;</span></span></code></pre></div>
+<p>Compare those two until you see each of the components of the ternary operator.</p>
+<p>Or, another example that prints if a number stored in <code>x</code> is odd or even:</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb20-1"><a href="variables-and-statements.html#cb20-1" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;The number </span><span class="sc">%d</span><span class="st"> is </span><span class="sc">%s</span><span class="st">.</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">,</span> x<span class="op">,</span> x <span class="op">%</span> <span class="dv">2</span> <span class="op">==</span> <span class="dv">0</span><span class="op">?</span> <span class="st">&quot;even&quot;</span><span class="op">:</span> <span class="st">&quot;odd&quot;</span><span class="op">)</span></span></code></pre></div>
+<p>The <code>%s</code> format specifier in <code>printf()</code> means print a string. If the expression <code>x % 2</code> evaluates to <code>0</code>, the value of the entire ternary expression evaluates to the string <code>"even"</code>. Otherwise it evaluates to the string <code>"odd"</code>. Pretty cool!</p>
+<p>It’s important to note that the ternary operator isn’t flow control like the <code>if</code> statement is. It’s just an expression that evaluates to a value. </p>
+<h3 data-number="3.2.3" id="pre-and-post-increment-and-decrement"><span class="header-section-number">3.2.3</span> Pre-and-Post Increment-and-Decrement</h3>
+<p> Now, let’s mess with another thing that you might not have seen.</p>
+<p>These are the legendary post-increment and post-decrement operators:</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb21-1"><a href="variables-and-statements.html#cb21-1" aria-hidden="true" tabindex="-1"></a>i<span class="op">++;</span>        <span class="co">// Add one to i (post-increment)</span></span>
+<span id="cb21-2"><a href="variables-and-statements.html#cb21-2" aria-hidden="true" tabindex="-1"></a>i<span class="op">--;</span>        <span class="co">// Subtract one from i (post-decrement)</span></span></code></pre></div>
+<p>Very commonly, these are just used as shorter versions of:</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb22-1"><a href="variables-and-statements.html#cb22-1" aria-hidden="true" tabindex="-1"></a>i <span class="op">+=</span> <span class="dv">1</span><span class="op">;</span>        <span class="co">// Add one to i</span></span>
+<span id="cb22-2"><a href="variables-and-statements.html#cb22-2" aria-hidden="true" tabindex="-1"></a>i <span class="op">-=</span> <span class="dv">1</span><span class="op">;</span>        <span class="co">// Subtract one from i</span></span></code></pre></div>
+<p>but they’re more subtly different than that, the clever scoundrels.</p>
+<p>Let’s take a look at this variant, pre-increment and pre-decrement:</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb23-1"><a href="variables-and-statements.html#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="op">++</span>i<span class="op">;</span>        <span class="co">// Add one to i (pre-increment)</span></span>
+<span id="cb23-2"><a href="variables-and-statements.html#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="op">--</span>i<span class="op">;</span>        <span class="co">// Subtract one from i (pre-decrement)</span></span></code></pre></div>
+<p>With pre-increment and pre-decrement, the value of the variable is incremented or decremented <em>before</em> the expression is evaluated. Then the expression is evaluated with the new value.</p>
+<p>With post-increment and post-decrement, the value of the expression is first computed with the value as-is, and <em>then</em> the value is incremented or decremented after the value of the expression has been determined.</p>
+<p>You can actually embed them in expressions, like this:</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb24-1"><a href="variables-and-statements.html#cb24-1" aria-hidden="true" tabindex="-1"></a>i <span class="op">=</span> <span class="dv">10</span><span class="op">;</span></span>
+<span id="cb24-2"><a href="variables-and-statements.html#cb24-2" aria-hidden="true" tabindex="-1"></a>j <span class="op">=</span> <span class="dv">5</span> <span class="op">+</span> i<span class="op">++;</span>  <span class="co">// Compute 5 + i, _then_ increment i</span></span>
+<span id="cb24-3"><a href="variables-and-statements.html#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-4"><a href="variables-and-statements.html#cb24-4" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d</span><span class="st">, </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> i<span class="op">,</span> j<span class="op">);</span>  <span class="co">// Prints 11, 15</span></span></code></pre></div>
+<p>Let’s compare this to the pre-increment operator:</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb25-1"><a href="variables-and-statements.html#cb25-1" aria-hidden="true" tabindex="-1"></a>i <span class="op">=</span> <span class="dv">10</span><span class="op">;</span></span>
+<span id="cb25-2"><a href="variables-and-statements.html#cb25-2" aria-hidden="true" tabindex="-1"></a>j <span class="op">=</span> <span class="dv">5</span> <span class="op">+</span> <span class="op">++</span>i<span class="op">;</span>  <span class="co">// Increment i, _then_ compute 5 + i</span></span>
+<span id="cb25-3"><a href="variables-and-statements.html#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-4"><a href="variables-and-statements.html#cb25-4" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d</span><span class="st">, </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> i<span class="op">,</span> j<span class="op">);</span>  <span class="co">// Prints 11, 16</span></span></code></pre></div>
+<p>This technique is used frequently with array and pointer access and manipulation. It gives you a way to use the value in a variable, and also increment or decrement that value before or after it is used.</p>
+<p>But by far the most common place you’ll see this is in a <code>for</code> loop:</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb26-1"><a href="variables-and-statements.html#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="op">(</span>i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> <span class="dv">10</span><span class="op">;</span> i<span class="op">++)</span></span>
+<span id="cb26-2"><a href="variables-and-statements.html#cb26-2" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;i is </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> i<span class="op">);</span></span></code></pre></div>
+<p>But more on that later. </p>
+<h3 data-number="3.2.4" id="the-comma-operator"><span class="header-section-number">3.2.4</span> The Comma Operator</h3>
+<p> This is an uncommonly-used way to separate expressions that will run left to right:</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb27-1"><a href="variables-and-statements.html#cb27-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="dv">10</span><span class="op">,</span> y <span class="op">=</span> <span class="dv">20</span><span class="op">;</span>  <span class="co">// First assign 10 to x, then 20 to y</span></span></code></pre></div>
+<p>Seems a bit silly, since you could just replace the comma with a semicolon, right?</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb28-1"><a href="variables-and-statements.html#cb28-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="dv">10</span><span class="op">;</span> y <span class="op">=</span> <span class="dv">20</span><span class="op">;</span>  <span class="co">// First assign 10 to x, then 20 to y</span></span></code></pre></div>
+<p>But that’s a little different. The latter is two separate expressions, while the former is a single expression!</p>
+<p>With the comma operator, the value of the comma expression is the value of the rightmost expression:</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb29-1"><a href="variables-and-statements.html#cb29-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="op">(</span><span class="dv">1</span><span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">3</span><span class="op">);</span></span>
+<span id="cb29-2"><a href="variables-and-statements.html#cb29-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-3"><a href="variables-and-statements.html#cb29-3" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;x is </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> x<span class="op">);</span>  <span class="co">// Prints 3, because 3 is rightmost in the comma list</span></span></code></pre></div>
+<p>But even that’s pretty contrived. One common place the comma operator is used is in <code>for</code> loops to do multiple things in each section of the statement:</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb30-1"><a href="variables-and-statements.html#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="op">(</span>i <span class="op">=</span> <span class="dv">0</span><span class="op">,</span> j <span class="op">=</span> <span class="dv">10</span><span class="op">;</span> i <span class="op">&lt;</span> <span class="dv">100</span><span class="op">;</span> i<span class="op">++,</span> j<span class="op">++)</span></span>
+<span id="cb30-2"><a href="variables-and-statements.html#cb30-2" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d</span><span class="st">, </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> i<span class="op">,</span> j<span class="op">);</span></span></code></pre></div>
+<p>We’ll revisit that later. </p>
+<h3 data-number="3.2.5" id="conditional-operators"><span class="header-section-number">3.2.5</span> Conditional Operators</h3>
+<p> For Boolean values, we have a raft of standard operators: </p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb31-1"><a href="variables-and-statements.html#cb31-1" aria-hidden="true" tabindex="-1"></a>a <span class="op">==</span> b<span class="op">;</span>  <span class="co">// True if a is equivalent to b</span></span>
+<span id="cb31-2"><a href="variables-and-statements.html#cb31-2" aria-hidden="true" tabindex="-1"></a>a <span class="op">!=</span> b<span class="op">;</span>  <span class="co">// True if a is not equivalent to b</span></span>
+<span id="cb31-3"><a href="variables-and-statements.html#cb31-3" aria-hidden="true" tabindex="-1"></a>a <span class="op">&lt;</span> b<span class="op">;</span>   <span class="co">// True if a is less than b</span></span>
+<span id="cb31-4"><a href="variables-and-statements.html#cb31-4" aria-hidden="true" tabindex="-1"></a>a <span class="op">&gt;</span> b<span class="op">;</span>   <span class="co">// True if a is greater than b</span></span>
+<span id="cb31-5"><a href="variables-and-statements.html#cb31-5" aria-hidden="true" tabindex="-1"></a>a <span class="op">&lt;=</span> b<span class="op">;</span>  <span class="co">// True if a is less than or equal to b</span></span>
+<span id="cb31-6"><a href="variables-and-statements.html#cb31-6" aria-hidden="true" tabindex="-1"></a>a <span class="op">&gt;=</span> b<span class="op">;</span>  <span class="co">// True if a is greater than or equal to b</span></span></code></pre></div>
+<p>Don’t mix up assignment <code>=</code> with comparison <code>==</code>! Use two equals to compare, one to assign.</p>
+<p>We can use the comparison expressions with <code>if</code> statements:</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb32-1"><a href="variables-and-statements.html#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(</span>a <span class="op">&lt;=</span> <span class="dv">10</span><span class="op">)</span></span>
+<span id="cb32-2"><a href="variables-and-statements.html#cb32-2" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;Success!</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span></code></pre></div>
+<p></p>
+<h3 data-number="3.2.6" id="boolean-operators"><span class="header-section-number">3.2.6</span> Boolean Operators</h3>
+<p> We can chain together or alter conditional expressions with Boolean operators for <em>and</em>, <em>or</em>, and <em>not</em>. </p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Operator</th>
+<th style="text-align: center;">Boolean meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><code>&amp;&amp;</code></td>
+<td style="text-align: center;">and</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><code>||</code></td>
+<td style="text-align: center;">or</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><code>!</code></td>
+<td style="text-align: center;">not</td>
+</tr>
+</tbody>
+</table>
+<p>An example of Boolean “and”:</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb33-1"><a href="variables-and-statements.html#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Do something if x less than 10 and y greater than 20:</span></span>
+<span id="cb33-2"><a href="variables-and-statements.html#cb33-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-3"><a href="variables-and-statements.html#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(</span>x <span class="op">&lt;</span> <span class="dv">10</span> <span class="op">&amp;&amp;</span> y <span class="op">&gt;</span> <span class="dv">20</span><span class="op">)</span></span>
+<span id="cb33-4"><a href="variables-and-statements.html#cb33-4" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;Doing something!</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span></code></pre></div>
+<p>An example of Boolean “not”:</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb34-1"><a href="variables-and-statements.html#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(!(</span>x <span class="op">&lt;</span> <span class="dv">12</span><span class="op">))</span></span>
+<span id="cb34-2"><a href="variables-and-statements.html#cb34-2" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;x is not less than 12</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span></code></pre></div>
+<p><code>!</code> has higher precedence than the other Boolean operators, so we have to use parentheses in that case.</p>
+<p>Of course, that’s just the same as:</p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb35-1"><a href="variables-and-statements.html#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(</span>x <span class="op">&gt;=</span> <span class="dv">12</span><span class="op">)</span></span>
+<span id="cb35-2"><a href="variables-and-statements.html#cb35-2" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;x is not less than 12</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span></code></pre></div>
+<p>but I needed the example! </p>
+<h3 data-number="3.2.7" id="sizeof-operator"><span class="header-section-number">3.2.7</span> The <code>sizeof</code> Operator</h3>
+<p> This operator tells you the size (in bytes) that a particular variable or data type uses in memory.</p>
+<p>More particularly, it tells you the size (in bytes) that the <em>type of a particular expression</em> (which might be just a single variable) uses in memory.</p>
+<p>This can be different on different systems, except for <code>char</code> and its variants (which are always 1 byte).</p>
+<p>And this might not seem very useful now, but we’ll be making references to it here and there, so it’s worth covering.</p>
+<p>Since this computes the number of bytes needed to store a type, you might think it would return an <code>int</code>. Or… since the size can’t be negative, maybe an <code>unsigned</code>?</p>
+<p> But it turns out C has a special type to represent the return value from <code>sizeof</code>. It’s <code>size_t</code>, pronounced “<em>size tee</em>”<a href="footnotes.html#fn39" class="footnote-ref" id="fnref39" role="doc-noteref"><sup>39</sup></a>. All we know is that it’s an unsigned integer type that can hold the size in bytes of anything you can give to <code>sizeof</code>.</p>
+<p><code>size_t</code> shows up a lot of different places where counts of things are passed or returned. Think of it as a value that represents a count. </p>
+<p>You can take the <code>sizeof</code> a variable or expression:</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb36-1"><a href="variables-and-statements.html#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> a <span class="op">=</span> <span class="dv">999</span><span class="op">;</span></span>
+<span id="cb36-2"><a href="variables-and-statements.html#cb36-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-3"><a href="variables-and-statements.html#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="co">// %zu is the format specifier for type size_t</span></span>
+<span id="cb36-4"><a href="variables-and-statements.html#cb36-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-5"><a href="variables-and-statements.html#cb36-5" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%zu\n</span><span class="st">&quot;</span><span class="op">,</span> <span class="kw">sizeof</span> a<span class="op">);</span>      <span class="co">// Prints 4 on my system</span></span>
+<span id="cb36-6"><a href="variables-and-statements.html#cb36-6" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%zu\n</span><span class="st">&quot;</span><span class="op">,</span> <span class="kw">sizeof</span><span class="op">(</span><span class="dv">2</span> <span class="op">+</span> <span class="dv">7</span><span class="op">));</span> <span class="co">// Prints 4 on my system</span></span>
+<span id="cb36-7"><a href="variables-and-statements.html#cb36-7" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%zu\n</span><span class="st">&quot;</span><span class="op">,</span> <span class="kw">sizeof</span> <span class="fl">3.14</span><span class="op">);</span>   <span class="co">// Prints 8 on my system</span></span>
+<span id="cb36-8"><a href="variables-and-statements.html#cb36-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-9"><a href="variables-and-statements.html#cb36-9" aria-hidden="true" tabindex="-1"></a><span class="co">// If you need to print out negative size_t values, use %zd</span></span></code></pre></div>
+<p>Remember: it’s the size in bytes of the <em>type</em> of the expression, not the size of the expression itself. That’s why the size of <code>2+7</code> is the same as the size of <code>a</code>—they’re both type <code>int</code>. We’ll revisit this number <code>4</code> in the very next block of code…</p>
+<p>…Where we’ll see you can take the <code>sizeof</code> a type (note the parentheses are required around a type name, unlike an expression):</p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb37-1"><a href="variables-and-statements.html#cb37-1" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%zu\n</span><span class="st">&quot;</span><span class="op">,</span> <span class="kw">sizeof</span><span class="op">(</span><span class="dt">int</span><span class="op">));</span>   <span class="co">// Prints 4 on my system</span></span>
+<span id="cb37-2"><a href="variables-and-statements.html#cb37-2" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%zu\n</span><span class="st">&quot;</span><span class="op">,</span> <span class="kw">sizeof</span><span class="op">(</span><span class="dt">char</span><span class="op">));</span>  <span class="co">// Prints 1 on all systems</span></span></code></pre></div>
+<p>It’s important to note that <code>sizeof</code> is a <em>compile-time</em> operation<a href="footnotes.html#fn40" class="footnote-ref" id="fnref40" role="doc-noteref"><sup>40</sup></a>. The result of the expression is determined entirely at compile-time, not at runtime.</p>
+<p>We’ll make use of this later on. </p>
+<h2 data-number="3.3" id="flow-control"><span class="header-section-number">3.3</span> Flow Control</h2>
+<p> Booleans are all good, but of course we’re nowhere if we can’t control program flow. Let’s take a look at a number of constructs: <code>if</code>, <code>for</code>, <code>while</code>, and <code>do-while</code>.</p>
+<p>First, a general forward-looking note about statements and blocks of statements brought to you by your local friendly C developer:</p>
+<p>After something like an <code>if</code> or <code>while</code> statement, you can either put a single statement to be executed, or a block of statements to all be executed in sequence.</p>
+<p> Let’s start with a single statement:</p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb38-1"><a href="variables-and-statements.html#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(</span>x <span class="op">==</span> <span class="dv">10</span><span class="op">)</span> printf<span class="op">(</span><span class="st">&quot;x is 10</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span></code></pre></div>
+<p>This is also sometimes written on a separate line. (Whitespace is largely irrelevant in C—it’s not like Python.)</p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb39-1"><a href="variables-and-statements.html#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(</span>x <span class="op">==</span> <span class="dv">10</span><span class="op">)</span></span>
+<span id="cb39-2"><a href="variables-and-statements.html#cb39-2" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;x is 10</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span></code></pre></div>
+<p>But what if you want multiple things to happen due to the conditional? You can use squirrelly braces to mark a <em>block</em> or <em>compound statement</em>.</p>
+<div class="sourceCode" id="cb40"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb40-1"><a href="variables-and-statements.html#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(</span>x <span class="op">==</span> <span class="dv">10</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb40-2"><a href="variables-and-statements.html#cb40-2" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;x is 10</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb40-3"><a href="variables-and-statements.html#cb40-3" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;And also this happens when x is 10</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb40-4"><a href="variables-and-statements.html#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>It’s a really common style to <em>always</em> use squirrelly braces even if they aren’t necessary:</p>
+<div class="sourceCode" id="cb41"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb41-1"><a href="variables-and-statements.html#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(</span>x <span class="op">==</span> <span class="dv">10</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb41-2"><a href="variables-and-statements.html#cb41-2" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;x is 10</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb41-3"><a href="variables-and-statements.html#cb41-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>Some devs feel the code is easier to read and avoids errors like this where things visually look like they’re in the <code>if</code> block, but actually they aren’t.</p>
+<div class="sourceCode" id="cb42"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb42-1"><a href="variables-and-statements.html#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co">// BAD ERROR EXAMPLE</span></span>
+<span id="cb42-2"><a href="variables-and-statements.html#cb42-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-3"><a href="variables-and-statements.html#cb42-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(</span>x <span class="op">==</span> <span class="dv">10</span><span class="op">)</span></span>
+<span id="cb42-4"><a href="variables-and-statements.html#cb42-4" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;This happens if x is 10</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb42-5"><a href="variables-and-statements.html#cb42-5" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;This happens ALWAYS</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span>  <span class="co">// Surprise!! Unconditional!</span></span></code></pre></div>
+<p><code>while</code> and <code>for</code> and the other looping constructs work the same way as the examples above. If you want to do multiple things in a loop or after an <code>if</code>, wrap them up in squirrelly braces.</p>
+<p>In other words, the <code>if</code> is going to run the one thing after the <code>if</code>. And that one thing can be a single statement or a block of statements. </p>
+<h3 data-number="3.3.1" id="ifstat"><span class="header-section-number">3.3.1</span> The <code>if</code>-<code>else</code> statement</h3>
+<p> We’ve already been using <code>if</code> for multiple examples, since it’s likely you’ve seen it in a language before, but here’s another:</p>
+<div class="sourceCode" id="cb43"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb43-1"><a href="variables-and-statements.html#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> i <span class="op">=</span> <span class="dv">10</span><span class="op">;</span></span>
+<span id="cb43-2"><a href="variables-and-statements.html#cb43-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-3"><a href="variables-and-statements.html#cb43-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(</span>i <span class="op">&gt;</span> <span class="dv">10</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb43-4"><a href="variables-and-statements.html#cb43-4" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;Yes, i is greater than 10.</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb43-5"><a href="variables-and-statements.html#cb43-5" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;And this will also print if i is greater than 10.</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb43-6"><a href="variables-and-statements.html#cb43-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb43-7"><a href="variables-and-statements.html#cb43-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-8"><a href="variables-and-statements.html#cb43-8" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(</span>i <span class="op">&lt;=</span> <span class="dv">10</span><span class="op">)</span> printf<span class="op">(</span><span class="st">&quot;i is less than or equal to 10.</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span></code></pre></div>
+<p>In the example code, the message will print if <code>i</code> is greater than 10, otherwise execution continues to the next line. Notice the squirrley braces after the <code>if</code> statement; if the condition is true, either the first statement or expression right after the if will be executed, or else the collection of code in the squirlley braces after the <code>if</code> will be executed. This sort of <em>code block</em> behavior is common to all statements.</p>
+<p>Of course, because C is fun this way, you can also do something if the condition is false with an <code>else</code> clause on your <code>if</code>:</p>
+<div class="sourceCode" id="cb44"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb44-1"><a href="variables-and-statements.html#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> i <span class="op">=</span> <span class="dv">99</span><span class="op">;</span></span>
+<span id="cb44-2"><a href="variables-and-statements.html#cb44-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-3"><a href="variables-and-statements.html#cb44-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(</span>i <span class="op">==</span> <span class="dv">10</span><span class="op">)</span></span>
+<span id="cb44-4"><a href="variables-and-statements.html#cb44-4" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;i is 10!</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb44-5"><a href="variables-and-statements.html#cb44-5" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb44-6"><a href="variables-and-statements.html#cb44-6" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;i is decidedly not 10.</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb44-7"><a href="variables-and-statements.html#cb44-7" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;Which irritates me a little, frankly.</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb44-8"><a href="variables-and-statements.html#cb44-8" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>And you can even cascade these to test a variety of conditions, like this:</p>
+<div class="sourceCode" id="cb45"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb45-1"><a href="variables-and-statements.html#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> i <span class="op">=</span> <span class="dv">99</span><span class="op">;</span></span>
+<span id="cb45-2"><a href="variables-and-statements.html#cb45-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-3"><a href="variables-and-statements.html#cb45-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(</span>i <span class="op">==</span> <span class="dv">10</span><span class="op">)</span></span>
+<span id="cb45-4"><a href="variables-and-statements.html#cb45-4" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;i is 10!</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb45-5"><a href="variables-and-statements.html#cb45-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-6"><a href="variables-and-statements.html#cb45-6" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span> <span class="cf">if</span> <span class="op">(</span>i <span class="op">==</span> <span class="dv">20</span><span class="op">)</span></span>
+<span id="cb45-7"><a href="variables-and-statements.html#cb45-7" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;i is 20!</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb45-8"><a href="variables-and-statements.html#cb45-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-9"><a href="variables-and-statements.html#cb45-9" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span> <span class="cf">if</span> <span class="op">(</span>i <span class="op">==</span> <span class="dv">99</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb45-10"><a href="variables-and-statements.html#cb45-10" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;i is 99! My favorite</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb45-11"><a href="variables-and-statements.html#cb45-11" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;I can&#39;t tell you how happy I am.</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb45-12"><a href="variables-and-statements.html#cb45-12" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;Really.</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb45-13"><a href="variables-and-statements.html#cb45-13" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb45-14"><a href="variables-and-statements.html#cb45-14" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb45-15"><a href="variables-and-statements.html#cb45-15" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span></span>
+<span id="cb45-16"><a href="variables-and-statements.html#cb45-16" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;i is some crazy number I&#39;ve never heard of.</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span></code></pre></div>
+<p>Though if you’re going that route, be sure to check out the <a href="variables-and-statements.html#switch-statement"><code>switch</code></a> statement for a potentially better solution. The catch is <code>switch</code> only works with equality comparisons with constant numbers. The above <code>if</code>-<code>else</code> cascade could check inequality, ranges, variables, or anything else you can craft in a conditional expression. </p>
+<h3 data-number="3.3.2" id="whilestat"><span class="header-section-number">3.3.2</span> The <code>while</code> statement</h3>
+<p> <code>while</code> is your average run-of-the-mill looping construct. Do a thing while a condition expression is true.</p>
+<p>Let’s do one!</p>
+<div class="sourceCode" id="cb46"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb46-1"><a href="variables-and-statements.html#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Print the following output:</span></span>
+<span id="cb46-2"><a href="variables-and-statements.html#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="co">//</span></span>
+<span id="cb46-3"><a href="variables-and-statements.html#cb46-3" aria-hidden="true" tabindex="-1"></a><span class="co">//   i is now 0!</span></span>
+<span id="cb46-4"><a href="variables-and-statements.html#cb46-4" aria-hidden="true" tabindex="-1"></a><span class="co">//   i is now 1!</span></span>
+<span id="cb46-5"><a href="variables-and-statements.html#cb46-5" aria-hidden="true" tabindex="-1"></a><span class="co">//   [ more of the same between 2 and 7 ]</span></span>
+<span id="cb46-6"><a href="variables-and-statements.html#cb46-6" aria-hidden="true" tabindex="-1"></a><span class="co">//   i is now 8!</span></span>
+<span id="cb46-7"><a href="variables-and-statements.html#cb46-7" aria-hidden="true" tabindex="-1"></a><span class="co">//   i is now 9!</span></span>
+<span id="cb46-8"><a href="variables-and-statements.html#cb46-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-9"><a href="variables-and-statements.html#cb46-9" aria-hidden="true" tabindex="-1"></a>i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb46-10"><a href="variables-and-statements.html#cb46-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-11"><a href="variables-and-statements.html#cb46-11" aria-hidden="true" tabindex="-1"></a><span class="cf">while</span> <span class="op">(</span>i <span class="op">&lt;</span> <span class="dv">10</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb46-12"><a href="variables-and-statements.html#cb46-12" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;i is now </span><span class="sc">%d</span><span class="st">!</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">,</span> i<span class="op">);</span></span>
+<span id="cb46-13"><a href="variables-and-statements.html#cb46-13" aria-hidden="true" tabindex="-1"></a>    i<span class="op">++;</span></span>
+<span id="cb46-14"><a href="variables-and-statements.html#cb46-14" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb46-15"><a href="variables-and-statements.html#cb46-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-16"><a href="variables-and-statements.html#cb46-16" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;All done!</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span></code></pre></div>
+<p>That gets you a basic loop. C also has a <code>for</code> loop which would have been cleaner for that example.</p>
+<p>A not-uncommon use of <code>while</code> is for infinite loops where you repeat while true:</p>
+<div class="sourceCode" id="cb47"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb47-1"><a href="variables-and-statements.html#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="cf">while</span> <span class="op">(</span><span class="dv">1</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb47-2"><a href="variables-and-statements.html#cb47-2" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;1 is always true, so this repeats forever.</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb47-3"><a href="variables-and-statements.html#cb47-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p></p>
+<h3 data-number="3.3.3" id="dowhilestat"><span class="header-section-number">3.3.3</span> The <code>do-while</code> statement</h3>
+<p> So now that we’ve gotten the <code>while</code> statement under control, let’s take a look at its closely related cousin, <code>do-while</code>.</p>
+<p>They are basically the same, except if the loop condition is false on the first pass, <code>do-while</code> will execute once, but <code>while</code> won’t execute at all. In other words, the test to see whether or not to execute the block happens at the <em>end</em> of the block with <code>do-while</code>. It happens at the <em>beginning</em> of the block with <code>while</code>.</p>
+<p>Let’s see by example:</p>
+<div class="sourceCode" id="cb48"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb48-1"><a href="variables-and-statements.html#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Using a while statement:</span></span>
+<span id="cb48-2"><a href="variables-and-statements.html#cb48-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-3"><a href="variables-and-statements.html#cb48-3" aria-hidden="true" tabindex="-1"></a>i <span class="op">=</span> <span class="dv">10</span><span class="op">;</span></span>
+<span id="cb48-4"><a href="variables-and-statements.html#cb48-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-5"><a href="variables-and-statements.html#cb48-5" aria-hidden="true" tabindex="-1"></a><span class="co">// this is not executed because i is not less than 10:</span></span>
+<span id="cb48-6"><a href="variables-and-statements.html#cb48-6" aria-hidden="true" tabindex="-1"></a><span class="cf">while</span><span class="op">(</span>i <span class="op">&lt;</span> <span class="dv">10</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb48-7"><a href="variables-and-statements.html#cb48-7" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;while: i is </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> i<span class="op">);</span></span>
+<span id="cb48-8"><a href="variables-and-statements.html#cb48-8" aria-hidden="true" tabindex="-1"></a>    i<span class="op">++;</span></span>
+<span id="cb48-9"><a href="variables-and-statements.html#cb48-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb48-10"><a href="variables-and-statements.html#cb48-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-11"><a href="variables-and-statements.html#cb48-11" aria-hidden="true" tabindex="-1"></a><span class="co">// Using a do-while statement:</span></span>
+<span id="cb48-12"><a href="variables-and-statements.html#cb48-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-13"><a href="variables-and-statements.html#cb48-13" aria-hidden="true" tabindex="-1"></a>i <span class="op">=</span> <span class="dv">10</span><span class="op">;</span></span>
+<span id="cb48-14"><a href="variables-and-statements.html#cb48-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-15"><a href="variables-and-statements.html#cb48-15" aria-hidden="true" tabindex="-1"></a><span class="co">// this is executed once, because the loop condition is not checked until</span></span>
+<span id="cb48-16"><a href="variables-and-statements.html#cb48-16" aria-hidden="true" tabindex="-1"></a><span class="co">// after the body of the loop runs:</span></span>
+<span id="cb48-17"><a href="variables-and-statements.html#cb48-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-18"><a href="variables-and-statements.html#cb48-18" aria-hidden="true" tabindex="-1"></a><span class="cf">do</span> <span class="op">{</span></span>
+<span id="cb48-19"><a href="variables-and-statements.html#cb48-19" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;do-while: i is </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> i<span class="op">);</span></span>
+<span id="cb48-20"><a href="variables-and-statements.html#cb48-20" aria-hidden="true" tabindex="-1"></a>    i<span class="op">++;</span></span>
+<span id="cb48-21"><a href="variables-and-statements.html#cb48-21" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> <span class="cf">while</span> <span class="op">(</span>i <span class="op">&lt;</span> <span class="dv">10</span><span class="op">);</span></span>
+<span id="cb48-22"><a href="variables-and-statements.html#cb48-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-23"><a href="variables-and-statements.html#cb48-23" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;All done!</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span></code></pre></div>
+<p>Notice that in both cases, the loop condition is false right away. So in the <code>while</code>, the loop fails, and the following block of code is never executed. With the <code>do-while</code>, however, the condition is checked <em>after</em> the block of code executes, so it always executes at least once. In this case, it prints the message, increments <code>i</code>, then fails the condition, and continues to the “All done!” output.</p>
+<p>The moral of the story is this: if you want the loop to execute at least once, no matter what the loop condition, use <code>do-while</code>.</p>
+<p>All these examples might have been better done with a <code>for</code> loop. Let’s do something less deterministic—repeat until a certain random number comes up!</p>
+<div class="sourceCode" id="cb49"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb49-1"><a href="variables-and-statements.html#cb49-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span><span class="pp">   </span><span class="co">// For printf</span></span>
+<span id="cb49-2"><a href="variables-and-statements.html#cb49-2"></a><span class="pp">#include </span><span class="im">&lt;stdlib.h&gt;</span><span class="pp">  </span><span class="co">// For rand</span></span>
+<span id="cb49-3"><a href="variables-and-statements.html#cb49-3"></a></span>
+<span id="cb49-4"><a href="variables-and-statements.html#cb49-4"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb49-5"><a href="variables-and-statements.html#cb49-5"></a><span class="op">{</span></span>
+<span id="cb49-6"><a href="variables-and-statements.html#cb49-6"></a>    <span class="dt">int</span> r<span class="op">;</span></span>
+<span id="cb49-7"><a href="variables-and-statements.html#cb49-7"></a></span>
+<span id="cb49-8"><a href="variables-and-statements.html#cb49-8"></a>    <span class="cf">do</span> <span class="op">{</span></span>
+<span id="cb49-9"><a href="variables-and-statements.html#cb49-9"></a>        r <span class="op">=</span> rand<span class="op">()</span> <span class="op">%</span> <span class="dv">100</span><span class="op">;</span> <span class="co">// Get a random number between 0 and 99</span></span>
+<span id="cb49-10"><a href="variables-and-statements.html#cb49-10"></a>        printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> r<span class="op">);</span></span>
+<span id="cb49-11"><a href="variables-and-statements.html#cb49-11"></a>    <span class="op">}</span> <span class="cf">while</span> <span class="op">(</span>r <span class="op">!=</span> <span class="dv">37</span><span class="op">);</span>    <span class="co">// Repeat until 37 comes up</span></span>
+<span id="cb49-12"><a href="variables-and-statements.html#cb49-12"></a><span class="op">}</span></span></code></pre></div>
+<p>Side note: did you run that more than once? If you did, did you notice the same sequence of numbers came up again. And again. And again? This is because <code>rand()</code> is a pseudorandom number generator that must be <em>seeded</em> with a different number in order to generate a different sequence. Look up the <a href="https://beej.us/guide/bgclr/html/split/stdlib.html#man-srand"><code>srand()</code></a><a href="footnotes.html#fn41" class="footnote-ref" id="fnref41" role="doc-noteref"><sup>41</sup></a> function for more details. </p>
+<h3 data-number="3.3.4" id="forstat"><span class="header-section-number">3.3.4</span> The <code>for</code> statement</h3>
+<p> Welcome to one of the most popular loops in the world! The <code>for</code> loop!</p>
+<p>This is a great loop if you know the number of times you want to loop in advance.</p>
+<p>You could do the same thing using just a <code>while</code> loop, but the <code>for</code> loop can help keep the code cleaner.</p>
+<p>Here are two pieces of equivalent code—note how the <code>for</code> loop is just a more compact representation:</p>
+<div class="sourceCode" id="cb50"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb50-1"><a href="variables-and-statements.html#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Print numbers between 0 and 9, inclusive...</span></span>
+<span id="cb50-2"><a href="variables-and-statements.html#cb50-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-3"><a href="variables-and-statements.html#cb50-3" aria-hidden="true" tabindex="-1"></a><span class="co">// Using a while statement:</span></span>
+<span id="cb50-4"><a href="variables-and-statements.html#cb50-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-5"><a href="variables-and-statements.html#cb50-5" aria-hidden="true" tabindex="-1"></a>i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb50-6"><a href="variables-and-statements.html#cb50-6" aria-hidden="true" tabindex="-1"></a><span class="cf">while</span> <span class="op">(</span>i <span class="op">&lt;</span> <span class="dv">10</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb50-7"><a href="variables-and-statements.html#cb50-7" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;i is </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> i<span class="op">);</span></span>
+<span id="cb50-8"><a href="variables-and-statements.html#cb50-8" aria-hidden="true" tabindex="-1"></a>    i<span class="op">++;</span></span>
+<span id="cb50-9"><a href="variables-and-statements.html#cb50-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb50-10"><a href="variables-and-statements.html#cb50-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-11"><a href="variables-and-statements.html#cb50-11" aria-hidden="true" tabindex="-1"></a><span class="co">// Do the exact same thing with a for-loop:</span></span>
+<span id="cb50-12"><a href="variables-and-statements.html#cb50-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-13"><a href="variables-and-statements.html#cb50-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="op">(</span>i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> <span class="dv">10</span><span class="op">;</span> i<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb50-14"><a href="variables-and-statements.html#cb50-14" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;i is </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> i<span class="op">);</span></span>
+<span id="cb50-15"><a href="variables-and-statements.html#cb50-15" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>That’s right, folks—they do exactly the same thing. But you can see how the <code>for</code> statement is a little more compact and easy on the eyes. (JavaScript users will fully appreciate its C origins at this point.)</p>
+<p>It’s split into three parts, separated by semicolons. The first is the initialization, the second is the loop condition, and the third is what should happen at the end of the block if the loop condition is true. All three of these parts are optional.</p>
+<div class="sourceCode" id="cb51"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb51-1"><a href="variables-and-statements.html#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="op">(</span>initialize things<span class="op">;</span> loop <span class="cf">if</span> this is true<span class="op">;</span> <span class="cf">do</span> this after each loop<span class="op">)</span></span></code></pre></div>
+<p>Note that the loop will not execute even a single time if the loop condition starts off false.</p>
+<blockquote>
+<p><strong><code>for</code>-loop fun fact!</strong></p>
+<p>You can use the comma operator to do multiple things in each clause of the <code>for</code> loop!</p>
+<div class="sourceCode" id="cb52"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb52-1"><a href="variables-and-statements.html#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="op">(</span>i <span class="op">=</span> <span class="dv">0</span><span class="op">,</span> j <span class="op">=</span> <span class="dv">999</span><span class="op">;</span> i <span class="op">&lt;</span> <span class="dv">10</span><span class="op">;</span> i<span class="op">++,</span> j<span class="op">--)</span> <span class="op">{</span></span>
+<span id="cb52-2"><a href="variables-and-statements.html#cb52-2" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d</span><span class="st">, </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> i<span class="op">,</span> j<span class="op">);</span></span>
+<span id="cb52-3"><a href="variables-and-statements.html#cb52-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+</blockquote>
+<p>An empty <code>for</code> will run forever:</p>
+<div class="sourceCode" id="cb53"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb53-1"><a href="variables-and-statements.html#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span><span class="op">(;;)</span> <span class="op">{</span>  <span class="co">// &quot;forever&quot;</span></span>
+<span id="cb53-2"><a href="variables-and-statements.html#cb53-2" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;I will print this again and again and again</span><span class="sc">\n</span><span class="st">&quot;</span> <span class="op">);</span></span>
+<span id="cb53-3"><a href="variables-and-statements.html#cb53-3" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;for all eternity until the heat-death of the universe.</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb53-4"><a href="variables-and-statements.html#cb53-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-5"><a href="variables-and-statements.html#cb53-5" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;Or until you hit CTRL-C.</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb53-6"><a href="variables-and-statements.html#cb53-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p></p>
+<h3 data-number="3.3.5" id="switch-statement"><span class="header-section-number">3.3.5</span> The <code>switch</code> Statement</h3>
+<p> Depending on what languages you’re coming from, you might or might not be familiar with <code>switch</code>, or C’s version might even be more restrictive than you’re used to. This is a statement that allows you to take a variety of actions depending on the value of an integer expression.</p>
+<p>Basically, it evaluates an expression to an integer value, jumps to the <code>case</code> that corresponds to that value. Execution resumes from that point. If a <code>break</code> statement is encountered, then execution jumps out of the <code>switch</code>.</p>
+<p>Let’s do an example where the user enters a number of goats and we print out a gut-feel of how many goats that is.</p>
+<div class="sourceCode" id="cb54"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb54-1"><a href="variables-and-statements.html#cb54-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb54-2"><a href="variables-and-statements.html#cb54-2"></a></span>
+<span id="cb54-3"><a href="variables-and-statements.html#cb54-3"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb54-4"><a href="variables-and-statements.html#cb54-4"></a><span class="op">{</span></span>
+<span id="cb54-5"><a href="variables-and-statements.html#cb54-5"></a>    <span class="dt">int</span> goat_count<span class="op">;</span></span>
+<span id="cb54-6"><a href="variables-and-statements.html#cb54-6"></a></span>
+<span id="cb54-7"><a href="variables-and-statements.html#cb54-7"></a>    printf<span class="op">(</span><span class="st">&quot;Enter a goat count: &quot;</span><span class="op">);</span></span>
+<span id="cb54-8"><a href="variables-and-statements.html#cb54-8"></a>    scanf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d</span><span class="st">&quot;</span><span class="op">,</span> <span class="op">&amp;</span>goat_count<span class="op">);</span>       <span class="co">// Read an integer from the keyboard</span></span>
+<span id="cb54-9"><a href="variables-and-statements.html#cb54-9"></a></span>
+<span id="cb54-10"><a href="variables-and-statements.html#cb54-10"></a>    <span class="cf">switch</span> <span class="op">(</span>goat_count<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb54-11"><a href="variables-and-statements.html#cb54-11"></a>        <span class="cf">case</span> <span class="dv">0</span><span class="op">:</span></span>
+<span id="cb54-12"><a href="variables-and-statements.html#cb54-12"></a>            printf<span class="op">(</span><span class="st">&quot;You have no goats.</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb54-13"><a href="variables-and-statements.html#cb54-13"></a>            <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb54-14"><a href="variables-and-statements.html#cb54-14"></a></span>
+<span id="cb54-15"><a href="variables-and-statements.html#cb54-15"></a>        <span class="cf">case</span> <span class="dv">1</span><span class="op">:</span></span>
+<span id="cb54-16"><a href="variables-and-statements.html#cb54-16"></a>            printf<span class="op">(</span><span class="st">&quot;You have a singular goat.</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb54-17"><a href="variables-and-statements.html#cb54-17"></a>            <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb54-18"><a href="variables-and-statements.html#cb54-18"></a></span>
+<span id="cb54-19"><a href="variables-and-statements.html#cb54-19"></a>        <span class="cf">case</span> <span class="dv">2</span><span class="op">:</span></span>
+<span id="cb54-20"><a href="variables-and-statements.html#cb54-20"></a>            printf<span class="op">(</span><span class="st">&quot;You have a brace of goats.</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb54-21"><a href="variables-and-statements.html#cb54-21"></a>            <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb54-22"><a href="variables-and-statements.html#cb54-22"></a></span>
+<span id="cb54-23"><a href="variables-and-statements.html#cb54-23"></a>        <span class="cf">default</span><span class="op">:</span></span>
+<span id="cb54-24"><a href="variables-and-statements.html#cb54-24"></a>            printf<span class="op">(</span><span class="st">&quot;You have a bona fide plethora of goats!</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb54-25"><a href="variables-and-statements.html#cb54-25"></a>            <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb54-26"><a href="variables-and-statements.html#cb54-26"></a>    <span class="op">}</span></span>
+<span id="cb54-27"><a href="variables-and-statements.html#cb54-27"></a><span class="op">}</span></span></code></pre></div>
+<p>In that example, if the user enters, say, <code>2</code>, the <code>switch</code> will jump to the <code>case 2</code> and execute from there. When (if) it hits a <code>break</code>, it jumps out of the <code>switch</code>. </p>
+<p>Also, you might see that <code>default</code> label there at the bottom. This is what happens when no cases match.</p>
+<p>Every <code>case</code>, including <code>default</code>, is optional. And they can occur in any order, but it’s really typical for <code>default</code>, if any, to be listed last.</p>
+<p>So the whole thing acts like an <code>if</code>-<code>else</code> cascade:</p>
+<div class="sourceCode" id="cb55"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb55-1"><a href="variables-and-statements.html#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(</span>goat_count <span class="op">==</span> <span class="dv">0</span><span class="op">)</span></span>
+<span id="cb55-2"><a href="variables-and-statements.html#cb55-2" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;You have no goats.</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb55-3"><a href="variables-and-statements.html#cb55-3" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span> <span class="cf">if</span> <span class="op">(</span>goat_count <span class="op">==</span> <span class="dv">1</span><span class="op">)</span></span>
+<span id="cb55-4"><a href="variables-and-statements.html#cb55-4" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;You have a singular goat.</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb55-5"><a href="variables-and-statements.html#cb55-5" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span> <span class="cf">if</span> <span class="op">(</span>goat_count <span class="op">==</span> <span class="dv">2</span><span class="op">)</span></span>
+<span id="cb55-6"><a href="variables-and-statements.html#cb55-6" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;You have a brace of goats.</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb55-7"><a href="variables-and-statements.html#cb55-7" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span></span>
+<span id="cb55-8"><a href="variables-and-statements.html#cb55-8" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;You have a bona fide plethora of goats!</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span></code></pre></div>
+<p>With some key differences:</p>
+<ul>
+<li><code>switch</code> is often faster to jump to the correct code (though the spec makes no such guarantee).</li>
+<li><code>if</code>-<code>else</code> can do things like relational conditionals like <code>&lt;</code> and <code>&gt;=</code> and floating point and other types, while <code>switch</code> cannot.</li>
+</ul>
+<p>There’s one more neat thing about switch that you sometimes see that is quite interesting: <em>fall through</em>.</p>
+<p> Remember how <code>break</code> causes us to jump out of the switch?</p>
+<p> Well, what happens if we <em>don’t</em> <code>break</code>?</p>
+<p>Turns out we just keep on going into the next <code>case</code>! Demo!</p>
+<div class="sourceCode" id="cb56"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb56-1"><a href="variables-and-statements.html#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="cf">switch</span> <span class="op">(</span>x<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb56-2"><a href="variables-and-statements.html#cb56-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">case</span> <span class="dv">1</span><span class="op">:</span></span>
+<span id="cb56-3"><a href="variables-and-statements.html#cb56-3" aria-hidden="true" tabindex="-1"></a>        printf<span class="op">(</span><span class="st">&quot;1</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb56-4"><a href="variables-and-statements.html#cb56-4" aria-hidden="true" tabindex="-1"></a>        <span class="co">// Fall through!</span></span>
+<span id="cb56-5"><a href="variables-and-statements.html#cb56-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">case</span> <span class="dv">2</span><span class="op">:</span></span>
+<span id="cb56-6"><a href="variables-and-statements.html#cb56-6" aria-hidden="true" tabindex="-1"></a>        printf<span class="op">(</span><span class="st">&quot;2</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb56-7"><a href="variables-and-statements.html#cb56-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb56-8"><a href="variables-and-statements.html#cb56-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">case</span> <span class="dv">3</span><span class="op">:</span></span>
+<span id="cb56-9"><a href="variables-and-statements.html#cb56-9" aria-hidden="true" tabindex="-1"></a>        printf<span class="op">(</span><span class="st">&quot;3</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb56-10"><a href="variables-and-statements.html#cb56-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb56-11"><a href="variables-and-statements.html#cb56-11" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>If <code>x == 1</code>, this <code>switch</code> will first hit <code>case 1</code>, it’ll print the <code>1</code>, but then it just continues on to the next line of code… which prints <code>2</code>!</p>
+<p>And then, at last, we hit a <code>break</code> so we jump out of the <code>switch</code>.</p>
+<p>if <code>x == 2</code>, then we just hit the <code>case 2</code>, print <code>2</code>, and <code>break</code> as normal.</p>
+<p>Not having a <code>break</code> is called <em>fall through</em>.</p>
+<p>ProTip: <em>ALWAYS</em> put a comment in the code where you intend to fall through, like I did above. It will save other programmers from wondering if you meant to do that. </p>
+<p>In fact, this is one of the common places to introduce bugs in C programs: forgetting to put a <code>break</code> in your <code>case</code>. You gotta do it if you don’t want to just roll into the next case<a href="footnotes.html#fn42" class="footnote-ref" id="fnref42" role="doc-noteref"><sup>42</sup></a>. </p>
+<p>Earlier I said that <code>switch</code> works with integer types—keep it that way. Don’t use floating point or string types in there. One loophole-ish thing here is that you can use character types because those are secretly integers themselves. So this is perfectly acceptable:</p>
+<div class="sourceCode" id="cb57"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb57-1"><a href="variables-and-statements.html#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="dt">char</span> c <span class="op">=</span> <span class="ch">&#39;b&#39;</span><span class="op">;</span></span>
+<span id="cb57-2"><a href="variables-and-statements.html#cb57-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-3"><a href="variables-and-statements.html#cb57-3" aria-hidden="true" tabindex="-1"></a><span class="cf">switch</span> <span class="op">(</span>c<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb57-4"><a href="variables-and-statements.html#cb57-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">case</span> <span class="ch">&#39;a&#39;</span><span class="op">:</span></span>
+<span id="cb57-5"><a href="variables-and-statements.html#cb57-5" aria-hidden="true" tabindex="-1"></a>        printf<span class="op">(</span><span class="st">&quot;It&#39;s &#39;a&#39;!</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb57-6"><a href="variables-and-statements.html#cb57-6" aria-hidden="true" tabindex="-1"></a>        <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb57-7"><a href="variables-and-statements.html#cb57-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-8"><a href="variables-and-statements.html#cb57-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">case</span> <span class="ch">&#39;b&#39;</span><span class="op">:</span></span>
+<span id="cb57-9"><a href="variables-and-statements.html#cb57-9" aria-hidden="true" tabindex="-1"></a>        printf<span class="op">(</span><span class="st">&quot;It&#39;s &#39;b&#39;!</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb57-10"><a href="variables-and-statements.html#cb57-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb57-11"><a href="variables-and-statements.html#cb57-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-12"><a href="variables-and-statements.html#cb57-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">case</span> <span class="ch">&#39;c&#39;</span><span class="op">:</span></span>
+<span id="cb57-13"><a href="variables-and-statements.html#cb57-13" aria-hidden="true" tabindex="-1"></a>        printf<span class="op">(</span><span class="st">&quot;It&#39;s &#39;c&#39;!</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb57-14"><a href="variables-and-statements.html#cb57-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb57-15"><a href="variables-and-statements.html#cb57-15" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>Finally, you can use <code>enum</code>s in <code>switch</code> since they are also integer types. But more on that in the <code>enum</code> chapter.</p>
+<p> </p>
+<!-- Beej's guide to C
+
+# vim: ts=4:sw=4:nosi:et:tw=72
+-->
+<hr><div style="text-align:center"><span><a href="hello-world.html">Prev</a> | </span><a href="index.html">Contents</a><span> | <a href="functions.html">Next</a></span></div></body>
+</html>

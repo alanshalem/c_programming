@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Beej's Guide to C Programming</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Mono&display=swap" rel="stylesheet"> 
+
+  <!-- BG custom styling -->
+  <style type="text/css">
+  /* Fix for line numbers not visible */
+  pre.numberSource code > span {
+      left: -1em;
+  }
+  pre.numberSource {
+      margin-left: initial;
+  }
+
+  /* Put some space after the section numbers */
+  span.toc-section-number::after {
+      content: "\a0\a0\a0";  /* non-breaking whitespace */
+  }
+
+  /* Hide underlines on code number links */
+  pre > code.sourceCode > span > a:first-child::before {
+      text-decoration: none;
+  }
+
+  /* Color the source blocks */
+  div.sourceCode {
+      background-color: #f0f0f0;
+  }
+
+  /* Fix iOS big text rendering issue */
+  pre > code.sourceCode > span {
+      display: initial;
+  }
+
+
+  /* Color the inline code */
+  code:not(.sourceCode) {
+      background: #f0f0f0;
+      padding-left: 0.2em;
+      padding-right: 0.2em;
+      border-radius: 0.2em;
+  }
+
+  /* Keep code tags from wrapping in tables */
+  tbody code {
+      white-space: nowrap;
+  }
+
+  td {
+      vertical-align: top;
+  }
+
+  body {
+      font-size: 12pt;
+      max-width: 43em;
+  }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<div style="text-align:center"><span><a href="functions.html">Prev</a> | </span><a href="index.html">Contents</a><span> | <a href="arrays.html">Next</a></span></div><hr>
+<h1 data-number="5" id="pointers"><span class="header-section-number">5</span> Pointers—Cower In Fear!</h1>
+<blockquote>
+<p><em>“How do you get to Carnegie Hall?”</em><br />
+<em>“Practice!”</em></p>
+<p>—20th-century joke of unknown origin</p>
+</blockquote>
+<p>Pointers are one of the most feared things in the C language. In fact, they are the one thing that makes this language challenging at all. But why?</p>
+<p>Because they, quite honestly, can cause electric shocks to come up through the keyboard and physically <em>weld</em> your arms permanently in place, cursing you to a life at the keyboard in this language from the 70s!</p>
+<p>Really? Well, not really. I’m just trying to set you up for success.</p>
+<p>Depending on what language you came from, you might already understand the concept of <em>references</em>, where a variable refers to an object of some type.</p>
+<p>This is very much the same, except we have to be more explicit with C about when we’re talking about the reference or the thing it refers to.</p>
+<h2 data-number="5.1" id="ptmem"><span class="header-section-number">5.1</span> Memory and Variables</h2>
+<p>Computer memory holds data of all kinds, right? It’ll hold <code>float</code>s, <code>int</code>s, or whatever you have. To make memory easy to cope with, each byte of memory is identified by an integer. These integers increase sequentially as you move up through memory<a href="footnotes.html#fn44" class="footnote-ref" id="fnref44" role="doc-noteref"><sup>44</sup></a>. You can think of it as a bunch of numbered boxes, where each box holds a byte<a href="footnotes.html#fn45" class="footnote-ref" id="fnref45" role="doc-noteref"><sup>45</sup></a> of data. Or like a big array where each element holds a byte, if you come from a language with arrays. The number that represents each box is called its <em>address</em>.</p>
+<p>Now, not all data types use just a byte. For instance, an <code>int</code> is often four bytes, as is a <code>float</code>, but it really depends on the system. You can use the <code>sizeof</code> operator to determine how many bytes of memory a certain type uses.</p>
+<div class="sourceCode" id="cb65"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb65-1"><a href="pointers.html#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="co">// %zu is the format specifier for type size_t</span></span>
+<span id="cb65-2"><a href="pointers.html#cb65-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-3"><a href="pointers.html#cb65-3" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;an int uses </span><span class="sc">%zu</span><span class="st"> bytes of memory</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">,</span> <span class="kw">sizeof</span><span class="op">(</span><span class="dt">int</span><span class="op">));</span></span>
+<span id="cb65-4"><a href="pointers.html#cb65-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-5"><a href="pointers.html#cb65-5" aria-hidden="true" tabindex="-1"></a><span class="co">// That prints &quot;4&quot; for me, but can vary by system.</span></span></code></pre></div>
+<blockquote>
+<p><strong>Memory Fun Facts</strong>: When you have a data type (like your typical <code>int</code>) that uses more than a byte of memory, the bytes that make up the data are always adjacent to one another in memory. Sometimes they’re in the order that you expect, and sometimes they’re not<a href="footnotes.html#fn46" class="footnote-ref" id="fnref46" role="doc-noteref"><sup>46</sup></a>. While C doesn’t guarantee any particular memory order (it’s platform-dependent), it’s still generally possible to write code in a way that’s platform-independent where you don’t have to even consider these pesky byte orderings.</p>
+</blockquote>
+<p>So <em>anyway</em>, if we can get on with it and get a drum roll and some foreboding music playing for the definition of a pointer, <em>a pointer is a variable that holds an address</em>. Imagine the classical score from 2001: A Space Odyssey at this point. Ba bum ba bum ba bum BAAAAH!</p>
+<p>Ok, so maybe a bit overwrought here, yes? There’s not a lot of mystery about pointers. They are the address of data. Just like an <code>int</code> variable can hold the value <code>12</code>, a pointer variable can hold the address of data.</p>
+<p>This means that all these things mean the same thing, i.e. a number that represents a point in memory:</p>
+<ul>
+<li>Index into memory (if you’re thinking of memory like a big array)</li>
+<li>Address</li>
+<li>Location</li>
+</ul>
+<p>I’m going to use these interchangeably. And yes, I just threw <em>location</em> in there because you can never have enough words that mean the same thing.</p>
+<p>And a pointer variable holds that address number. Just like a <code>float</code> variable might hold <code>3.14159</code>.</p>
+<p>Imagine you have a bunch of Post-it® notes all numbered in sequence with their address. (The first one is at index numbered <code>0</code>, the next at index <code>1</code>, and so on.)</p>
+<p>In addition to the number representing their positions, you can also write another number of your choice on each. It could be the number of dogs you have. Or the number of moons around Mars…</p>
+<p>…Or, <em>it could be the index of another Post-it note!</em></p>
+<p>If you have written the number of dogs you have, that’s just a regular variable. But if you wrote the index of another Post-it in there, <em>that’s a pointer</em>. It points to the other note!</p>
+<p>Another analogy might be with house addresses. You can have a house with certain qualities, yard, metal roof, solar, etc. Or you could have the address of that house. The address isn’t the same as the house itself. One’s a full-blown house, and the other is just a few lines of text. But the address of the house is a <em>pointer</em> to that house. It’s not the house itself, but it tells you where to find it.</p>
+<p>And we can do the same thing in the computer with data. You can have a data variable that’s holding some value. And that value is in memory at some address. And you could have a different <em>pointer variable</em> hold the address of that data variable.</p>
+<p>It’s not the data variable itself, but, like with a house address, it tells us where to find it.</p>
+<p>When we have that, we say we have a “pointer to” that data. And we can follow the pointer to access the data itself.</p>
+<p>(Though it doesn’t seem particularly useful yet, this all becomes indispensable when used with function calls. Bear with me until we get there.)</p>
+<p>So if we have an <code>int</code>, say, and we want a pointer to it, what we want is some way to get the address of that <code>int</code>, right? After all, the pointer just holds the <em>address of</em> the data. What operator do you suppose we’d use to find the <em>address of</em> the <code>int</code>?</p>
+<p>Well, by a shocking surprise that must come as something of a shock to you, gentle reader, we use the <code>address-of</code> operator (which happens to be an ampersand: “<code>&amp;</code>”)to find the address of the data. Ampersand.</p>
+<p>So for a quick example, we’ll introduce a new <em>format specifier</em> for <code>printf()</code> so you can print a pointer. You know already how <code>%d</code> prints a decimal integer, yes? Well, <code>%p</code> prints a pointer. Now, this pointer is going to look like a garbage number (and it might be printed in hexadecimal<a href="footnotes.html#fn47" class="footnote-ref" id="fnref47" role="doc-noteref"><sup>47</sup></a> instead of decimal), but it is merely the index into memory the data is stored in. (Or the index into memory that the first byte of data is stored in, if the data is multi-byte.) In virtually all circumstances, including this one, the actual value of the number printed is unimportant to you, and I show it here only for demonstration of the <code>address-of</code> operator.</p>
+<div class="sourceCode" id="cb66"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb66-1"><a href="pointers.html#cb66-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb66-2"><a href="pointers.html#cb66-2"></a></span>
+<span id="cb66-3"><a href="pointers.html#cb66-3"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb66-4"><a href="pointers.html#cb66-4"></a><span class="op">{</span></span>
+<span id="cb66-5"><a href="pointers.html#cb66-5"></a>    <span class="dt">int</span> i <span class="op">=</span> <span class="dv">10</span><span class="op">;</span></span>
+<span id="cb66-6"><a href="pointers.html#cb66-6"></a></span>
+<span id="cb66-7"><a href="pointers.html#cb66-7"></a>    printf<span class="op">(</span><span class="st">&quot;The value of i is </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> i<span class="op">);</span></span>
+<span id="cb66-8"><a href="pointers.html#cb66-8"></a>    printf<span class="op">(</span><span class="st">&quot;And its address is </span><span class="sc">%p\n</span><span class="st">&quot;</span><span class="op">,</span> <span class="op">(</span><span class="dt">void</span> <span class="op">*)&amp;</span>i<span class="op">);</span></span>
+<span id="cb66-9"><a href="pointers.html#cb66-9"></a></span>
+<span id="cb66-10"><a href="pointers.html#cb66-10"></a>    <span class="co">// %p expects the argument to be a pointer to void</span></span>
+<span id="cb66-11"><a href="pointers.html#cb66-11"></a>    <span class="co">// so we cast it to make the compiler happy.</span></span>
+<span id="cb66-12"><a href="pointers.html#cb66-12"></a><span class="op">}</span></span></code></pre></div>
+<p>On my computer, this prints:</p>
+<div class="sourceCode" id="cb67"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb67-1"><a href="pointers.html#cb67-1" aria-hidden="true" tabindex="-1"></a>The value of i is 10</span>
+<span id="cb67-2"><a href="pointers.html#cb67-2" aria-hidden="true" tabindex="-1"></a>And its address is 0x7ffddf7072a4</span></code></pre></div>
+<p></p>
+<p>If you’re curious, that hexadecimal number is 140,727,326,896,068 in decimal (base 10 just like Grandma used to use). That’s the index into memory where the variable <code>i</code>’s data is stored. It’s the address of <code>i</code>. It’s the location of <code>i</code>. It’s a pointer to <code>i</code>.</p>
+<p>It’s a pointer because it lets you know where <code>i</code> is in memory. Like a home address written on a scrap of paper tells you where you can find a particular house, this number indicates to us where in memory we can find the value of <code>i</code>. It points to <code>i</code>.</p>
+<p>Again, we don’t really care what the address’s exact number is, generally. We just care that it’s a pointer to <code>i</code>.</p>
+<h2 data-number="5.2" id="pttypes"><span class="header-section-number">5.2</span> Pointer Types</h2>
+<p>So… this is all well and good. You can now successfully take the address of a variable and print it on the screen. There’s a little something for the ol’ resume, right? Here’s where you grab me by the scruff of the neck and ask politely what the frick pointers are good for.</p>
+<p>Excellent question, and we’ll get to that right after these messages from our sponsor.</p>
+<blockquote>
+<p><code>ACME ROBOTIC HOUSING UNIT CLEANING SERVICES. YOUR HOMESTEAD WILL BE DRAMATICALLY IMPROVED OR YOU WILL BE TERMINATED. MESSAGE ENDS.</code></p>
+</blockquote>
+<p>Welcome back to another installment of Beej’s Guide. When we met last we were talking about how to make use of pointers. Well, what we’re going to do is store a pointer off in a variable so that we can use it later. You can identify the <em>pointer type</em> because there’s an asterisk (<code>*</code>) before the variable name and after its type:</p>
+<div class="sourceCode" id="cb68"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb68-1"><a href="pointers.html#cb68-1"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb68-2"><a href="pointers.html#cb68-2"></a><span class="op">{</span></span>
+<span id="cb68-3"><a href="pointers.html#cb68-3"></a>    <span class="dt">int</span> i<span class="op">;</span>  <span class="co">// i&#39;s type is &quot;int&quot;</span></span>
+<span id="cb68-4"><a href="pointers.html#cb68-4"></a>    <span class="dt">int</span> <span class="op">*</span>p<span class="op">;</span> <span class="co">// p&#39;s type is &quot;pointer to an int&quot;, or &quot;int-pointer&quot;</span></span>
+<span id="cb68-5"><a href="pointers.html#cb68-5"></a><span class="op">}</span></span></code></pre></div>
+<p>Hey, so we have here a variable that is a pointer type, and it can point to other <code>int</code>s. That is, it can hold the address of other <code>int</code>s. We know it points to <code>int</code>s, since it’s of type <code>int*</code> (read “int-pointer”).</p>
+<p>When you do an assignment into a pointer variable, the type of the right hand side of the assignment has to be the same type as the pointer variable. Fortunately for us, when you take the <code>address-of</code> a variable, the resultant type is a pointer to that variable type, so assignments like the following are perfect:</p>
+<div class="sourceCode" id="cb69"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb69-1"><a href="pointers.html#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> i<span class="op">;</span></span>
+<span id="cb69-2"><a href="pointers.html#cb69-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> <span class="op">*</span>p<span class="op">;</span>  <span class="co">// p is a pointer, but is uninitialized and points to garbage</span></span>
+<span id="cb69-3"><a href="pointers.html#cb69-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-4"><a href="pointers.html#cb69-4" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> <span class="op">&amp;</span>i<span class="op">;</span>  <span class="co">// p is assigned the address of i--p now &quot;points to&quot; i</span></span></code></pre></div>
+<p>On the left of the assignment, we have a variable of type pointer-to-<code>int</code> (<code>int*</code>), and on the right side, we have expression of type pointer-to-<code>int</code> since <code>i</code> is an <code>int</code> (because address-of <code>int</code> gives you a pointer to <code>int</code>). The address of a thing can be stored in a pointer to that thing.</p>
+<p>Get it? I know it still doesn’t quite make much sense since you haven’t seen an actual use for the pointer variable, but we’re taking small steps here so that no one gets lost. So now, let’s introduce you to the anti-address-of operator. It’s kind of like what <code>address-of</code> would be like in Bizarro World.</p>
+<h2 data-number="5.3" id="deref"><span class="header-section-number">5.3</span> Dereferencing</h2>
+<p>A pointer variable can be thought of as <em>referring</em> to another variable by pointing to it. It’s rare you’ll hear anyone in C land talking about “referring” or “references”, but I bring it up just so that the name of this operator will make a little more sense.</p>
+<p>When you have a pointer to a variable (roughly “a reference to a variable”), you can use the original variable through the pointer by <em>dereferencing</em> the pointer. (You can think of this as “de-pointering” the pointer, but no one ever says “de-pointering”.)</p>
+<p>Back to our analogy, this is vaguely like looking at a home address and then going to that house.</p>
+<p>Now, what do I mean by “get access to the original variable”? Well, if you have a variable called <code>i</code>, and you have a pointer to <code>i</code> called <code>p</code>, you can use the dereferenced pointer <code>p</code> <em>exactly as if it were the original variable <code>i</code></em>!</p>
+<p>You almost have enough knowledge to handle an example. The last tidbit you need to know is actually this: what is the dereference operator? It’s actually called the <em>indirection operator</em>, because you’re accessing values indirectly via the pointer. And it is the asterisk, again: <code>*</code>. Now, don’t get this confused with the asterisk you used in the pointer declaration, earlier. They are the same character, but they have different meanings in different contexts<a href="footnotes.html#fn48" class="footnote-ref" id="fnref48" role="doc-noteref"><sup>48</sup></a>.</p>
+<p>Here’s a full-blown example:</p>
+<div class="sourceCode" id="cb70"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb70-1"><a href="pointers.html#cb70-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb70-2"><a href="pointers.html#cb70-2"></a></span>
+<span id="cb70-3"><a href="pointers.html#cb70-3"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb70-4"><a href="pointers.html#cb70-4"></a><span class="op">{</span></span>
+<span id="cb70-5"><a href="pointers.html#cb70-5"></a>    <span class="dt">int</span> i<span class="op">;</span></span>
+<span id="cb70-6"><a href="pointers.html#cb70-6"></a>    <span class="dt">int</span> <span class="op">*</span>p<span class="op">;</span>  <span class="co">// this is NOT a dereference--this is a type &quot;int*&quot;</span></span>
+<span id="cb70-7"><a href="pointers.html#cb70-7"></a></span>
+<span id="cb70-8"><a href="pointers.html#cb70-8"></a>    p <span class="op">=</span> <span class="op">&amp;</span>i<span class="op">;</span>  <span class="co">// p now points to i, p holds address of i</span></span>
+<span id="cb70-9"><a href="pointers.html#cb70-9"></a></span>
+<span id="cb70-10"><a href="pointers.html#cb70-10"></a>    i <span class="op">=</span> <span class="dv">10</span><span class="op">;</span>  <span class="co">// i is now 10</span></span>
+<span id="cb70-11"><a href="pointers.html#cb70-11"></a>    <span class="op">*</span>p <span class="op">=</span> <span class="dv">20</span><span class="op">;</span> <span class="co">// the thing p points to (namely i!) is now 20!!</span></span>
+<span id="cb70-12"><a href="pointers.html#cb70-12"></a></span>
+<span id="cb70-13"><a href="pointers.html#cb70-13"></a>    printf<span class="op">(</span><span class="st">&quot;i is </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> i<span class="op">);</span>   <span class="co">// prints &quot;20&quot;</span></span>
+<span id="cb70-14"><a href="pointers.html#cb70-14"></a>    printf<span class="op">(</span><span class="st">&quot;i is </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> <span class="op">*</span>p<span class="op">);</span>  <span class="co">// &quot;20&quot;! dereference-p is the same as i!</span></span>
+<span id="cb70-15"><a href="pointers.html#cb70-15"></a><span class="op">}</span></span></code></pre></div>
+<p>Remember that <code>p</code> holds the address of <code>i</code>, as you can see where we did the assignment to <code>p</code> on line 8. What the indirection operator does is tells the computer to <em>use the object the pointer points to</em> instead of using the pointer itself. In this way, we have turned <code>*p</code> into an alias of sorts for <code>i</code>.</p>
+<p>Great, but <em>why</em>? Why do any of this?</p>
+<h2 data-number="5.4" id="ptpass"><span class="header-section-number">5.4</span> Passing Pointers as Arguments</h2>
+<p>Right about now, you’re thinking that you have an awful lot of knowledge about pointers, but absolutely zero application, right? I mean, what use is <code>*p</code> if you could just simply say <code>i</code> instead?</p>
+<p>Well, my friend, the real power of pointers comes into play when you start passing them to functions. Why is this a big deal? You might recall from before that you could pass all kinds of arguments to functions and they’d be dutifully copied into parameters, and then you could manipulate local copies of those variables from within the function, and then you could return a single value.</p>
+<p>What if you wanted to bring back more than one single piece of data from the function? I mean, you can only return one thing, right? What if I answered that question with another question? …Er, two questions?</p>
+<p>What happens when you pass a pointer as an argument to a function? Does a copy of the pointer get put into its corresponding parameter? <em>You bet your sweet peas it does.</em> Remember how earlier I rambled on and on about how <em>EVERY SINGLE ARGUMENT</em> gets copied into parameters and the function uses a copy of the argument? Well, the same is true here. The function will get a copy of the pointer.</p>
+<p>But, and this is the clever part: we will have set up the pointer in advance to point at a variable… and then the function can dereference its copy of the pointer to get back to the original variable! The function can’t see the variable itself, but it can certainly dereference a pointer to that variable!</p>
+<p>This is analogous to writing a home address on a piece of paper, and then copying that onto another piece of paper. You now have <em>two</em> pointers to that house, and both are equally good at getting you to the house itself.</p>
+<p>In the case of a function call. one of the copies is stored in a pointer variable out in the calling scope, and the other is stored in a pointer variable that is the parameter of the function.</p>
+<p>Example! Let’s revisit our old <code>increment()</code> function, but this time let’s make it so that it actually increments the value out in the caller.</p>
+<div class="sourceCode" id="cb71"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb71-1"><a href="pointers.html#cb71-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb71-2"><a href="pointers.html#cb71-2"></a></span>
+<span id="cb71-3"><a href="pointers.html#cb71-3"></a><span class="dt">void</span> increment<span class="op">(</span><span class="dt">int</span> <span class="op">*</span>p<span class="op">)</span>  <span class="co">// note that it accepts a pointer to an int</span></span>
+<span id="cb71-4"><a href="pointers.html#cb71-4"></a><span class="op">{</span></span>
+<span id="cb71-5"><a href="pointers.html#cb71-5"></a>    <span class="op">*</span>p <span class="op">=</span> <span class="op">*</span>p <span class="op">+</span> <span class="dv">1</span><span class="op">;</span>        <span class="co">// add one to the thing p points to</span></span>
+<span id="cb71-6"><a href="pointers.html#cb71-6"></a><span class="op">}</span></span>
+<span id="cb71-7"><a href="pointers.html#cb71-7"></a></span>
+<span id="cb71-8"><a href="pointers.html#cb71-8"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb71-9"><a href="pointers.html#cb71-9"></a><span class="op">{</span></span>
+<span id="cb71-10"><a href="pointers.html#cb71-10"></a>    <span class="dt">int</span> i <span class="op">=</span> <span class="dv">10</span><span class="op">;</span></span>
+<span id="cb71-11"><a href="pointers.html#cb71-11"></a>    <span class="dt">int</span> <span class="op">*</span>j <span class="op">=</span> <span class="op">&amp;</span>i<span class="op">;</span>  <span class="co">// note the address-of; turns it into a pointer to i</span></span>
+<span id="cb71-12"><a href="pointers.html#cb71-12"></a></span>
+<span id="cb71-13"><a href="pointers.html#cb71-13"></a>    printf<span class="op">(</span><span class="st">&quot;i is </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> i<span class="op">);</span>        <span class="co">// prints &quot;10&quot;</span></span>
+<span id="cb71-14"><a href="pointers.html#cb71-14"></a>    printf<span class="op">(</span><span class="st">&quot;i is also </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> <span class="op">*</span>j<span class="op">);</span>  <span class="co">// prints &quot;10&quot;</span></span>
+<span id="cb71-15"><a href="pointers.html#cb71-15"></a></span>
+<span id="cb71-16"><a href="pointers.html#cb71-16"></a>    increment<span class="op">(</span>j<span class="op">);</span>                  <span class="co">// j is an int*--to i</span></span>
+<span id="cb71-17"><a href="pointers.html#cb71-17"></a></span>
+<span id="cb71-18"><a href="pointers.html#cb71-18"></a>    printf<span class="op">(</span><span class="st">&quot;i is </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> i<span class="op">);</span>        <span class="co">// prints &quot;11&quot;!</span></span>
+<span id="cb71-19"><a href="pointers.html#cb71-19"></a><span class="op">}</span></span></code></pre></div>
+<p>Ok! There are a couple things to see here… not the least of which is that the <code>increment()</code> function takes an <code>int*</code> as an argument. We pass it an <code>int*</code> in the call by changing the <code>int</code> variable <code>i</code> to an <code>int*</code> using the <code>address-of</code> operator. (Remember, a pointer holds an address, so we make pointers to variables by running them through the <code>address-of</code> operator.)</p>
+<p>The <code>increment()</code> function gets a copy of the pointer. Both the original pointer <code>j</code> (in <code>main()</code>) and the copy of that pointer <code>p</code> (the parameter in <code>increment()</code>) point to the same address, namely the one holding the value <code>i</code>. (Again, by analogy, like two pieces of paper with the same home address written on them.) Dereferencing either will allow you to modify the original variable <code>i</code>! The function can modify a variable in another scope! Rock on!</p>
+<p>The above example is often more concisely written in the call just by using address-of right in the argument list:</p>
+<div class="sourceCode" id="cb72"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb72-1"><a href="pointers.html#cb72-1" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;i is </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> i<span class="op">);</span>  <span class="co">// prints &quot;10&quot;</span></span>
+<span id="cb72-2"><a href="pointers.html#cb72-2" aria-hidden="true" tabindex="-1"></a>increment<span class="op">(&amp;</span>i<span class="op">);</span></span>
+<span id="cb72-3"><a href="pointers.html#cb72-3" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;i is </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> i<span class="op">);</span>  <span class="co">// prints &quot;11&quot;!</span></span></code></pre></div>
+<p>Pointer enthusiasts will recall from early on in the guide, we used a function to read from the keyboard, <code>scanf()</code>… and, although you might not have recognized it at the time, we used the <code>address-of</code> to pass a pointer to a value to <code>scanf()</code>. We had to pass a pointer, see, because <code>scanf()</code> reads from the keyboard (typically) and stores the result in a variable. The only way it can see that variable out in the calling function’s scope is if we pass a pointer to that variable:</p>
+<div class="sourceCode" id="cb73"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb73-1"><a href="pointers.html#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb73-2"><a href="pointers.html#cb73-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb73-3"><a href="pointers.html#cb73-3" aria-hidden="true" tabindex="-1"></a>scanf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d</span><span class="st">&quot;</span><span class="op">,</span> <span class="op">&amp;</span>i<span class="op">);</span>         <span class="co">// pretend you typed &quot;12&quot;</span></span>
+<span id="cb73-4"><a href="pointers.html#cb73-4" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;i is </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> i<span class="op">);</span>  <span class="co">// prints &quot;i is 12&quot;</span></span></code></pre></div>
+<p>See, <code>scanf()</code> dereferences the pointer we pass it in order to modify the variable it points to. And now you know why you have to put that pesky ampersand in there!</p>
+<h2 data-number="5.5" id="the-null-pointer"><span class="header-section-number">5.5</span> The <code>NULL</code> Pointer</h2>
+<p>Any pointer variable of any pointer type can be set to a special value called <code>NULL</code>. This indicates that this pointer doesn’t point to anything.</p>
+<div class="sourceCode" id="cb74"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb74-1"><a href="pointers.html#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> <span class="op">*</span>p<span class="op">;</span></span>
+<span id="cb74-2"><a href="pointers.html#cb74-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb74-3"><a href="pointers.html#cb74-3" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> NULL<span class="op">;</span></span></code></pre></div>
+<p>Since it doesn’t point to a value, dereferencing it is undefined behavior, and probably will result in a crash:</p>
+<div class="sourceCode" id="cb75"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb75-1"><a href="pointers.html#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> <span class="op">*</span>p <span class="op">=</span> NULL<span class="op">;</span></span>
+<span id="cb75-2"><a href="pointers.html#cb75-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb75-3"><a href="pointers.html#cb75-3" aria-hidden="true" tabindex="-1"></a><span class="op">*</span>p <span class="op">=</span> <span class="dv">12</span><span class="op">;</span>  <span class="co">// CRASH or SOMETHING PROBABLY BAD. BEST AVOIDED.</span></span></code></pre></div>
+<p>Despite being called <a href="https://en.wikipedia.org/wiki/Null_pointer#History">the billion dollar mistake by its creator</a><a href="footnotes.html#fn49" class="footnote-ref" id="fnref49" role="doc-noteref"><sup>49</sup></a>, the <code>NULL</code> pointer is a good <a href="https://en.wikipedia.org/wiki/Sentinel_value">sentinel value</a><a href="footnotes.html#fn50" class="footnote-ref" id="fnref50" role="doc-noteref"><sup>50</sup></a> and general indicator that a pointer hasn’t yet been initialized.</p>
+<p>(Of course, like other variables, the pointer points to garbage unless you explicitly assign it to point to an address or <code>NULL</code>.) </p>
+<h2 data-number="5.6" id="a-note-on-declaring-pointers"><span class="header-section-number">5.6</span> A Note on Declaring Pointers</h2>
+<p>The syntax for declaring a pointer can get a little weird. Let’s look at this example:</p>
+<div class="sourceCode" id="cb76"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb76-1"><a href="pointers.html#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> a<span class="op">;</span></span>
+<span id="cb76-2"><a href="pointers.html#cb76-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> b<span class="op">;</span></span></code></pre></div>
+<p>We can condense that into a single line, right?</p>
+<div class="sourceCode" id="cb77"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb77-1"><a href="pointers.html#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> a<span class="op">,</span> b<span class="op">;</span>  <span class="co">// Same thing</span></span></code></pre></div>
+<p>So <code>a</code> and <code>b</code> are both <code>int</code>s. No problem.</p>
+<p>But what about this?</p>
+<div class="sourceCode" id="cb78"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb78-1"><a href="pointers.html#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> a<span class="op">;</span></span>
+<span id="cb78-2"><a href="pointers.html#cb78-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> <span class="op">*</span>p<span class="op">;</span></span></code></pre></div>
+<p>Can we make that into one line? We can. But where does the <code>*</code> go?</p>
+<p>The rule is that the <code>*</code> goes in front of any variable that is a pointer type. That is. the <code>*</code> is <em>not</em> part of the <code>int</code> in this example. it’s a part of variable <code>p</code>.</p>
+<p>With that in mind, we can write this:</p>
+<div class="sourceCode" id="cb79"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb79-1"><a href="pointers.html#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> a<span class="op">,</span> <span class="op">*</span>p<span class="op">;</span>  <span class="co">// Same thing</span></span></code></pre></div>
+<p>It’s important to note that the following line does <em>not</em> declare two pointers:</p>
+<div class="sourceCode" id="cb80"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb80-1"><a href="pointers.html#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> <span class="op">*</span>p<span class="op">,</span> q<span class="op">;</span>  <span class="co">// p is a pointer to an int; q is just an int.</span></span></code></pre></div>
+<p>This can be particularly insidious-looking if the programmer writes this following (valid) line of code which is functionally identical to the one above.</p>
+<div class="sourceCode" id="cb81"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb81-1"><a href="pointers.html#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span><span class="op">*</span> p<span class="op">,</span> q<span class="op">;</span>  <span class="co">// p is a pointer to an int; q is just an int.</span></span></code></pre></div>
+<p>So take a look at this and determine which variables are pointers and which are not:</p>
+<div class="sourceCode" id="cb82"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb82-1"><a href="pointers.html#cb82-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> <span class="op">*</span>a<span class="op">,</span> b<span class="op">,</span> c<span class="op">,</span> <span class="op">*</span>d<span class="op">,</span> e<span class="op">,</span> <span class="op">*</span>f<span class="op">,</span> g<span class="op">,</span> h<span class="op">,</span> <span class="op">*</span>i<span class="op">;</span></span></code></pre></div>
+<p>I’ll drop the answer in a footnote<a href="footnotes.html#fn51" class="footnote-ref" id="fnref51" role="doc-noteref"><sup>51</sup></a>.</p>
+<h2 data-number="5.7" id="sizeof-and-pointers"><span class="header-section-number">5.7</span> <code>sizeof</code> and Pointers</h2>
+<p>Just a little bit of syntax here that might be confusing and you might see from time to time.</p>
+<p>Recall that <code>sizeof</code> operates on the <em>type</em> of the expression.</p>
+<div class="sourceCode" id="cb83"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb83-1"><a href="pointers.html#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> <span class="op">*</span>p<span class="op">;</span></span>
+<span id="cb83-2"><a href="pointers.html#cb83-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb83-3"><a href="pointers.html#cb83-3" aria-hidden="true" tabindex="-1"></a><span class="co">// Prints size of an &#39;int&#39;</span></span>
+<span id="cb83-4"><a href="pointers.html#cb83-4" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%zu\n</span><span class="st">&quot;</span><span class="op">,</span> <span class="kw">sizeof</span><span class="op">(</span><span class="dt">int</span><span class="op">));</span></span>
+<span id="cb83-5"><a href="pointers.html#cb83-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb83-6"><a href="pointers.html#cb83-6" aria-hidden="true" tabindex="-1"></a><span class="co">// p is type &#39;int *&#39;, so prints size of &#39;int*&#39;</span></span>
+<span id="cb83-7"><a href="pointers.html#cb83-7" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%zu\n</span><span class="st">&quot;</span><span class="op">,</span> <span class="kw">sizeof</span> p<span class="op">);</span></span>
+<span id="cb83-8"><a href="pointers.html#cb83-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb83-9"><a href="pointers.html#cb83-9" aria-hidden="true" tabindex="-1"></a><span class="co">// *p is type &#39;int&#39;, so prints size of &#39;int&#39;</span></span>
+<span id="cb83-10"><a href="pointers.html#cb83-10" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%zu\n</span><span class="st">&quot;</span><span class="op">,</span> <span class="kw">sizeof</span> <span class="op">*</span>p<span class="op">);</span></span></code></pre></div>
+<p>You might see code in the wild with that last <code>sizeof</code> in there. Just remember that <code>sizeof</code> is all about the type of the expression, not the variables in the expression themselves.</p>
+<!-- Beej's guide to C
+
+# vim: ts=4:sw=4:nosi:et:tw=72
+-->
+<hr><div style="text-align:center"><span><a href="functions.html">Prev</a> | </span><a href="index.html">Contents</a><span> | <a href="arrays.html">Next</a></span></div></body>
+</html>

@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Beej's Guide to C Programming</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Mono&display=swap" rel="stylesheet"> 
+
+  <!-- BG custom styling -->
+  <style type="text/css">
+  /* Fix for line numbers not visible */
+  pre.numberSource code > span {
+      left: -1em;
+  }
+  pre.numberSource {
+      margin-left: initial;
+  }
+
+  /* Put some space after the section numbers */
+  span.toc-section-number::after {
+      content: "\a0\a0\a0";  /* non-breaking whitespace */
+  }
+
+  /* Hide underlines on code number links */
+  pre > code.sourceCode > span > a:first-child::before {
+      text-decoration: none;
+  }
+
+  /* Color the source blocks */
+  div.sourceCode {
+      background-color: #f0f0f0;
+  }
+
+  /* Fix iOS big text rendering issue */
+  pre > code.sourceCode > span {
+      display: initial;
+  }
+
+
+  /* Color the inline code */
+  code:not(.sourceCode) {
+      background: #f0f0f0;
+      padding-left: 0.2em;
+      padding-right: 0.2em;
+      border-radius: 0.2em;
+  }
+
+  /* Keep code tags from wrapping in tables */
+  tbody code {
+      white-space: nowrap;
+  }
+
+  td {
+      vertical-align: top;
+  }
+
+  body {
+      font-size: 12pt;
+      max-width: 43em;
+  }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<div style="text-align:center"><span><a href="goto.html">Prev</a> | </span><a href="index.html">Contents</a><span> | <a href="arrays-part-ii.html">Next</a></span></div><hr>
+<h1 data-number="32" id="types-part-v-compound-literals-and-generic-selections"><span class="header-section-number">32</span> Types Part V: Compound Literals and Generic Selections</h1>
+<p>This is the final chapter for types! We’re going to talk about two things:</p>
+<ul>
+<li>How to have “anonymous” unnamed objects and how that’s useful.</li>
+<li>How to generate type-dependent code.</li>
+</ul>
+<p>They’re not particularly related, but don’t really each warrant their own chapters. So I crammed them in here like a rebel!</p>
+<h2 data-number="32.1" id="compound-literals"><span class="header-section-number">32.1</span> Compound Literals</h2>
+<p></p>
+<p>This is a neat feature of the language that allows you to create an object of some type on the fly without ever assigning it to a variable. You can make simple types, arrays, <code>struct</code>s, you name it.</p>
+<p>One of the main uses for this is passing complex arguments to functions when you don’t want to make a temporary variable to hold the value.</p>
+<p>The way you create a compound literal is to put the type name in parentheses, and then put an initializer list after. For example, an unnamed array of <code>int</code>s, might look like this:</p>
+<div class="sourceCode" id="cb607"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb607-1"><a href="types-part-v-compound-literals-and-generic-selections.html#cb607-1" aria-hidden="true" tabindex="-1"></a><span class="op">(</span><span class="dt">int</span> <span class="op">[]){</span><span class="dv">1</span><span class="op">,</span><span class="dv">2</span><span class="op">,</span><span class="dv">3</span><span class="op">,</span><span class="dv">4</span><span class="op">}</span></span></code></pre></div>
+<p>Now, that line of code doesn’t do anything on its own. It creates an unnamed array of 4 <code>int</code>s, and then throws them away without using them.</p>
+<p>We could use a pointer to store a reference to the array…</p>
+<div class="sourceCode" id="cb608"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb608-1"><a href="types-part-v-compound-literals-and-generic-selections.html#cb608-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> <span class="op">*</span>p <span class="op">=</span> <span class="op">(</span><span class="dt">int</span> <span class="op">[]){</span><span class="dv">1</span> <span class="op">,</span><span class="dv">2</span> <span class="op">,</span><span class="dv">3</span> <span class="op">,</span><span class="dv">4</span><span class="op">};</span></span>
+<span id="cb608-2"><a href="types-part-v-compound-literals-and-generic-selections.html#cb608-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb608-3"><a href="types-part-v-compound-literals-and-generic-selections.html#cb608-3" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> p<span class="op">[</span><span class="dv">1</span><span class="op">]);</span>  <span class="co">// 2</span></span></code></pre></div>
+<p>But that seems a little like a long-winded way to have an array. I mean, we could have just done this<a href="footnotes.html#fn177" class="footnote-ref" id="fnref177" role="doc-noteref"><sup>177</sup></a>:</p>
+<div class="sourceCode" id="cb609"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb609-1"><a href="types-part-v-compound-literals-and-generic-selections.html#cb609-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> p<span class="op">[]</span> <span class="op">=</span> <span class="op">{</span><span class="dv">1</span><span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">3</span><span class="op">,</span> <span class="dv">4</span><span class="op">};</span></span>
+<span id="cb609-2"><a href="types-part-v-compound-literals-and-generic-selections.html#cb609-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb609-3"><a href="types-part-v-compound-literals-and-generic-selections.html#cb609-3" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> p<span class="op">[</span><span class="dv">1</span><span class="op">]);</span>  <span class="co">// 2</span></span></code></pre></div>
+<p>So let’s take a look at a more useful example.</p>
+<h3 data-number="32.1.1" id="passing-unnamed-objects-to-functions"><span class="header-section-number">32.1.1</span> Passing Unnamed Objects to Functions</h3>
+<p></p>
+<p>Let’s say we have a function to sum an array of <code>int</code>s:</p>
+<div class="sourceCode" id="cb610"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb610-1"><a href="types-part-v-compound-literals-and-generic-selections.html#cb610-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> sum<span class="op">(</span><span class="dt">int</span> p<span class="op">[],</span> <span class="dt">int</span> count<span class="op">)</span></span>
+<span id="cb610-2"><a href="types-part-v-compound-literals-and-generic-selections.html#cb610-2" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb610-3"><a href="types-part-v-compound-literals-and-generic-selections.html#cb610-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> total <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb610-4"><a href="types-part-v-compound-literals-and-generic-selections.html#cb610-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb610-5"><a href="types-part-v-compound-literals-and-generic-selections.html#cb610-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> count<span class="op">;</span> i<span class="op">++)</span></span>
+<span id="cb610-6"><a href="types-part-v-compound-literals-and-generic-selections.html#cb610-6" aria-hidden="true" tabindex="-1"></a>        total <span class="op">+=</span> p<span class="op">[</span>i<span class="op">];</span></span>
+<span id="cb610-7"><a href="types-part-v-compound-literals-and-generic-selections.html#cb610-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb610-8"><a href="types-part-v-compound-literals-and-generic-selections.html#cb610-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> total<span class="op">;</span></span>
+<span id="cb610-9"><a href="types-part-v-compound-literals-and-generic-selections.html#cb610-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>If we wanted to call it, we’d normally have to do something like this, declaring an array and storing values in it to pass to the function:</p>
+<div class="sourceCode" id="cb611"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb611-1"><a href="types-part-v-compound-literals-and-generic-selections.html#cb611-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> a<span class="op">[]</span> <span class="op">=</span> <span class="op">{</span><span class="dv">1</span><span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">3</span><span class="op">,</span> <span class="dv">4</span><span class="op">};</span></span>
+<span id="cb611-2"><a href="types-part-v-compound-literals-and-generic-selections.html#cb611-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb611-3"><a href="types-part-v-compound-literals-and-generic-selections.html#cb611-3" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> s <span class="op">=</span> sum<span class="op">(</span>a<span class="op">,</span> <span class="dv">4</span><span class="op">);</span></span></code></pre></div>
+<p>But unnamed objects give us a way to skip the variable by passing it directly in (parameter names listed above). Check it out—we’re going to replace the variable <code>a</code> with an unnamed array that we pass in as the first argument:</p>
+<div class="sourceCode" id="cb612"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb612-1"><a href="types-part-v-compound-literals-and-generic-selections.html#cb612-1" aria-hidden="true" tabindex="-1"></a><span class="co">//                   p[]         count</span></span>
+<span id="cb612-2"><a href="types-part-v-compound-literals-and-generic-selections.html#cb612-2" aria-hidden="true" tabindex="-1"></a><span class="co">//           |-----------------|  |</span></span>
+<span id="cb612-3"><a href="types-part-v-compound-literals-and-generic-selections.html#cb612-3" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> s <span class="op">=</span> sum<span class="op">((</span><span class="dt">int</span> <span class="op">[]){</span><span class="dv">1</span><span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">3</span><span class="op">,</span> <span class="dv">4</span><span class="op">},</span> <span class="dv">4</span><span class="op">);</span></span></code></pre></div>
+<p>Pretty slick!</p>
+<p></p>
+<h3 data-number="32.1.2" id="unnamed-structs"><span class="header-section-number">32.1.2</span> Unnamed <code>struct</code>s</h3>
+<p> </p>
+<p>We can do something similar with <code>struct</code>s.</p>
+<p>First, let’s do things without unnamed objects. We’ll define a <code>struct</code> to hold some <code>x</code>/<code>y</code> coordinates. Then we’ll define one, passing in values into its initializer. Finally, we’ll pass it to a function to print the values:</p>
+<div class="sourceCode" id="cb613"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb613-1"><a href="types-part-v-compound-literals-and-generic-selections.html#cb613-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb613-2"><a href="types-part-v-compound-literals-and-generic-selections.html#cb613-2"></a></span>
+<span id="cb613-3"><a href="types-part-v-compound-literals-and-generic-selections.html#cb613-3"></a><span class="kw">struct</span> coord <span class="op">{</span></span>
+<span id="cb613-4"><a href="types-part-v-compound-literals-and-generic-selections.html#cb613-4"></a>    <span class="dt">int</span> x<span class="op">,</span> y<span class="op">;</span></span>
+<span id="cb613-5"><a href="types-part-v-compound-literals-and-generic-selections.html#cb613-5"></a><span class="op">};</span></span>
+<span id="cb613-6"><a href="types-part-v-compound-literals-and-generic-selections.html#cb613-6"></a></span>
+<span id="cb613-7"><a href="types-part-v-compound-literals-and-generic-selections.html#cb613-7"></a><span class="dt">void</span> print_coord<span class="op">(</span><span class="kw">struct</span> coord c<span class="op">)</span></span>
+<span id="cb613-8"><a href="types-part-v-compound-literals-and-generic-selections.html#cb613-8"></a><span class="op">{</span></span>
+<span id="cb613-9"><a href="types-part-v-compound-literals-and-generic-selections.html#cb613-9"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d</span><span class="st">, </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> c<span class="op">.</span>x<span class="op">,</span> c<span class="op">.</span>y<span class="op">);</span></span>
+<span id="cb613-10"><a href="types-part-v-compound-literals-and-generic-selections.html#cb613-10"></a><span class="op">}</span></span>
+<span id="cb613-11"><a href="types-part-v-compound-literals-and-generic-selections.html#cb613-11"></a></span>
+<span id="cb613-12"><a href="types-part-v-compound-literals-and-generic-selections.html#cb613-12"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb613-13"><a href="types-part-v-compound-literals-and-generic-selections.html#cb613-13"></a><span class="op">{</span></span>
+<span id="cb613-14"><a href="types-part-v-compound-literals-and-generic-selections.html#cb613-14"></a>    <span class="kw">struct</span> coord t <span class="op">=</span> <span class="op">{.</span>x<span class="op">=</span><span class="dv">10</span><span class="op">,</span> <span class="op">.</span>y<span class="op">=</span><span class="dv">20</span><span class="op">};</span></span>
+<span id="cb613-15"><a href="types-part-v-compound-literals-and-generic-selections.html#cb613-15"></a></span>
+<span id="cb613-16"><a href="types-part-v-compound-literals-and-generic-selections.html#cb613-16"></a>    print_coord<span class="op">(</span>t<span class="op">);</span>   <span class="co">// prints &quot;10, 20&quot;</span></span>
+<span id="cb613-17"><a href="types-part-v-compound-literals-and-generic-selections.html#cb613-17"></a><span class="op">}</span></span></code></pre></div>
+<p>Straightforward enough?</p>
+<p>Let’s modify it to use an unnamed object instead of the variable <code>t</code> we’re passing to <code>print_coord()</code>.</p>
+<p>We’ll just take <code>t</code> out of there and replace it with an unnamed <code>struct</code>:</p>
+<div class="sourceCode" id="cb614" data-startfrom="7"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c" style="counter-reset: source-line 6;"><span id="cb614-7"><a href="types-part-v-compound-literals-and-generic-selections.html#cb614-7"></a>    <span class="co">//struct coord t = {.x=10, .y=20};</span></span>
+<span id="cb614-8"><a href="types-part-v-compound-literals-and-generic-selections.html#cb614-8"></a></span>
+<span id="cb614-9"><a href="types-part-v-compound-literals-and-generic-selections.html#cb614-9"></a>    print_coord<span class="op">((</span><span class="kw">struct</span> coord<span class="op">){.</span>x<span class="op">=</span><span class="dv">10</span><span class="op">,</span> <span class="op">.</span>y<span class="op">=</span><span class="dv">20</span><span class="op">});</span>   <span class="co">// prints &quot;10, 20&quot;</span></span></code></pre></div>
+<p>Still works!</p>
+<p> </p>
+<h3 data-number="32.1.3" id="pointers-to-unnamed-objects"><span class="header-section-number">32.1.3</span> Pointers to Unnamed Objects</h3>
+<p></p>
+<p>You might have noticed in the last example that even through we were using a <code>struct</code>, we were passing a copy of the <code>struct</code> to <code>print_coord()</code> as opposed to passing a pointer to the <code>struct</code>.</p>
+<p>Turns out, we can just take the address of an unnamed object with <code>&amp;</code> like always.</p>
+<p>This is because, in general, if an operator would have worked on a variable of that type, you can use that operator on an unnamed object of that type.</p>
+<p>Let’s modify the above code so that we pass a pointer to an unnamed object</p>
+<div class="sourceCode" id="cb615"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb615-1"><a href="types-part-v-compound-literals-and-generic-selections.html#cb615-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb615-2"><a href="types-part-v-compound-literals-and-generic-selections.html#cb615-2"></a></span>
+<span id="cb615-3"><a href="types-part-v-compound-literals-and-generic-selections.html#cb615-3"></a><span class="kw">struct</span> coord <span class="op">{</span></span>
+<span id="cb615-4"><a href="types-part-v-compound-literals-and-generic-selections.html#cb615-4"></a>    <span class="dt">int</span> x<span class="op">,</span> y<span class="op">;</span></span>
+<span id="cb615-5"><a href="types-part-v-compound-literals-and-generic-selections.html#cb615-5"></a><span class="op">};</span></span>
+<span id="cb615-6"><a href="types-part-v-compound-literals-and-generic-selections.html#cb615-6"></a></span>
+<span id="cb615-7"><a href="types-part-v-compound-literals-and-generic-selections.html#cb615-7"></a><span class="dt">void</span> print_coord<span class="op">(</span><span class="kw">struct</span> coord <span class="op">*</span>c<span class="op">)</span></span>
+<span id="cb615-8"><a href="types-part-v-compound-literals-and-generic-selections.html#cb615-8"></a><span class="op">{</span></span>
+<span id="cb615-9"><a href="types-part-v-compound-literals-and-generic-selections.html#cb615-9"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d</span><span class="st">, </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> c<span class="op">-&gt;</span>x<span class="op">,</span> c<span class="op">-&gt;</span>y<span class="op">);</span></span>
+<span id="cb615-10"><a href="types-part-v-compound-literals-and-generic-selections.html#cb615-10"></a><span class="op">}</span></span>
+<span id="cb615-11"><a href="types-part-v-compound-literals-and-generic-selections.html#cb615-11"></a></span>
+<span id="cb615-12"><a href="types-part-v-compound-literals-and-generic-selections.html#cb615-12"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb615-13"><a href="types-part-v-compound-literals-and-generic-selections.html#cb615-13"></a><span class="op">{</span></span>
+<span id="cb615-14"><a href="types-part-v-compound-literals-and-generic-selections.html#cb615-14"></a>    <span class="co">//     Note the &amp;</span></span>
+<span id="cb615-15"><a href="types-part-v-compound-literals-and-generic-selections.html#cb615-15"></a>    <span class="co">//          |</span></span>
+<span id="cb615-16"><a href="types-part-v-compound-literals-and-generic-selections.html#cb615-16"></a>    print_coord<span class="op">(&amp;(</span><span class="kw">struct</span> coord<span class="op">){.</span>x<span class="op">=</span><span class="dv">10</span><span class="op">,</span> <span class="op">.</span>y<span class="op">=</span><span class="dv">20</span><span class="op">});</span>   <span class="co">// prints &quot;10, 20&quot;</span></span>
+<span id="cb615-17"><a href="types-part-v-compound-literals-and-generic-selections.html#cb615-17"></a><span class="op">}</span></span></code></pre></div>
+<p>Additionally, this can be a nice way to pass even pointers to simple objects:</p>
+<div class="sourceCode" id="cb616"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb616-1"><a href="types-part-v-compound-literals-and-generic-selections.html#cb616-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Pass a pointer to an int with value 3490</span></span>
+<span id="cb616-2"><a href="types-part-v-compound-literals-and-generic-selections.html#cb616-2" aria-hidden="true" tabindex="-1"></a>foo<span class="op">(&amp;(</span><span class="dt">int</span><span class="op">){</span><span class="dv">3490</span><span class="op">});</span></span></code></pre></div>
+<p>Easy as that.</p>
+<p></p>
+<h3 data-number="32.1.4" id="unnamed-objects-and-scope"><span class="header-section-number">32.1.4</span> Unnamed Objects and Scope</h3>
+<p></p>
+<p>The lifetime of an unnamed object ends at the end of its scope. The biggest way this could bite you is if you make a new unnamed object, get a pointer to it, and then leave the object’s scope. In that case, the pointer will refer to a dead object.</p>
+<p>So this is undefined behavior:</p>
+<div class="sourceCode" id="cb617"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb617-1"><a href="types-part-v-compound-literals-and-generic-selections.html#cb617-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> <span class="op">*</span>p<span class="op">;</span></span>
+<span id="cb617-2"><a href="types-part-v-compound-literals-and-generic-selections.html#cb617-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb617-3"><a href="types-part-v-compound-literals-and-generic-selections.html#cb617-3" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb617-4"><a href="types-part-v-compound-literals-and-generic-selections.html#cb617-4" aria-hidden="true" tabindex="-1"></a>    p <span class="op">=</span> <span class="op">&amp;(</span><span class="dt">int</span><span class="op">){</span><span class="dv">10</span><span class="op">};</span></span>
+<span id="cb617-5"><a href="types-part-v-compound-literals-and-generic-selections.html#cb617-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb617-6"><a href="types-part-v-compound-literals-and-generic-selections.html#cb617-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb617-7"><a href="types-part-v-compound-literals-and-generic-selections.html#cb617-7" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> <span class="op">*</span>p<span class="op">);</span>  <span class="co">// INVALID: The (int){10} fell out of scope</span></span></code></pre></div>
+<p>Likewise, you can’t return a pointer to an unnamed object from a function. The object is deallocated when it falls out of scope:</p>
+<div class="sourceCode" id="cb618"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb618-1"><a href="types-part-v-compound-literals-and-generic-selections.html#cb618-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb618-2"><a href="types-part-v-compound-literals-and-generic-selections.html#cb618-2"></a></span>
+<span id="cb618-3"><a href="types-part-v-compound-literals-and-generic-selections.html#cb618-3"></a><span class="dt">int</span> <span class="op">*</span>get3490<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb618-4"><a href="types-part-v-compound-literals-and-generic-selections.html#cb618-4"></a><span class="op">{</span></span>
+<span id="cb618-5"><a href="types-part-v-compound-literals-and-generic-selections.html#cb618-5"></a>    <span class="co">// Don&#39;t do this</span></span>
+<span id="cb618-6"><a href="types-part-v-compound-literals-and-generic-selections.html#cb618-6"></a>    <span class="cf">return</span> <span class="op">&amp;(</span><span class="dt">int</span><span class="op">){</span><span class="dv">3490</span><span class="op">};</span></span>
+<span id="cb618-7"><a href="types-part-v-compound-literals-and-generic-selections.html#cb618-7"></a><span class="op">}</span></span>
+<span id="cb618-8"><a href="types-part-v-compound-literals-and-generic-selections.html#cb618-8"></a></span>
+<span id="cb618-9"><a href="types-part-v-compound-literals-and-generic-selections.html#cb618-9"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb618-10"><a href="types-part-v-compound-literals-and-generic-selections.html#cb618-10"></a><span class="op">{</span></span>
+<span id="cb618-11"><a href="types-part-v-compound-literals-and-generic-selections.html#cb618-11"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> <span class="op">*</span>get3490<span class="op">());</span>  <span class="co">// INVALID: (int){3490} fell out of scope</span></span>
+<span id="cb618-12"><a href="types-part-v-compound-literals-and-generic-selections.html#cb618-12"></a><span class="op">}</span></span></code></pre></div>
+<p>Just think of their scope like that of an ordinary local variable. You can’t return a pointer to a local variable, either.</p>
+<p></p>
+<h3 data-number="32.1.5" id="silly-unnamed-object-example"><span class="header-section-number">32.1.5</span> Silly Unnamed Object Example</h3>
+<p>You can put any type in there and make an unnamed object.</p>
+<p>For example, these are effectively equivalent:</p>
+<div class="sourceCode" id="cb619"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb619-1"><a href="types-part-v-compound-literals-and-generic-selections.html#cb619-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> x <span class="op">=</span> <span class="dv">3490</span><span class="op">;</span></span>
+<span id="cb619-2"><a href="types-part-v-compound-literals-and-generic-selections.html#cb619-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb619-3"><a href="types-part-v-compound-literals-and-generic-selections.html#cb619-3" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> x<span class="op">);</span>               <span class="co">// 3490 (variable)</span></span>
+<span id="cb619-4"><a href="types-part-v-compound-literals-and-generic-selections.html#cb619-4" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> <span class="dv">3490</span><span class="op">);</span>            <span class="co">// 3490 (constant)</span></span>
+<span id="cb619-5"><a href="types-part-v-compound-literals-and-generic-selections.html#cb619-5" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> <span class="op">(</span><span class="dt">int</span><span class="op">){</span><span class="dv">3490</span><span class="op">});</span>     <span class="co">// 3490 (unnamed object)</span></span></code></pre></div>
+<p>That last one is unnamed, but it’s silly. Might as well do the simple one on the line before.</p>
+<p>But hopefully that provides a little more clarity on the syntax.</p>
+<p></p>
+<h2 data-number="32.2" id="type-generics"><span class="header-section-number">32.2</span> Generic Selections</h2>
+<p></p>
+<p>This is an expression that allows you to select different pieces of code depending on the <em>type</em> of the first argument to the expression.</p>
+<p>We’ll look at an example in just a second, but it’s important to know this is processed at compile time, <em>not at runtime</em>. There’s no runtime analysis going on here.</p>
+<p></p>
+<p>The expression begins with <code>_Generic</code>, works kinda like a <code>switch</code>, and it takes at least two arguments.</p>
+<p>The first argument is an expression (or variable<a href="footnotes.html#fn178" class="footnote-ref" id="fnref178" role="doc-noteref"><sup>178</sup></a>) that has a <em>type</em>. All expressions have a type. The remaining arguments to <code>_Generic</code> are the cases of what to substitute in for the result of the expression if the first argument is that type.</p>
+<p>Wat?</p>
+<p>Let’s try it out and see.</p>
+<div class="sourceCode" id="cb620"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb620-1"><a href="types-part-v-compound-literals-and-generic-selections.html#cb620-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb620-2"><a href="types-part-v-compound-literals-and-generic-selections.html#cb620-2"></a></span>
+<span id="cb620-3"><a href="types-part-v-compound-literals-and-generic-selections.html#cb620-3"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb620-4"><a href="types-part-v-compound-literals-and-generic-selections.html#cb620-4"></a><span class="op">{</span></span>
+<span id="cb620-5"><a href="types-part-v-compound-literals-and-generic-selections.html#cb620-5"></a>    <span class="dt">int</span> i<span class="op">;</span></span>
+<span id="cb620-6"><a href="types-part-v-compound-literals-and-generic-selections.html#cb620-6"></a>    <span class="dt">float</span> f<span class="op">;</span></span>
+<span id="cb620-7"><a href="types-part-v-compound-literals-and-generic-selections.html#cb620-7"></a>    <span class="dt">char</span> c<span class="op">;</span></span>
+<span id="cb620-8"><a href="types-part-v-compound-literals-and-generic-selections.html#cb620-8"></a></span>
+<span id="cb620-9"><a href="types-part-v-compound-literals-and-generic-selections.html#cb620-9"></a>    <span class="dt">char</span> <span class="op">*</span>s <span class="op">=</span> <span class="dt">_Generic</span><span class="op">(</span>i<span class="op">,</span></span>
+<span id="cb620-10"><a href="types-part-v-compound-literals-and-generic-selections.html#cb620-10"></a>                    <span class="dt">int</span><span class="op">:</span> <span class="st">&quot;that variable is an int&quot;</span><span class="op">,</span></span>
+<span id="cb620-11"><a href="types-part-v-compound-literals-and-generic-selections.html#cb620-11"></a>                    <span class="dt">float</span><span class="op">:</span> <span class="st">&quot;that variable is a float&quot;</span><span class="op">,</span></span>
+<span id="cb620-12"><a href="types-part-v-compound-literals-and-generic-selections.html#cb620-12"></a>                    <span class="cf">default</span><span class="op">:</span> <span class="st">&quot;that variable is some type&quot;</span></span>
+<span id="cb620-13"><a href="types-part-v-compound-literals-and-generic-selections.html#cb620-13"></a>                <span class="op">);</span></span>
+<span id="cb620-14"><a href="types-part-v-compound-literals-and-generic-selections.html#cb620-14"></a></span>
+<span id="cb620-15"><a href="types-part-v-compound-literals-and-generic-selections.html#cb620-15"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> s<span class="op">);</span></span>
+<span id="cb620-16"><a href="types-part-v-compound-literals-and-generic-selections.html#cb620-16"></a><span class="op">}</span></span></code></pre></div>
+<p>Check out the <code>_Generic</code> expression starting on line 9.</p>
+<p>When the compiler sees it, it looks at the type of the first argument. (In this example, the type of the variable <code>i</code>.) It then looks through the cases for something of that type. And then it substitutes the argument in place of the entire <code>_Generic</code> expression.</p>
+<p>In this case, <code>i</code> is an <code>int</code>, so it matches that case. Then the string is substituted in for the expression. So the line turns into this when the compiler sees it:</p>
+<div class="sourceCode" id="cb621"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb621-1"><a href="types-part-v-compound-literals-and-generic-selections.html#cb621-1" aria-hidden="true" tabindex="-1"></a>    <span class="dt">char</span> <span class="op">*</span>s <span class="op">=</span> <span class="st">&quot;that variable is an int&quot;</span><span class="op">;</span></span></code></pre></div>
+<p>If the compiler can’t find a type match in the <code>_Generic</code>, it looks for the optional <code>default</code> case and uses that.</p>
+<p>If it can’t find a type match and there’s no <code>default</code>, you’ll get a compile error. The first expression <strong>must</strong> match one of the types or <code>default</code>.</p>
+<p>Because it’s inconvenient to write <code>_Generic</code> over and over, it’s often used to make the body of a macro that can be easily repeatedly reused.</p>
+<p>Let’s make a macro <code>TYPESTR(x)</code> that takes an argument and returns a string with the type of the argument.</p>
+<p>So <code>TYPESTR(1)</code> will return the string <code>"int"</code>, for example.</p>
+<p>Here we go:</p>
+<div class="sourceCode" id="cb622"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb622-1"><a href="types-part-v-compound-literals-and-generic-selections.html#cb622-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb622-2"><a href="types-part-v-compound-literals-and-generic-selections.html#cb622-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb622-3"><a href="types-part-v-compound-literals-and-generic-selections.html#cb622-3" aria-hidden="true" tabindex="-1"></a><span class="pp">#define TYPESTR</span><span class="op">(</span><span class="pp">x</span><span class="op">)</span><span class="pp"> </span><span class="dt">_Generic</span><span class="op">((</span><span class="pp">x</span><span class="op">),</span><span class="pp"> </span><span class="op">\</span></span>
+<span id="cb622-4"><a href="types-part-v-compound-literals-and-generic-selections.html#cb622-4" aria-hidden="true" tabindex="-1"></a><span class="pp">                        </span><span class="dt">int</span><span class="op">:</span><span class="pp"> </span><span class="st">&quot;int&quot;</span><span class="op">,</span><span class="pp"> </span><span class="op">\</span></span>
+<span id="cb622-5"><a href="types-part-v-compound-literals-and-generic-selections.html#cb622-5" aria-hidden="true" tabindex="-1"></a><span class="pp">                        </span><span class="dt">long</span><span class="op">:</span><span class="pp"> </span><span class="st">&quot;long&quot;</span><span class="op">,</span><span class="pp"> </span><span class="op">\</span></span>
+<span id="cb622-6"><a href="types-part-v-compound-literals-and-generic-selections.html#cb622-6" aria-hidden="true" tabindex="-1"></a><span class="pp">                        </span><span class="dt">float</span><span class="op">:</span><span class="pp"> </span><span class="st">&quot;float&quot;</span><span class="op">,</span><span class="pp"> </span><span class="op">\</span></span>
+<span id="cb622-7"><a href="types-part-v-compound-literals-and-generic-selections.html#cb622-7" aria-hidden="true" tabindex="-1"></a><span class="pp">                        </span><span class="dt">double</span><span class="op">:</span><span class="pp"> </span><span class="st">&quot;double&quot;</span><span class="op">,</span><span class="pp"> </span><span class="op">\</span></span>
+<span id="cb622-8"><a href="types-part-v-compound-literals-and-generic-selections.html#cb622-8" aria-hidden="true" tabindex="-1"></a><span class="pp">                        </span><span class="cf">default</span><span class="op">:</span><span class="pp"> </span><span class="st">&quot;something else&quot;</span><span class="op">)</span></span>
+<span id="cb622-9"><a href="types-part-v-compound-literals-and-generic-selections.html#cb622-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb622-10"><a href="types-part-v-compound-literals-and-generic-selections.html#cb622-10" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb622-11"><a href="types-part-v-compound-literals-and-generic-selections.html#cb622-11" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb622-12"><a href="types-part-v-compound-literals-and-generic-selections.html#cb622-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> i<span class="op">;</span></span>
+<span id="cb622-13"><a href="types-part-v-compound-literals-and-generic-selections.html#cb622-13" aria-hidden="true" tabindex="-1"></a>    <span class="dt">long</span> l<span class="op">;</span></span>
+<span id="cb622-14"><a href="types-part-v-compound-literals-and-generic-selections.html#cb622-14" aria-hidden="true" tabindex="-1"></a>    <span class="dt">float</span> f<span class="op">;</span></span>
+<span id="cb622-15"><a href="types-part-v-compound-literals-and-generic-selections.html#cb622-15" aria-hidden="true" tabindex="-1"></a>    <span class="dt">double</span> d<span class="op">;</span></span>
+<span id="cb622-16"><a href="types-part-v-compound-literals-and-generic-selections.html#cb622-16" aria-hidden="true" tabindex="-1"></a>    <span class="dt">char</span> c<span class="op">;</span></span>
+<span id="cb622-17"><a href="types-part-v-compound-literals-and-generic-selections.html#cb622-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb622-18"><a href="types-part-v-compound-literals-and-generic-selections.html#cb622-18" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;i is type </span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> TYPESTR<span class="op">(</span>i<span class="op">));</span></span>
+<span id="cb622-19"><a href="types-part-v-compound-literals-and-generic-selections.html#cb622-19" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;l is type </span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> TYPESTR<span class="op">(</span>l<span class="op">));</span></span>
+<span id="cb622-20"><a href="types-part-v-compound-literals-and-generic-selections.html#cb622-20" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;f is type </span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> TYPESTR<span class="op">(</span>f<span class="op">));</span></span>
+<span id="cb622-21"><a href="types-part-v-compound-literals-and-generic-selections.html#cb622-21" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;d is type </span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> TYPESTR<span class="op">(</span>d<span class="op">));</span></span>
+<span id="cb622-22"><a href="types-part-v-compound-literals-and-generic-selections.html#cb622-22" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;c is type </span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> TYPESTR<span class="op">(</span>c<span class="op">));</span></span>
+<span id="cb622-23"><a href="types-part-v-compound-literals-and-generic-selections.html#cb622-23" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>This outputs:</p>
+<div class="sourceCode" id="cb623"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb623-1"><a href="types-part-v-compound-literals-and-generic-selections.html#cb623-1" aria-hidden="true" tabindex="-1"></a>i is type int</span>
+<span id="cb623-2"><a href="types-part-v-compound-literals-and-generic-selections.html#cb623-2" aria-hidden="true" tabindex="-1"></a>l is type long</span>
+<span id="cb623-3"><a href="types-part-v-compound-literals-and-generic-selections.html#cb623-3" aria-hidden="true" tabindex="-1"></a>f is type float</span>
+<span id="cb623-4"><a href="types-part-v-compound-literals-and-generic-selections.html#cb623-4" aria-hidden="true" tabindex="-1"></a>d is type double</span>
+<span id="cb623-5"><a href="types-part-v-compound-literals-and-generic-selections.html#cb623-5" aria-hidden="true" tabindex="-1"></a>c is type something else</span></code></pre></div>
+<p>Which should be no surprise, because, like we said, that code in <code>main()</code> is replaced with the following when it is compiled:</p>
+<div class="sourceCode" id="cb624"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb624-1"><a href="types-part-v-compound-literals-and-generic-selections.html#cb624-1" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;i is type </span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> <span class="st">&quot;int&quot;</span><span class="op">);</span></span>
+<span id="cb624-2"><a href="types-part-v-compound-literals-and-generic-selections.html#cb624-2" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;l is type </span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> <span class="st">&quot;long&quot;</span><span class="op">);</span></span>
+<span id="cb624-3"><a href="types-part-v-compound-literals-and-generic-selections.html#cb624-3" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;f is type </span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> <span class="st">&quot;float&quot;</span><span class="op">);</span></span>
+<span id="cb624-4"><a href="types-part-v-compound-literals-and-generic-selections.html#cb624-4" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;d is type </span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> <span class="st">&quot;double&quot;</span><span class="op">);</span></span>
+<span id="cb624-5"><a href="types-part-v-compound-literals-and-generic-selections.html#cb624-5" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;c is type </span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> <span class="st">&quot;something else&quot;</span><span class="op">);</span></span></code></pre></div>
+<p>And that’s exactly the output we see.</p>
+<p>Let’s do one more. I’ve included some macros here so that when you run:</p>
+<div class="sourceCode" id="cb625"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb625-1"><a href="types-part-v-compound-literals-and-generic-selections.html#cb625-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> i <span class="op">=</span> <span class="dv">10</span><span class="op">;</span></span>
+<span id="cb625-2"><a href="types-part-v-compound-literals-and-generic-selections.html#cb625-2" aria-hidden="true" tabindex="-1"></a><span class="dt">char</span> <span class="op">*</span>s <span class="op">=</span> <span class="st">&quot;Foo!&quot;</span><span class="op">;</span></span>
+<span id="cb625-3"><a href="types-part-v-compound-literals-and-generic-selections.html#cb625-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb625-4"><a href="types-part-v-compound-literals-and-generic-selections.html#cb625-4" aria-hidden="true" tabindex="-1"></a>PRINT_VAL<span class="op">(</span>i<span class="op">);</span></span>
+<span id="cb625-5"><a href="types-part-v-compound-literals-and-generic-selections.html#cb625-5" aria-hidden="true" tabindex="-1"></a>PRINT_VAL<span class="op">(</span>s<span class="op">);</span></span></code></pre></div>
+<p>you get the output:</p>
+<div class="sourceCode" id="cb626"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb626-1"><a href="types-part-v-compound-literals-and-generic-selections.html#cb626-1" aria-hidden="true" tabindex="-1"></a>i = 10</span>
+<span id="cb626-2"><a href="types-part-v-compound-literals-and-generic-selections.html#cb626-2" aria-hidden="true" tabindex="-1"></a>s = Foo!</span></code></pre></div>
+<p>We’ll have to make use of some macro magic to do that.</p>
+<div class="sourceCode" id="cb627"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb627-1"><a href="types-part-v-compound-literals-and-generic-selections.html#cb627-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb627-2"><a href="types-part-v-compound-literals-and-generic-selections.html#cb627-2"></a><span class="pp">#include </span><span class="im">&lt;string.h&gt;</span></span>
+<span id="cb627-3"><a href="types-part-v-compound-literals-and-generic-selections.html#cb627-3"></a></span>
+<span id="cb627-4"><a href="types-part-v-compound-literals-and-generic-selections.html#cb627-4"></a><span class="co">// Macro that gives back a format specifier for a type</span></span>
+<span id="cb627-5"><a href="types-part-v-compound-literals-and-generic-selections.html#cb627-5"></a><span class="pp">#define FMTSPEC</span><span class="op">(</span><span class="pp">x</span><span class="op">)</span><span class="pp"> </span><span class="dt">_Generic</span><span class="op">((</span><span class="pp">x</span><span class="op">),</span><span class="pp"> </span><span class="op">\</span></span>
+<span id="cb627-6"><a href="types-part-v-compound-literals-and-generic-selections.html#cb627-6"></a><span class="pp">                        </span><span class="dt">int</span><span class="op">:</span><span class="pp"> </span><span class="st">&quot;</span><span class="sc">%d</span><span class="st">&quot;</span><span class="op">,</span><span class="pp"> </span><span class="op">\</span></span>
+<span id="cb627-7"><a href="types-part-v-compound-literals-and-generic-selections.html#cb627-7"></a><span class="pp">                        </span><span class="dt">long</span><span class="op">:</span><span class="pp"> </span><span class="st">&quot;</span><span class="sc">%ld</span><span class="st">&quot;</span><span class="op">,</span><span class="pp"> </span><span class="op">\</span></span>
+<span id="cb627-8"><a href="types-part-v-compound-literals-and-generic-selections.html#cb627-8"></a><span class="pp">                        </span><span class="dt">float</span><span class="op">:</span><span class="pp"> </span><span class="st">&quot;</span><span class="sc">%f</span><span class="st">&quot;</span><span class="op">,</span><span class="pp"> </span><span class="op">\</span></span>
+<span id="cb627-9"><a href="types-part-v-compound-literals-and-generic-selections.html#cb627-9"></a><span class="pp">                        </span><span class="dt">double</span><span class="op">:</span><span class="pp"> </span><span class="st">&quot;</span><span class="sc">%f</span><span class="st">&quot;</span><span class="op">,</span><span class="pp"> </span><span class="op">\</span></span>
+<span id="cb627-10"><a href="types-part-v-compound-literals-and-generic-selections.html#cb627-10"></a><span class="pp">                        </span><span class="dt">char</span><span class="pp"> </span><span class="op">*:</span><span class="pp"> </span><span class="st">&quot;</span><span class="sc">%s</span><span class="st">&quot;</span><span class="op">)</span></span>
+<span id="cb627-11"><a href="types-part-v-compound-literals-and-generic-selections.html#cb627-11"></a>                        <span class="co">// </span><span class="al">TODO</span><span class="co">: add more types</span></span>
+<span id="cb627-12"><a href="types-part-v-compound-literals-and-generic-selections.html#cb627-12"></a>                        </span>
+<span id="cb627-13"><a href="types-part-v-compound-literals-and-generic-selections.html#cb627-13"></a><span class="co">// Macro that prints a variable in the form &quot;name = value&quot;</span></span>
+<span id="cb627-14"><a href="types-part-v-compound-literals-and-generic-selections.html#cb627-14"></a><span class="pp">#define PRINT_VAL</span><span class="op">(</span><span class="pp">x</span><span class="op">)</span><span class="pp"> </span><span class="cf">do</span><span class="pp"> </span><span class="op">{</span><span class="pp"> </span><span class="op">\</span></span>
+<span id="cb627-15"><a href="types-part-v-compound-literals-and-generic-selections.html#cb627-15"></a><span class="pp">    </span><span class="dt">char</span><span class="pp"> fmt</span><span class="op">[</span><span class="dv">512</span><span class="op">];</span><span class="pp"> </span><span class="op">\</span></span>
+<span id="cb627-16"><a href="types-part-v-compound-literals-and-generic-selections.html#cb627-16"></a><span class="pp">    snprintf</span><span class="op">(</span><span class="pp">fmt</span><span class="op">,</span><span class="pp"> </span><span class="kw">sizeof</span><span class="pp"> fmt</span><span class="op">,</span><span class="pp"> </span><span class="op">#</span><span class="pp">x </span><span class="st">&quot; = </span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span><span class="pp"> FMTSPEC</span><span class="op">(</span><span class="pp">x</span><span class="op">));</span><span class="pp"> </span><span class="op">\</span></span>
+<span id="cb627-17"><a href="types-part-v-compound-literals-and-generic-selections.html#cb627-17"></a><span class="pp">    printf</span><span class="op">(</span><span class="pp">fmt</span><span class="op">,</span><span class="pp"> </span><span class="op">(</span><span class="pp">x</span><span class="op">));</span><span class="pp"> </span><span class="op">\</span></span>
+<span id="cb627-18"><a href="types-part-v-compound-literals-and-generic-selections.html#cb627-18"></a><span class="op">}</span><span class="pp"> </span><span class="cf">while</span><span class="op">(</span><span class="dv">0</span><span class="op">)</span></span>
+<span id="cb627-19"><a href="types-part-v-compound-literals-and-generic-selections.html#cb627-19"></a></span>
+<span id="cb627-20"><a href="types-part-v-compound-literals-and-generic-selections.html#cb627-20"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb627-21"><a href="types-part-v-compound-literals-and-generic-selections.html#cb627-21"></a><span class="op">{</span></span>
+<span id="cb627-22"><a href="types-part-v-compound-literals-and-generic-selections.html#cb627-22"></a>    <span class="dt">int</span> i <span class="op">=</span> <span class="dv">10</span><span class="op">;</span></span>
+<span id="cb627-23"><a href="types-part-v-compound-literals-and-generic-selections.html#cb627-23"></a>    <span class="dt">float</span> f <span class="op">=</span> <span class="fl">3.14159</span><span class="op">;</span></span>
+<span id="cb627-24"><a href="types-part-v-compound-literals-and-generic-selections.html#cb627-24"></a>    <span class="dt">char</span> <span class="op">*</span>s <span class="op">=</span> <span class="st">&quot;Hello, world!&quot;</span><span class="op">;</span></span>
+<span id="cb627-25"><a href="types-part-v-compound-literals-and-generic-selections.html#cb627-25"></a></span>
+<span id="cb627-26"><a href="types-part-v-compound-literals-and-generic-selections.html#cb627-26"></a>    PRINT_VAL<span class="op">(</span>i<span class="op">);</span></span>
+<span id="cb627-27"><a href="types-part-v-compound-literals-and-generic-selections.html#cb627-27"></a>    PRINT_VAL<span class="op">(</span>f<span class="op">);</span></span>
+<span id="cb627-28"><a href="types-part-v-compound-literals-and-generic-selections.html#cb627-28"></a>    PRINT_VAL<span class="op">(</span>s<span class="op">);</span></span>
+<span id="cb627-29"><a href="types-part-v-compound-literals-and-generic-selections.html#cb627-29"></a><span class="op">}</span></span></code></pre></div>
+<p></p>
+<p>for the output:</p>
+<div class="sourceCode" id="cb628"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb628-1"><a href="types-part-v-compound-literals-and-generic-selections.html#cb628-1" aria-hidden="true" tabindex="-1"></a>i = 10</span>
+<span id="cb628-2"><a href="types-part-v-compound-literals-and-generic-selections.html#cb628-2" aria-hidden="true" tabindex="-1"></a>f = 3.141590</span>
+<span id="cb628-3"><a href="types-part-v-compound-literals-and-generic-selections.html#cb628-3" aria-hidden="true" tabindex="-1"></a>s = Hello, world!</span></code></pre></div>
+<p>We could have crammed that all in one big macro, but I broke it into two to prevent eye bleeding.</p>
+<p></p>
+<!-- Beej's guide to C
+
+# vim: ts=4:sw=4:nosi:et:tw=72
+-->
+<hr><div style="text-align:center"><span><a href="goto.html">Prev</a> | </span><a href="index.html">Contents</a><span> | <a href="arrays-part-ii.html">Next</a></span></div></body>
+</html>

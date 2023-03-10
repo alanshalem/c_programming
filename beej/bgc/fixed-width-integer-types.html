@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Beej's Guide to C Programming</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Mono&display=swap" rel="stylesheet"> 
+
+  <!-- BG custom styling -->
+  <style type="text/css">
+  /* Fix for line numbers not visible */
+  pre.numberSource code > span {
+      left: -1em;
+  }
+  pre.numberSource {
+      margin-left: initial;
+  }
+
+  /* Put some space after the section numbers */
+  span.toc-section-number::after {
+      content: "\a0\a0\a0";  /* non-breaking whitespace */
+  }
+
+  /* Hide underlines on code number links */
+  pre > code.sourceCode > span > a:first-child::before {
+      text-decoration: none;
+  }
+
+  /* Color the source blocks */
+  div.sourceCode {
+      background-color: #f0f0f0;
+  }
+
+  /* Fix iOS big text rendering issue */
+  pre > code.sourceCode > span {
+      display: initial;
+  }
+
+
+  /* Color the inline code */
+  code:not(.sourceCode) {
+      background: #f0f0f0;
+      padding-left: 0.2em;
+      padding-right: 0.2em;
+      border-radius: 0.2em;
+  }
+
+  /* Keep code tags from wrapping in tables */
+  tbody code {
+      white-space: nowrap;
+  }
+
+  td {
+      vertical-align: top;
+  }
+
+  body {
+      font-size: 12pt;
+      max-width: 43em;
+  }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<div style="text-align:center"><span><a href="complex-numbers.html">Prev</a> | </span><a href="index.html">Contents</a><span> | <a href="date-and-time-functionality.html">Next</a></span></div><hr>
+<h1 data-number="37" id="fixed-width-integer-types"><span class="header-section-number">37</span> Fixed Width Integer Types</h1>
+<p></p>
+<p>C has all those small, bigger, and biggest integer types like <code>int</code> and <code>long</code> and all that. And you can look in <a href="types-ii-way-more-types.html#limits-macros">the section on limits</a> to see what the largest int is with <code>INT_MAX</code> and so on.</p>
+<p>How big are those types? That is, how many bytes do they take up? We could use <code>sizeof</code> to get that answer.</p>
+<p>But what if I wanted to go the other way? What if I needed a type that was exactly 32 bits (4 bytes) or at least 16 bits or somesuch?</p>
+<p>How can we declare a type that’s a certain size?</p>
+<p>The header <code>&lt;stdint.h&gt;</code> gives us a way.</p>
+<h2 data-number="37.1" id="the-bit-sized-types"><span class="header-section-number">37.1</span> The Bit-Sized Types</h2>
+<p>For both signed and unsigned integers, we can specify a type that is a certain number of bits, with some caveats, of course.</p>
+<p>And there are three main classes of these types (in these examples, the <code>N</code> would be replaced by a certain number of bits):</p>
+<ul>
+<li>Integers of exactly a certain size (<code>intN_t</code>)</li>
+<li>Integers that are at least a certain size (<code>int_leastN_t</code>)</li>
+<li>Integers that are at least a certain size and are as fast as possible (<code>int_fastN_t</code>)<a href="footnotes.html#fn187" class="footnote-ref" id="fnref187" role="doc-noteref"><sup>187</sup></a></li>
+</ul>
+<p>How much faster is <code>fast</code>? Definitely maybe some amount faster. Probably. The spec doesn’t say how much faster, just that they’ll be the fastest on this architecture. Most C compilers are pretty good, though, so you’ll probably only see this used in places where the most possible speed needs to be guaranteed (rather than just hoping the compiler is producing pretty-dang-fast code, which it is).</p>
+<p>Finally, these unsigned number types have a leading <code>u</code> to differentiate them.</p>
+<p>For example, these types have the corresponding listed meaning:</p>
+<p> </p>
+<div class="sourceCode" id="cb689"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb689-1"><a href="fixed-width-integer-types.html#cb689-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int32_t</span> w<span class="op">;</span>        <span class="co">// x is exactly 32 bits, signed</span></span>
+<span id="cb689-2"><a href="fixed-width-integer-types.html#cb689-2" aria-hidden="true" tabindex="-1"></a><span class="dt">uint16_t</span> x<span class="op">;</span>       <span class="co">// y is exactly 16 bits, unsigned</span></span>
+<span id="cb689-3"><a href="fixed-width-integer-types.html#cb689-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb689-4"><a href="fixed-width-integer-types.html#cb689-4" aria-hidden="true" tabindex="-1"></a><span class="dt">int_least8_t</span> y<span class="op">;</span>   <span class="co">// y is at least 8 bits, signed</span></span>
+<span id="cb689-5"><a href="fixed-width-integer-types.html#cb689-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb689-6"><a href="fixed-width-integer-types.html#cb689-6" aria-hidden="true" tabindex="-1"></a><span class="dt">uint_fast64_t</span> z<span class="op">;</span>  <span class="co">// z is the fastest representation at least 64 bits, unsigned</span></span></code></pre></div>
+<p>The following types are guaranteed to be defined:</p>
+<div class="sourceCode" id="cb690"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb690-1"><a href="fixed-width-integer-types.html#cb690-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int_least8_t</span>      <span class="dt">uint_least8_t</span></span>
+<span id="cb690-2"><a href="fixed-width-integer-types.html#cb690-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int_least16_t</span>     <span class="dt">uint_least16_t</span></span>
+<span id="cb690-3"><a href="fixed-width-integer-types.html#cb690-3" aria-hidden="true" tabindex="-1"></a><span class="dt">int_least32_t</span>     <span class="dt">uint_least32_t</span></span>
+<span id="cb690-4"><a href="fixed-width-integer-types.html#cb690-4" aria-hidden="true" tabindex="-1"></a><span class="dt">int_least64_t</span>     <span class="dt">uint_least64_t</span></span>
+<span id="cb690-5"><a href="fixed-width-integer-types.html#cb690-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb690-6"><a href="fixed-width-integer-types.html#cb690-6" aria-hidden="true" tabindex="-1"></a><span class="dt">int_fast8_t</span>       <span class="dt">uint_fast8_t</span></span>
+<span id="cb690-7"><a href="fixed-width-integer-types.html#cb690-7" aria-hidden="true" tabindex="-1"></a><span class="dt">int_fast16_t</span>      <span class="dt">uint_fast16_t</span></span>
+<span id="cb690-8"><a href="fixed-width-integer-types.html#cb690-8" aria-hidden="true" tabindex="-1"></a><span class="dt">int_fast32_t</span>      <span class="dt">uint_fast32_t</span></span>
+<span id="cb690-9"><a href="fixed-width-integer-types.html#cb690-9" aria-hidden="true" tabindex="-1"></a><span class="dt">int_fast64_t</span>      <span class="dt">uint_fast64_t</span></span></code></pre></div>
+<p>There might be others of different widths, as well, but those are optional.</p>
+<p>Hey! Where are the fixed types like <code>int16_t</code>? Turns out those are entirely optional…unless certain conditions are met<a href="footnotes.html#fn188" class="footnote-ref" id="fnref188" role="doc-noteref"><sup>188</sup></a>. And if you have an average run-of-the-mill modern computer system, those conditions probably are met. And if they are, you’ll have these types:</p>
+<div class="sourceCode" id="cb691"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb691-1"><a href="fixed-width-integer-types.html#cb691-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int8_t</span>      <span class="dt">uint8_t</span></span>
+<span id="cb691-2"><a href="fixed-width-integer-types.html#cb691-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int16_t</span>     <span class="dt">uint16_t</span></span>
+<span id="cb691-3"><a href="fixed-width-integer-types.html#cb691-3" aria-hidden="true" tabindex="-1"></a><span class="dt">int32_t</span>     <span class="dt">uint32_t</span></span>
+<span id="cb691-4"><a href="fixed-width-integer-types.html#cb691-4" aria-hidden="true" tabindex="-1"></a><span class="dt">int64_t</span>     <span class="dt">uint64_t</span></span></code></pre></div>
+<p>Other variants with different widths might be defined, but they’re optional.</p>
+<p> </p>
+<h2 data-number="37.2" id="maximum-integer-size-type"><span class="header-section-number">37.2</span> Maximum Integer Size Type</h2>
+<p>There’s a type you can use that holds the largest representable integers available on the system, both signed and unsigned:</p>
+<p> </p>
+<div class="sourceCode" id="cb692"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb692-1"><a href="fixed-width-integer-types.html#cb692-1" aria-hidden="true" tabindex="-1"></a><span class="dt">intmax_t</span></span>
+<span id="cb692-2"><a href="fixed-width-integer-types.html#cb692-2" aria-hidden="true" tabindex="-1"></a><span class="dt">uintmax_t</span></span></code></pre></div>
+<p> </p>
+<p>Use these types when you want to go as big as possible.</p>
+<p>Obviously values from any other integer types of the same sign will fit in this type, necessarily.</p>
+<h2 data-number="37.3" id="using-fixed-size-constants"><span class="header-section-number">37.3</span> Using Fixed Size Constants</h2>
+<p>If you have a constant that you want to have fit in a certain number of bits, you can use these macros to automatically append the proper suffix onto the number (e.g. <code>22L</code> or <code>3490ULL</code>).</p>
+<p> </p>
+<div class="sourceCode" id="cb693"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb693-1"><a href="fixed-width-integer-types.html#cb693-1" aria-hidden="true" tabindex="-1"></a>INT8_C<span class="op">(</span>x<span class="op">)</span>     UINT8_C<span class="op">(</span>x<span class="op">)</span></span>
+<span id="cb693-2"><a href="fixed-width-integer-types.html#cb693-2" aria-hidden="true" tabindex="-1"></a>INT16_C<span class="op">(</span>x<span class="op">)</span>    UINT16_C<span class="op">(</span>x<span class="op">)</span></span>
+<span id="cb693-3"><a href="fixed-width-integer-types.html#cb693-3" aria-hidden="true" tabindex="-1"></a>INT32_C<span class="op">(</span>x<span class="op">)</span>    UINT32_C<span class="op">(</span>x<span class="op">)</span></span>
+<span id="cb693-4"><a href="fixed-width-integer-types.html#cb693-4" aria-hidden="true" tabindex="-1"></a>INT64_C<span class="op">(</span>x<span class="op">)</span>    UINT64_C<span class="op">(</span>x<span class="op">)</span></span>
+<span id="cb693-5"><a href="fixed-width-integer-types.html#cb693-5" aria-hidden="true" tabindex="-1"></a>INTMAX_C<span class="op">(</span>x<span class="op">)</span>   UINTMAX_C<span class="op">(</span>x<span class="op">)</span></span></code></pre></div>
+<p> </p>
+<p>Again, these work only with constant integer values.</p>
+<p>For example, we can use one of these to assign constant values like so:</p>
+<div class="sourceCode" id="cb694"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb694-1"><a href="fixed-width-integer-types.html#cb694-1" aria-hidden="true" tabindex="-1"></a><span class="dt">uint16_t</span> x <span class="op">=</span> UINT16_C<span class="op">(</span><span class="dv">12</span><span class="op">);</span></span>
+<span id="cb694-2"><a href="fixed-width-integer-types.html#cb694-2" aria-hidden="true" tabindex="-1"></a><span class="dt">intmax_t</span> y <span class="op">=</span> INTMAX_C<span class="op">(</span><span class="dv">3490</span><span class="op">);</span></span></code></pre></div>
+<p> </p>
+<h2 data-number="37.4" id="limits-of-fixed-size-integers"><span class="header-section-number">37.4</span> Limits of Fixed Size Integers</h2>
+<p>We also have some limits defined so you can get the maximum and minimum values for these types:</p>
+<p> </p>
+<div class="sourceCode" id="cb695"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb695-1"><a href="fixed-width-integer-types.html#cb695-1" aria-hidden="true" tabindex="-1"></a>INT8_MAX           INT8_MIN           UINT8_MAX</span>
+<span id="cb695-2"><a href="fixed-width-integer-types.html#cb695-2" aria-hidden="true" tabindex="-1"></a>INT16_MAX          INT16_MIN          UINT16_MAX</span>
+<span id="cb695-3"><a href="fixed-width-integer-types.html#cb695-3" aria-hidden="true" tabindex="-1"></a>INT32_MAX          INT32_MIN          UINT32_MAX</span>
+<span id="cb695-4"><a href="fixed-width-integer-types.html#cb695-4" aria-hidden="true" tabindex="-1"></a>INT64_MAX          INT64_MIN          UINT64_MAX</span>
+<span id="cb695-5"><a href="fixed-width-integer-types.html#cb695-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb695-6"><a href="fixed-width-integer-types.html#cb695-6" aria-hidden="true" tabindex="-1"></a>INT_LEAST8_MAX     INT_LEAST8_MIN     UINT_LEAST8_MAX</span>
+<span id="cb695-7"><a href="fixed-width-integer-types.html#cb695-7" aria-hidden="true" tabindex="-1"></a>INT_LEAST16_MAX    INT_LEAST16_MIN    UINT_LEAST16_MAX</span>
+<span id="cb695-8"><a href="fixed-width-integer-types.html#cb695-8" aria-hidden="true" tabindex="-1"></a>INT_LEAST32_MAX    INT_LEAST32_MIN    UINT_LEAST32_MAX</span>
+<span id="cb695-9"><a href="fixed-width-integer-types.html#cb695-9" aria-hidden="true" tabindex="-1"></a>INT_LEAST64_MAX    INT_LEAST64_MIN    UINT_LEAST64_MAX</span>
+<span id="cb695-10"><a href="fixed-width-integer-types.html#cb695-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb695-11"><a href="fixed-width-integer-types.html#cb695-11" aria-hidden="true" tabindex="-1"></a>INT_FAST8_MAX      INT_FAST8_MIN      UINT_FAST8_MAX</span>
+<span id="cb695-12"><a href="fixed-width-integer-types.html#cb695-12" aria-hidden="true" tabindex="-1"></a>INT_FAST16_MAX     INT_FAST16_MIN     UINT_FAST16_MAX</span>
+<span id="cb695-13"><a href="fixed-width-integer-types.html#cb695-13" aria-hidden="true" tabindex="-1"></a>INT_FAST32_MAX     INT_FAST32_MIN     UINT_FAST32_MAX</span>
+<span id="cb695-14"><a href="fixed-width-integer-types.html#cb695-14" aria-hidden="true" tabindex="-1"></a>INT_FAST64_MAX     INT_FAST64_MIN     UINT_FAST64_MAX</span>
+<span id="cb695-15"><a href="fixed-width-integer-types.html#cb695-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb695-16"><a href="fixed-width-integer-types.html#cb695-16" aria-hidden="true" tabindex="-1"></a>INTMAX_MAX         INTMAX_MIN         UINTMAX_MAX</span></code></pre></div>
+<p> </p>
+<p>Note the <code>MIN</code> for all the unsigned types is <code>0</code>, so, as such, there’s no macro for it.</p>
+<p> </p>
+<h2 data-number="37.5" id="format-specifiers"><span class="header-section-number">37.5</span> Format Specifiers</h2>
+<p>In order to print these types, you need to send the right format specifier to <code>printf()</code>. (And the same issue for getting input with <code>scanf()</code>.)</p>
+<p>But how are you going to know what size the types are under the hood? Luckily, once again, C provides some macros to help with this.</p>
+<p>All this can be found in <code>&lt;inttypes.h&gt;</code>.</p>
+<p>Now, we have a bunch of macros. Like a complexity explosion of macros. So I’m going to stop listing out every one and just put the lowercase letter <code>n</code> in the place where you should put <code>8</code>, <code>16</code>, <code>32</code>, or <code>64</code> depending on your needs.</p>
+<p>Let’s look at the macros for printing signed integers:</p>
+<p> </p>
+<div class="sourceCode" id="cb696"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb696-1"><a href="fixed-width-integer-types.html#cb696-1" aria-hidden="true" tabindex="-1"></a>PRIdn    PRIdLEASTn    PRIdFASTn    PRIdMAX</span>
+<span id="cb696-2"><a href="fixed-width-integer-types.html#cb696-2" aria-hidden="true" tabindex="-1"></a>PRIin    PRIiLEASTn    PRIiFASTn    PRIiMAX</span></code></pre></div>
+<p>Look for the patterns there. You can see there are variants for the fixed, least, fast, and max types.</p>
+<p>And you also have a lowercase <code>d</code> and a lowercase <code>i</code>. Those correspond to the <code>printf()</code> format specifiers <code>%d</code> and <code>%i</code>.</p>
+<p>So if I have something of type:</p>
+<div class="sourceCode" id="cb697"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb697-1"><a href="fixed-width-integer-types.html#cb697-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int_least16_t</span> x <span class="op">=</span> <span class="dv">3490</span><span class="op">;</span></span></code></pre></div>
+<p>I can print that with the equivalent format specifier for <code>%d</code> by using <code>PRId16</code>.</p>
+<p>But how? How do we use that macro?</p>
+<p>First of all, that macro specifies a string containing the letter or letters <code>printf()</code> needs to use to print that type. Like, for example, it could be <code>"d"</code> or <code>"ld"</code>.</p>
+<p>So all we need to do is embed that in our format string to the <code>printf()</code> call.</p>
+<p>To do this, we can take advantage of a fact about C that you might have forgotten: adjacent string literals are automatically concatenated to a single string. E.g.:</p>
+<div class="sourceCode" id="cb698"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb698-1"><a href="fixed-width-integer-types.html#cb698-1" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;Hello, &quot;</span> <span class="st">&quot;world!</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span>   <span class="co">// Prints &quot;Hello, world!&quot;</span></span></code></pre></div>
+<p>And since these macros are string literals, we can use them like so:</p>
+<div class="sourceCode" id="cb699"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb699-1"><a href="fixed-width-integer-types.html#cb699-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb699-2"><a href="fixed-width-integer-types.html#cb699-2"></a><span class="pp">#include </span><span class="im">&lt;stdint.h&gt;</span></span>
+<span id="cb699-3"><a href="fixed-width-integer-types.html#cb699-3"></a><span class="pp">#include </span><span class="im">&lt;inttypes.h&gt;</span></span>
+<span id="cb699-4"><a href="fixed-width-integer-types.html#cb699-4"></a></span>
+<span id="cb699-5"><a href="fixed-width-integer-types.html#cb699-5"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb699-6"><a href="fixed-width-integer-types.html#cb699-6"></a><span class="op">{</span></span>
+<span id="cb699-7"><a href="fixed-width-integer-types.html#cb699-7"></a>    <span class="dt">int_least16_t</span> x <span class="op">=</span> <span class="dv">3490</span><span class="op">;</span></span>
+<span id="cb699-8"><a href="fixed-width-integer-types.html#cb699-8"></a></span>
+<span id="cb699-9"><a href="fixed-width-integer-types.html#cb699-9"></a>    printf<span class="op">(</span><span class="st">&quot;The value is %&quot;</span> PRIdLEAST16 <span class="st">&quot;!</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">,</span> x<span class="op">);</span></span>
+<span id="cb699-10"><a href="fixed-width-integer-types.html#cb699-10"></a><span class="op">}</span></span></code></pre></div>
+<p> </p>
+<p>We also have a pile of macros for printing unsigned types:</p>
+<p> </p>
+<div class="sourceCode" id="cb700"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb700-1"><a href="fixed-width-integer-types.html#cb700-1" aria-hidden="true" tabindex="-1"></a>PRIon    PRIoLEASTn    PRIoFASTn    PRIoMAX</span>
+<span id="cb700-2"><a href="fixed-width-integer-types.html#cb700-2" aria-hidden="true" tabindex="-1"></a>PRIun    PRIuLEASTn    PRIuFASTn    PRIuMAX</span>
+<span id="cb700-3"><a href="fixed-width-integer-types.html#cb700-3" aria-hidden="true" tabindex="-1"></a>PRIxn    PRIxLEASTn    PRIxFASTn    PRIxMAX</span>
+<span id="cb700-4"><a href="fixed-width-integer-types.html#cb700-4" aria-hidden="true" tabindex="-1"></a>PRIXn    PRIXLEASTn    PRIXFASTn    PRIXMAX</span></code></pre></div>
+<p>In this case, <code>o</code>, <code>u</code>, <code>x</code>, and <code>X</code> correspond to the documented format specifiers in <code>printf()</code>.</p>
+<p>And, as before, the lowercase <code>n</code> should be substituted with <code>8</code>, <code>16</code>, <code>32</code>, or <code>64</code>.</p>
+<p> </p>
+<p>But just when you think you had enough of the macros, it turns out we have a complete complementary set of them for <code>scanf()</code>!</p>
+<p> </p>
+<div class="sourceCode" id="cb701"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb701-1"><a href="fixed-width-integer-types.html#cb701-1" aria-hidden="true" tabindex="-1"></a>SCNdn    SCNdLEASTn    SCNdFASTn    SCNdMAX</span>
+<span id="cb701-2"><a href="fixed-width-integer-types.html#cb701-2" aria-hidden="true" tabindex="-1"></a>SCNin    SCNiLEASTn    SCNiFASTn    SCNiMAX</span>
+<span id="cb701-3"><a href="fixed-width-integer-types.html#cb701-3" aria-hidden="true" tabindex="-1"></a>SCNon    SCNoLEASTn    SCNoFASTn    SCNoMAX</span>
+<span id="cb701-4"><a href="fixed-width-integer-types.html#cb701-4" aria-hidden="true" tabindex="-1"></a>SCNun    SCNuLEASTn    SCNuFASTn    SCNuMAX</span>
+<span id="cb701-5"><a href="fixed-width-integer-types.html#cb701-5" aria-hidden="true" tabindex="-1"></a>SCNxn    SCNxLEASTn    SCNxFASTn    SCNxMAX</span></code></pre></div>
+<p> </p>
+<p>Remember: when you want to print out a fixed size integer type with <code>printf()</code> or <code>scanf()</code>, grab the correct corresponding format specifer from <code>&lt;inttypes.h&gt;</code>.</p>
+<p></p>
+<!-- Beej's guide to C
+
+# vim: ts=4:sw=4:nosi:et:tw=72
+-->
+<hr><div style="text-align:center"><span><a href="complex-numbers.html">Prev</a> | </span><a href="index.html">Contents</a><span> | <a href="date-and-time-functionality.html">Next</a></span></div></body>
+</html>

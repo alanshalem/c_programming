@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Beej's Guide to C Programming</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Mono&display=swap" rel="stylesheet"> 
+
+  <!-- BG custom styling -->
+  <style type="text/css">
+  /* Fix for line numbers not visible */
+  pre.numberSource code > span {
+      left: -1em;
+  }
+  pre.numberSource {
+      margin-left: initial;
+  }
+
+  /* Put some space after the section numbers */
+  span.toc-section-number::after {
+      content: "\a0\a0\a0";  /* non-breaking whitespace */
+  }
+
+  /* Hide underlines on code number links */
+  pre > code.sourceCode > span > a:first-child::before {
+      text-decoration: none;
+  }
+
+  /* Color the source blocks */
+  div.sourceCode {
+      background-color: #f0f0f0;
+  }
+
+  /* Fix iOS big text rendering issue */
+  pre > code.sourceCode > span {
+      display: initial;
+  }
+
+
+  /* Color the inline code */
+  code:not(.sourceCode) {
+      background: #f0f0f0;
+      padding-left: 0.2em;
+      padding-right: 0.2em;
+      border-radius: 0.2em;
+  }
+
+  /* Keep code tags from wrapping in tables */
+  tbody code {
+      white-space: nowrap;
+  }
+
+  td {
+      vertical-align: top;
+  }
+
+  body {
+      font-size: 12pt;
+      max-width: 43em;
+  }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<div style="text-align:center"><span><a href="foreword.html">Prev</a> | </span><a href="index.html">Contents</a><span> | <a href="variables-and-statements.html">Next</a></span></div><hr>
+<h1 data-number="2" id="hello-world"><span class="header-section-number">2</span> Hello, World!</h1>
+<h2 data-number="2.1" id="what-to-expect-from-c"><span class="header-section-number">2.1</span> What to Expect from C</h2>
+<blockquote>
+<p><em>“Where do these stairs go?”</em><br />
+<em>“They go up.”</em></p>
+<p>—Ray Stantz and Peter Venkman, Ghostbusters</p>
+</blockquote>
+<p>C is a low-level language.</p>
+<p>It didn’t use to be. Back in the day when people carved punch cards out of granite, C was an incredible way to be free of the drudgery of lower-level languages like <a href="https://en.wikipedia.org/wiki/Assembly_language">assembly</a><a href="footnotes.html#fn19" class="footnote-ref" id="fnref19" role="doc-noteref"><sup>19</sup></a>.</p>
+<p>But now in these modern times, current-generation languages offer all kinds of features that didn’t exist in 1972 when C was invented. This means C is a pretty basic language with not a lot of features. It can do <em>anything</em>, but it can make you work for it.</p>
+<p>So why would we even use it today?</p>
+<ul>
+<li><p>As a learning tool: not only is C a venerable piece of computing history, but it is connected to the <a href="https://en.wikipedia.org/wiki/Bare_machine">bare metal</a><a href="footnotes.html#fn20" class="footnote-ref" id="fnref20" role="doc-noteref"><sup>20</sup></a> in a way that present-day languages are not. When you learn C, you learn about how software interfaces with computer memory at a low level. There are no seatbelts. You’ll write software that crashes, I assure you. And that’s all part of the fun!</p></li>
+<li><p>As a useful tool: C still is used for certain applications, such as building <a href="https://en.wikipedia.org/wiki/Operating_system">operating systems</a><a href="footnotes.html#fn21" class="footnote-ref" id="fnref21" role="doc-noteref"><sup>21</sup></a> or in <a href="https://en.wikipedia.org/wiki/Embedded_system">embedded systems</a><a href="footnotes.html#fn22" class="footnote-ref" id="fnref22" role="doc-noteref"><sup>22</sup></a>. (Though the <a href="https://en.wikipedia.org/wiki/Rust_(programming_language)">Rust</a><a href="footnotes.html#fn23" class="footnote-ref" id="fnref23" role="doc-noteref"><sup>23</sup></a> programming language is eyeing both these fields!)</p></li>
+</ul>
+<p>If you’re familiar with another language, a lot of things about C are easy. C inspired many other languages, and you’ll see bits of it in Go, Rust, Swift, Python, JavaScript, Java, and all kinds of other languages. Those parts will be familiar.</p>
+<p>The one thing about C that hangs people up is <em>pointers</em>. Virtually everything else is familiar, but pointers are the weird one. The concept behind pointers is likely one you already know, but C forces you to be explicit about it, using operators you’ve likely never seen before.</p>
+<p>It’s especially insidious because once you <a href="https://en.wikipedia.org/wiki/Grok"><em>grok</em></a><a href="footnotes.html#fn24" class="footnote-ref" id="fnref24" role="doc-noteref"><sup>24</sup></a> pointers, they’re suddenly easy. But up until that moment, they’re slippery eels.</p>
+<p>Everything else in C is just memorizing another way (or sometimes the same way!) of doing something you’ve done already. Pointers are the weird bit. And, arguably, even pointers are variations on a theme you’re probably familiar with.</p>
+<p>So get ready for a rollicking adventure as close to the core of the computer as you can get without assembly, in the most influential computer language of all time<a href="footnotes.html#fn25" class="footnote-ref" id="fnref25" role="doc-noteref"><sup>25</sup></a>. Hang on!</p>
+<h2 data-number="2.2" id="hello-world-1"><span class="header-section-number">2.2</span> Hello, World!</h2>
+<p>This is the canonical example of a C program. Everyone uses it. (Note that the numbers to the left are for reader reference only, and are not part of the source code.)</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb2-1"><a href="hello-world.html#cb2-1"></a><span class="co">/* Hello world program */</span></span>
+<span id="cb2-2"><a href="hello-world.html#cb2-2"></a></span>
+<span id="cb2-3"><a href="hello-world.html#cb2-3"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb2-4"><a href="hello-world.html#cb2-4"></a></span>
+<span id="cb2-5"><a href="hello-world.html#cb2-5"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb2-6"><a href="hello-world.html#cb2-6"></a><span class="op">{</span></span>
+<span id="cb2-7"><a href="hello-world.html#cb2-7"></a>    printf<span class="op">(</span><span class="st">&quot;Hello, World!</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span>  <span class="co">// Actually do the work here</span></span>
+<span id="cb2-8"><a href="hello-world.html#cb2-8"></a><span class="op">}</span></span></code></pre></div>
+<p>We’re going to don our long-sleeved heavy-duty rubber gloves, grab a scalpel, and rip into this thing to see what makes it tick. So, scrub up, because here we go. Cutting very gently…</p>
+<p>Let’s get the easy thing out of the way: anything between the digraphs <code>/*</code> and <code>*/</code> is a comment and will be completely ignored by the compiler. Same goes for anything on a line after a <code>//</code>. This allows you to leave messages to yourself and others, so that when you come back and read your code in the distant future, you’ll know what the heck it was you were trying to do. Believe me, you will forget; it happens.</p>
+<p>Now, what is this <code>#include</code>? GROSS! Well, it tells the C Preprocessor to pull the contents of another file and insert it into the code right <em>there</em>.</p>
+<p>Wait—what’s a C Preprocessor? Good question. There are two stages<a href="footnotes.html#fn26" class="footnote-ref" id="fnref26" role="doc-noteref"><sup>26</sup></a> to compilation: the preprocessor and the compiler. Anything that starts with pound sign, or “octothorpe”, (<code>#</code>) is something the preprocessor operates on before the compiler even gets started. Common <em>preprocessor directives</em>, as they’re called, are <code>#include</code> and <code>#define</code>. More on that later.</p>
+<p>Before we go on, why would I even begin to bother pointing out that a pound sign is called an octothorpe? The answer is simple: I think the word octothorpe is so excellently funny, I have to gratuitously spread its name around whenever I get the opportunity. Octothorpe. Octothorpe, octothorpe, octothorpe.</p>
+<p>So <em>anyway</em>. After the C preprocessor has finished preprocessing everything, the results are ready for the compiler to take them and produce <a href="https://en.wikipedia.org/wiki/Assembly_language">assembly code</a><a href="footnotes.html#fn27" class="footnote-ref" id="fnref27" role="doc-noteref"><sup>27</sup></a>, <a href="https://en.wikipedia.org/wiki/Machine_code">machine code</a><a href="footnotes.html#fn28" class="footnote-ref" id="fnref28" role="doc-noteref"><sup>28</sup></a>, or whatever it’s about to do. Machine code is the “language” the CPU understands, and it can understand it <em>very rapidly</em>. This is one of the reasons C programs tend to be quick.</p>
+<p>Don’t worry about the technical details of compilation for now; just know that your source runs through the preprocessor, then the output of that runs through the compiler, then that produces an executable for you to run.</p>
+<p>What about the rest of the line? What’s <code>&lt;stdio.h&gt;</code>? That is what is known as a <em>header file</em>. It’s the dot-h at the end that gives it away. In fact it’s the “Standard I/O” (<code>stdio</code>) header file that you will grow to know and love. It gives us access to a bunch of I/O functionality<a href="footnotes.html#fn29" class="footnote-ref" id="fnref29" role="doc-noteref"><sup>29</sup></a>. For our demo program, we’re outputting the string “Hello, World!”, so we in particular need access to the <code>printf()</code> function to do this. The <code>&lt;stdio.h&gt;</code> file gives us this access. Basically, if we tried to use <code>printf()</code> without <code>#include &lt;stdio.h&gt;</code>, the compiler would have complained to us about it.</p>
+<p>How did I know I needed to <code>#include &lt;stdio.h&gt;</code> for <code>printf()</code>? Answer: it’s in the documentation. If you’re on a Unix system, <code>man 3 printf</code> and it’ll tell you right at the top of the man page what header files are required. Or see the reference section in this book. <code>:-)</code> </p>
+<p>Holy moly. That was all to cover the first line! But, let’s face it, it has been completely dissected. No mystery shall remain!</p>
+<p>So take a breather…look back over the sample code. Only a couple easy lines to go.</p>
+<p>Welcome back from your break! I know you didn’t really take a break; I was just humoring you.</p>
+<p>The next line is <code>main()</code>. This is the definition of the function <code>main()</code>; everything between the squirrelly braces (<code>{</code> and <code>}</code>) is part of the function definition.</p>
+<p>(How do you <em>call</em> a different function, anyway? The answer lies in the <code>printf()</code> line, but we’ll get to that in a minute.)</p>
+<p>Now, the main function is a special one in many ways, but one way stands above the rest: it is the function that will be called automatically when your program starts executing. Nothing of yours gets called before <code>main()</code>. In the case of our example, this works fine since all we want to do is print a line and exit.</p>
+<p>Oh, that’s another thing: once the program executes past the end of <code>main()</code>, down there at the closing squirrelly brace, the program will exit, and you’ll be back at your command prompt.</p>
+<p>So now we know that that program has brought in a header file, <code>stdio.h</code>, and declared a <code>main()</code> function that will execute when the program is started. What are the goodies in <code>main()</code>?</p>
+<p>I am so happy you asked. Really! We only have the one goodie: a call to the function <code>printf()</code>. You can tell this is a function call and not a function definition in a number of ways, but one indicator is the lack of squirrelly braces after it. And you end the function call with a semicolon so the compiler knows it’s the end of the expression. You’ll be putting semicolons after almost everything, as you’ll see.</p>
+<p>You’re passing one argument to the function <code>printf()</code>: a string to be printed when you call it. Oh, yeah—we’re calling a function! We rock! Wait, wait—don’t get cocky. What’s that crazy <code>\n</code> at the end of the string? Well, most characters in the string will print out just like they are stored. But there are certain characters that you can’t print on screen well that are embedded as two-character backslash codes. One of the most popular is <code>\n</code> (read “backslash-N” or simply “newline”) that corresponds to the <em>newline</em> character. This is the character that causes further printing to continue at the beginning of the next line instead of the current. It’s like hitting return at the end of the line.</p>
+<p>So copy that code into a file called <code>hello.c</code> and build it. On a Unix-like platform (e.g. Linux, BSD, Mac, or WSL), from the command line you’ll build with a command like so:</p>
+<p></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode zsh"><code class="sourceCode zsh"><span id="cb3-1"><a href="hello-world.html#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gcc</span> <span class="at">-o</span> hello hello.c</span></code></pre></div>
+<p>(This means “compile <code>hello.c</code>, and output an executable called <code>hello</code>”.)</p>
+<p>After that’s done, you should have a file called <code>hello</code> that you can run with this command:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb4-1"><a href="hello-world.html#cb4-1" aria-hidden="true" tabindex="-1"></a>./hello</span></code></pre></div>
+<p>(The leading <code>./</code> tells the shell to “run from the current directory”.)</p>
+<p>And see what happens:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb5-1"><a href="hello-world.html#cb5-1" aria-hidden="true" tabindex="-1"></a>Hello, World! </span></code></pre></div>
+<p>It’s done and tested! Ship it!</p>
+<h2 data-number="2.3" id="compilation-details"><span class="header-section-number">2.3</span> Compilation Details</h2>
+<p>Let’s talk a bit more about how to build C programs, and what happens behind the scenes there.</p>
+<p>Like other languages, C has <em>source code</em>. But, depending on what language you’re coming from, you might never have had to <em>compile</em> your source code into an <em>executable</em>.</p>
+<p>Compilation is the process of taking your C source code and turning it into a program that your operating system can execute.</p>
+<p>JavaScript and Python devs aren’t used to a separate compilation step at all–though behind the scenes it’s happening! Python compiles your source code into something called <em>bytecode</em> that the Python virtual machine can execute. Java devs are used to compilation, but that produces bytecode for the Java Virtual Machine.</p>
+<p>When compiling C, <em>machine code</em> is generated. This is the 1s and 0s that can be executed directly and speedily by the CPU.</p>
+<blockquote>
+<p>Languages that typically aren’t compiled are called <em>interpreted</em> languages. But as we mentioned with Java and Python, they also have a compilation step. And there’s no rule saying that C can’t be interpreted. (There are C interpreters out there!) In short, it’s a bunch of gray areas. Compilation in general is just taking source code and turning it into another, more easily-executed form.</p>
+</blockquote>
+<p>The C compiler is the program that does the compilation.</p>
+<p>As we’ve already said, <code>gcc</code> is a compiler that’s installed on a lot of <a href="https://en.wikipedia.org/wiki/Unix">Unix-like operating systems</a><a href="footnotes.html#fn30" class="footnote-ref" id="fnref30" role="doc-noteref"><sup>30</sup></a>. And it’s commonly run from the command line in a terminal, but not always. You can run it from your IDE, as well.</p>
+<p>So how do we do command line builds?</p>
+<h2 data-number="2.4" id="building-with-gcc"><span class="header-section-number">2.4</span> Building with <code>gcc</code></h2>
+<p>If you have a source file called <code>hello.c</code> in the current directory, you can build that into a program called <code>hello</code> with this command typed in a terminal:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode zsh"><code class="sourceCode zsh"><span id="cb6-1"><a href="hello-world.html#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gcc</span> <span class="at">-o</span> hello hello.c</span></code></pre></div>
+<p>The <code>-o</code> means “output to this file”<a href="footnotes.html#fn31" class="footnote-ref" id="fnref31" role="doc-noteref"><sup>31</sup></a>. And there’s <code>hello.c</code> at the end, the name of the file we want to compile.</p>
+<p>If your source is broken up into multiple files, you can compile them all together (almost as if they were one file, but the rules are actually more complex than that) by putting all the <code>.c</code> files on the command line:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode zsh"><code class="sourceCode zsh"><span id="cb7-1"><a href="hello-world.html#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gcc</span> <span class="at">-o</span> awesomegame ui.c characters.c npc.c items.c</span></code></pre></div>
+<p></p>
+<p>and they’ll all get built together into a big executable.</p>
+<p>That’s enough to get started—later we’ll talk details about multiple source files, object files, and all kinds of fun stuff.</p>
+<h2 data-number="2.5" id="building-with-clang"><span class="header-section-number">2.5</span> Building with <code>clang</code></h2>
+<p>On Macs, the stock compiler isn’t <code>gcc</code>—it’s <code>clang</code>. But a wrapper is also installed so you can run <code>gcc</code> and have it still work.</p>
+<p>You can also install the <code>gcc</code> compiler proper through <a href="https://formulae.brew.sh/formula/gcc">Homebrew</a><a href="footnotes.html#fn32" class="footnote-ref" id="fnref32" role="doc-noteref"><sup>32</sup></a> or some other means.</p>
+<h2 data-number="2.6" id="building-from-ides"><span class="header-section-number">2.6</span> Building from IDEs</h2>
+<p>If you’re using an <em>Integrated Development Environment</em> (IDE), you probably don’t have to build from the command line.</p>
+<p>With Visual Studio, <code>CTRL-F7</code> will build, and <code>CTRL-F5</code> will run.</p>
+<p>With VS Code, you can hit <code>F5</code> to run via the debugger. (You’ll have to install the C/C++ Extension.)</p>
+<p>With XCode, you can build with <code>COMMAND-B</code> and run with <code>COMMAND-R</code>. To get the command line tools, Google for “XCode command line tools” and you’ll find instructions for installing them.</p>
+<p>For getting started, I encourage you to also try to build from the command line—it’s history!</p>
+<h2 data-number="2.7" id="c-versions"><span class="header-section-number">2.7</span> C Versions</h2>
+<p>C has come a long way over the years, and it had many named version numbers to describe which dialect of the language you’re using.</p>
+<p>These generally refer to the year of the specification.</p>
+<p>The most famous are C89, C99, C11, and C2x. We’ll focus on the latter in this book.</p>
+<p>But here’s a more complete table:</p>
+<table>
+<colgroup>
+<col style="width: 26%" />
+<col style="width: 73%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Version</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>K&amp;R C</td>
+<td>1978, the original. Named after Brian Kernighan and Dennis Ritchie. Ritchie designed and coded the language, and Kernighan co-authored the book on it. You rarely see original K&amp;R code today. If you do, it’ll look odd, like Middle English looks odd to modern English readers.</td>
+</tr>
+<tr class="even">
+<td><strong>C89</strong>, ANSI C, C90</td>
+<td>In 1989, the American National Standards Institute (ANSI) produced a C language specification that set the tone for C that persists to this day. A year later, the reins were handed to the International Organization for Standardization (ISO) that produced the identical C90.</td>
+</tr>
+<tr class="odd">
+<td>C95</td>
+<td>A rarely-mentioned addition to C89 that included wide character support.</td>
+</tr>
+<tr class="even">
+<td><strong>C99</strong></td>
+<td>The first big overhaul with lots of language additions. The thing most people remember is the addition of <code>//</code>-style comments. This is the most popular version of C in use as of this writing.</td>
+</tr>
+<tr class="odd">
+<td><strong>C11</strong></td>
+<td>This major version update includes Unicode support and multi-threading. Be advised that if you start using these language features, you might be sacrificing portability with places that are stuck in C99 land. But, honestly, 1999 is getting to be a while back now.</td>
+</tr>
+<tr class="even">
+<td>C17, C18</td>
+<td>Bugfix update to C11. C17 seems to be the official name, but the publication was delayed until 2018. As far as I can tell, these two are interchangeable, with C17 being preferred.</td>
+</tr>
+<tr class="odd">
+<td>C2x</td>
+<td>What’s coming next! Expected to eventually become C23.</td>
+</tr>
+</tbody>
+</table>
+<p>You can force GCC to use one of these standards with the <code>-std=</code> command line argument. If you want it to be picky about the standard, add <code>-pedantic</code>.</p>
+<p>For example:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode zsh"><code class="sourceCode zsh"><span id="cb8-1"><a href="hello-world.html#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gcc</span> <span class="at">-std</span><span class="op">=</span>c11 <span class="at">-pedantic</span> foo.c</span></code></pre></div>
+<p>For this book, I compile programs for C2x with all warnings set:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode zsh"><code class="sourceCode zsh"><span id="cb9-1"><a href="hello-world.html#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gcc</span> <span class="at">-Wall</span> <span class="at">-Wextra</span> <span class="at">-std</span><span class="op">=</span>c2x <span class="at">-pedantic</span> foo.c</span></code></pre></div>
+<p></p>
+<!-- Beej's guide to C
+
+# vim: ts=4:sw=4:nosi:et:tw=72
+-->
+<hr><div style="text-align:center"><span><a href="foreword.html">Prev</a> | </span><a href="index.html">Contents</a><span> | <a href="variables-and-statements.html">Next</a></span></div></body>
+</html>

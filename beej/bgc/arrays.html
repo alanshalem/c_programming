@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Beej's Guide to C Programming</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Mono&display=swap" rel="stylesheet"> 
+
+  <!-- BG custom styling -->
+  <style type="text/css">
+  /* Fix for line numbers not visible */
+  pre.numberSource code > span {
+      left: -1em;
+  }
+  pre.numberSource {
+      margin-left: initial;
+  }
+
+  /* Put some space after the section numbers */
+  span.toc-section-number::after {
+      content: "\a0\a0\a0";  /* non-breaking whitespace */
+  }
+
+  /* Hide underlines on code number links */
+  pre > code.sourceCode > span > a:first-child::before {
+      text-decoration: none;
+  }
+
+  /* Color the source blocks */
+  div.sourceCode {
+      background-color: #f0f0f0;
+  }
+
+  /* Fix iOS big text rendering issue */
+  pre > code.sourceCode > span {
+      display: initial;
+  }
+
+
+  /* Color the inline code */
+  code:not(.sourceCode) {
+      background: #f0f0f0;
+      padding-left: 0.2em;
+      padding-right: 0.2em;
+      border-radius: 0.2em;
+  }
+
+  /* Keep code tags from wrapping in tables */
+  tbody code {
+      white-space: nowrap;
+  }
+
+  td {
+      vertical-align: top;
+  }
+
+  body {
+      font-size: 12pt;
+      max-width: 43em;
+  }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<div style="text-align:center"><span><a href="pointers.html">Prev</a> | </span><a href="index.html">Contents</a><span> | <a href="strings.html">Next</a></span></div><hr>
+<h1 data-number="6" id="arrays"><span class="header-section-number">6</span> Arrays</h1>
+<blockquote>
+<p><em>“Should array indices start at 0 or 1? My compromise of 0.5 was rejected without, I thought, proper consideration.”</em></p>
+<p>—Stan Kelly-Bootle, computer scientist</p>
+</blockquote>
+<p> Luckily, C has arrays. I mean, I know it’s considered a low-level language<a href="footnotes.html#fn52" class="footnote-ref" id="fnref52" role="doc-noteref"><sup>52</sup></a> but it does at least have the concept of arrays built-in. And since a great many languages drew inspiration from C’s syntax, you’re probably already familiar with using <code>[</code> and <code>]</code> for declaring and using arrays.</p>
+<p>But C only <em>barely</em> has arrays! As we’ll find out later, arrays are just syntactic sugar in C—they’re actually all pointers and stuff deep down. <em>Freak out!</em> But for now, let’s just use them as arrays. <em>Phew</em>.</p>
+<h2 data-number="6.1" id="easy-example"><span class="header-section-number">6.1</span> Easy Example</h2>
+<p>Let’s just crank out an example:</p>
+<p></p>
+<div class="sourceCode" id="cb84"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb84-1"><a href="arrays.html#cb84-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb84-2"><a href="arrays.html#cb84-2"></a></span>
+<span id="cb84-3"><a href="arrays.html#cb84-3"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb84-4"><a href="arrays.html#cb84-4"></a><span class="op">{</span></span>
+<span id="cb84-5"><a href="arrays.html#cb84-5"></a>    <span class="dt">int</span> i<span class="op">;</span></span>
+<span id="cb84-6"><a href="arrays.html#cb84-6"></a>    <span class="dt">float</span> f<span class="op">[</span><span class="dv">4</span><span class="op">];</span>  <span class="co">// Declare an array of 4 floats</span></span>
+<span id="cb84-7"><a href="arrays.html#cb84-7"></a></span>
+<span id="cb84-8"><a href="arrays.html#cb84-8"></a>    f<span class="op">[</span><span class="dv">0</span><span class="op">]</span> <span class="op">=</span> <span class="fl">3.14159</span><span class="op">;</span>  <span class="co">// Indexing starts at 0, of course.</span></span>
+<span id="cb84-9"><a href="arrays.html#cb84-9"></a>    f<span class="op">[</span><span class="dv">1</span><span class="op">]</span> <span class="op">=</span> <span class="fl">1.41421</span><span class="op">;</span></span>
+<span id="cb84-10"><a href="arrays.html#cb84-10"></a>    f<span class="op">[</span><span class="dv">2</span><span class="op">]</span> <span class="op">=</span> <span class="fl">1.61803</span><span class="op">;</span></span>
+<span id="cb84-11"><a href="arrays.html#cb84-11"></a>    f<span class="op">[</span><span class="dv">3</span><span class="op">]</span> <span class="op">=</span> <span class="fl">2.71828</span><span class="op">;</span></span>
+<span id="cb84-12"><a href="arrays.html#cb84-12"></a></span>
+<span id="cb84-13"><a href="arrays.html#cb84-13"></a>    <span class="co">// Print them all out:</span></span>
+<span id="cb84-14"><a href="arrays.html#cb84-14"></a></span>
+<span id="cb84-15"><a href="arrays.html#cb84-15"></a>    <span class="cf">for</span> <span class="op">(</span>i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> <span class="dv">4</span><span class="op">;</span> i<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb84-16"><a href="arrays.html#cb84-16"></a>        printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%f\n</span><span class="st">&quot;</span><span class="op">,</span> f<span class="op">[</span>i<span class="op">]);</span></span>
+<span id="cb84-17"><a href="arrays.html#cb84-17"></a>    <span class="op">}</span></span>
+<span id="cb84-18"><a href="arrays.html#cb84-18"></a><span class="op">}</span></span></code></pre></div>
+<p>When you declare an array, you have to give it a size. And the size has to be fixed<a href="footnotes.html#fn53" class="footnote-ref" id="fnref53" role="doc-noteref"><sup>53</sup></a>.</p>
+<p>In the above example, we made an array of 4 <code>float</code>s. The value in the square brackets in the declaration lets us know that.</p>
+<p>Later on in subsequent lines, we access the values in the array, setting them or getting them, again with square brackets. </p>
+<p>Hopefully this looks familiar from languages you already know!</p>
+<h2 data-number="6.2" id="getting-the-length-of-an-array"><span class="header-section-number">6.2</span> Getting the Length of an Array</h2>
+<p> You can’t…ish. C doesn’t record this information<a href="footnotes.html#fn54" class="footnote-ref" id="fnref54" role="doc-noteref"><sup>54</sup></a>. You have to manage it separately in another variable.</p>
+<p>When I say “can’t”, I actually mean there are some circumstances when you <em>can</em>. There is a trick to get the number of elements in an array in the scope in which an array is declared. But, generally speaking, this won’t work the way you want if you pass the array to a function<a href="footnotes.html#fn55" class="footnote-ref" id="fnref55" role="doc-noteref"><sup>55</sup></a>.</p>
+<p>Let’s take a look at this trick. The basic idea is that you take the <code>sizeof</code> the array, and then divide that by the size of each element to get the length. For example, if an <code>int</code> is 4 bytes, and the array is 32 bytes long, there must be room for <span class="math inline">\(\frac{32}{4}\)</span> or <span class="math inline">\(8\)</span> <code>int</code>s in there.</p>
+<div class="sourceCode" id="cb85"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb85-1"><a href="arrays.html#cb85-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> x<span class="op">[</span><span class="dv">12</span><span class="op">];</span>  <span class="co">// 12 ints</span></span>
+<span id="cb85-2"><a href="arrays.html#cb85-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb85-3"><a href="arrays.html#cb85-3" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%zu\n</span><span class="st">&quot;</span><span class="op">,</span> <span class="kw">sizeof</span> x<span class="op">);</span>     <span class="co">// 48 total bytes</span></span>
+<span id="cb85-4"><a href="arrays.html#cb85-4" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%zu\n</span><span class="st">&quot;</span><span class="op">,</span> <span class="kw">sizeof</span><span class="op">(</span><span class="dt">int</span><span class="op">));</span>  <span class="co">// 4 bytes per int</span></span>
+<span id="cb85-5"><a href="arrays.html#cb85-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb85-6"><a href="arrays.html#cb85-6" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%zu\n</span><span class="st">&quot;</span><span class="op">,</span> <span class="kw">sizeof</span> x <span class="op">/</span> <span class="kw">sizeof</span><span class="op">(</span><span class="dt">int</span><span class="op">));</span>  <span class="co">// 48/4 = 12 ints!</span></span></code></pre></div>
+<p>If it’s an array of <code>char</code>s, then <code>sizeof</code> the array <em>is</em> the number of elements, since <code>sizeof(char)</code> is defined to be 1. For anything else, you have to divide by the size of each element.</p>
+<p>But this trick only works in the scope in which the array was defined. If you pass the array to a function, it doesn’t work. Even if you make it “big” in the function signature:</p>
+<div class="sourceCode" id="cb86"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb86-1"><a href="arrays.html#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> foo<span class="op">(</span><span class="dt">int</span> x<span class="op">[</span><span class="dv">12</span><span class="op">])</span></span>
+<span id="cb86-2"><a href="arrays.html#cb86-2" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb86-3"><a href="arrays.html#cb86-3" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%zu\n</span><span class="st">&quot;</span><span class="op">,</span> <span class="kw">sizeof</span> x<span class="op">);</span>     <span class="co">// 8?! What happened to 48?</span></span>
+<span id="cb86-4"><a href="arrays.html#cb86-4" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%zu\n</span><span class="st">&quot;</span><span class="op">,</span> <span class="kw">sizeof</span><span class="op">(</span><span class="dt">int</span><span class="op">));</span>  <span class="co">// 4 bytes per int</span></span>
+<span id="cb86-5"><a href="arrays.html#cb86-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb86-6"><a href="arrays.html#cb86-6" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%zu\n</span><span class="st">&quot;</span><span class="op">,</span> <span class="kw">sizeof</span> x <span class="op">/</span> <span class="kw">sizeof</span><span class="op">(</span><span class="dt">int</span><span class="op">));</span>  <span class="co">// 8/4 = 2 ints?? WRONG.</span></span>
+<span id="cb86-7"><a href="arrays.html#cb86-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>This is because when you “pass” arrays to functions, you’re only passing a pointer to the first element, and that’s what <code>sizeof</code> measures. More on this in the <a href="arrays.html#passing1darrays">Passing Single Dimensional Arrays to Functions</a> section, below.</p>
+<p>One more thing you can do with <code>sizeof</code> and arrays is get the size of an array of a fixed number of elements without declaring the array. This is like how you can get the size of an <code>int</code> with <code>sizeof(int)</code>.</p>
+<p>For example, to see how many bytes would be needed for an array of 48 <code>double</code>s, you can do this:</p>
+<div class="sourceCode" id="cb87"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb87-1"><a href="arrays.html#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="kw">sizeof</span><span class="op">(</span><span class="dt">double</span> <span class="op">[</span><span class="dv">48</span><span class="op">]);</span></span></code></pre></div>
+<p> </p>
+<h2 data-number="6.3" id="array-initializers"><span class="header-section-number">6.3</span> Array Initializers</h2>
+<p> You can initialize an array with constants ahead of time:</p>
+<div class="sourceCode" id="cb88"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb88-1"><a href="arrays.html#cb88-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb88-2"><a href="arrays.html#cb88-2"></a></span>
+<span id="cb88-3"><a href="arrays.html#cb88-3"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb88-4"><a href="arrays.html#cb88-4"></a><span class="op">{</span></span>
+<span id="cb88-5"><a href="arrays.html#cb88-5"></a>    <span class="dt">int</span> i<span class="op">;</span></span>
+<span id="cb88-6"><a href="arrays.html#cb88-6"></a>    <span class="dt">int</span> a<span class="op">[</span><span class="dv">5</span><span class="op">]</span> <span class="op">=</span> <span class="op">{</span><span class="dv">22</span><span class="op">,</span> <span class="dv">37</span><span class="op">,</span> <span class="dv">3490</span><span class="op">,</span> <span class="dv">18</span><span class="op">,</span> <span class="dv">95</span><span class="op">};</span>  <span class="co">// Initialize with these values</span></span>
+<span id="cb88-7"><a href="arrays.html#cb88-7"></a></span>
+<span id="cb88-8"><a href="arrays.html#cb88-8"></a>    <span class="cf">for</span> <span class="op">(</span>i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> <span class="dv">5</span><span class="op">;</span> i<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb88-9"><a href="arrays.html#cb88-9"></a>        printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> a<span class="op">[</span>i<span class="op">]);</span></span>
+<span id="cb88-10"><a href="arrays.html#cb88-10"></a>    <span class="op">}</span></span>
+<span id="cb88-11"><a href="arrays.html#cb88-11"></a><span class="op">}</span></span></code></pre></div>
+<p>Catch: initializer values must be constant terms. Can’t throw variables in there. Sorry, Illinois!</p>
+<p>You should never have more items in your initializer than there is room for in the array, or the compiler will get cranky:</p>
+<div class="sourceCode" id="cb89"><pre class="sourceCode zsh"><code class="sourceCode zsh"><span id="cb89-1"><a href="arrays.html#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="ex">foo.c:</span> In function ‘main’:</span>
+<span id="cb89-2"><a href="arrays.html#cb89-2" aria-hidden="true" tabindex="-1"></a><span class="ex">foo.c:6:39:</span> warning: excess elements in array initializer</span>
+<span id="cb89-3"><a href="arrays.html#cb89-3" aria-hidden="true" tabindex="-1"></a>    <span class="ex">6</span> <span class="kw">|</span>     <span class="ex">int</span> a<span class="pp">[</span><span class="st">5</span><span class="pp">]</span> <span class="kw">=</span> {22, 37, 3490, 18, 95, 999<span class="er">}</span><span class="kw">;</span></span>
+<span id="cb89-4"><a href="arrays.html#cb89-4" aria-hidden="true" tabindex="-1"></a>      <span class="kw">|</span>                                       <span class="ex">^~~</span></span>
+<span id="cb89-5"><a href="arrays.html#cb89-5" aria-hidden="true" tabindex="-1"></a><span class="ex">foo.c:6:39:</span> note: <span class="pp">(</span><span class="ss">near initialization for ‘a’</span><span class="pp">)</span></span></code></pre></div>
+<p>But (fun fact!) you can have <em>fewer</em> items in your initializer than there is room for in the array. The remaining elements in the array will be automatically initialized with zero. This is true in general for all types of array initializers: if you have an initializer, anything not explicitly set to a value will be set to zero.</p>
+<div class="sourceCode" id="cb90"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb90-1"><a href="arrays.html#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> a<span class="op">[</span><span class="dv">5</span><span class="op">]</span> <span class="op">=</span> <span class="op">{</span><span class="dv">22</span><span class="op">,</span> <span class="dv">37</span><span class="op">,</span> <span class="dv">3490</span><span class="op">};</span></span>
+<span id="cb90-2"><a href="arrays.html#cb90-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb90-3"><a href="arrays.html#cb90-3" aria-hidden="true" tabindex="-1"></a><span class="co">// is the same as:</span></span>
+<span id="cb90-4"><a href="arrays.html#cb90-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb90-5"><a href="arrays.html#cb90-5" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> a<span class="op">[</span><span class="dv">5</span><span class="op">]</span> <span class="op">=</span> <span class="op">{</span><span class="dv">22</span><span class="op">,</span> <span class="dv">37</span><span class="op">,</span> <span class="dv">3490</span><span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="dv">0</span><span class="op">};</span></span></code></pre></div>
+<p>It’s a common shortcut to see this in an initializer when you want to set an entire array to zero:</p>
+<div class="sourceCode" id="cb91"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb91-1"><a href="arrays.html#cb91-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> a<span class="op">[</span><span class="dv">100</span><span class="op">]</span> <span class="op">=</span> <span class="op">{</span><span class="dv">0</span><span class="op">};</span></span></code></pre></div>
+<p>Which means, “Make the first element zero, and then automatically make the rest zero, as well.”</p>
+<p>You can set specific array elements in the initializer, as well, by specifying an index for the value! When you do this, C will happily keep initializing subsequent values for you until the initializer runs out, filling everything else with <code>0</code>.</p>
+<p>To do this, put the index in square brackets with an <code>=</code> after, and then set the value.</p>
+<p>Here’s an example where we build an array:</p>
+<div class="sourceCode" id="cb92"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb92-1"><a href="arrays.html#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> a<span class="op">[</span><span class="dv">10</span><span class="op">]</span> <span class="op">=</span> <span class="op">{</span><span class="dv">0</span><span class="op">,</span> <span class="dv">11</span><span class="op">,</span> <span class="dv">22</span><span class="op">,</span> <span class="op">[</span><span class="dv">5</span><span class="op">]=</span><span class="dv">55</span><span class="op">,</span> <span class="dv">66</span><span class="op">,</span> <span class="dv">77</span><span class="op">};</span></span></code></pre></div>
+<p>Because we listed index 5 as the start for <code>55</code>, the resulting data in the array is:</p>
+<div class="sourceCode" id="cb93"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb93-1"><a href="arrays.html#cb93-1" aria-hidden="true" tabindex="-1"></a>0 11 22 0 0 55 66 77 0 0</span></code></pre></div>
+<p>You can put simple constant expressions in there, as well.</p>
+<div class="sourceCode" id="cb94"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb94-1"><a href="arrays.html#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#define COUNT </span><span class="dv">5</span></span>
+<span id="cb94-2"><a href="arrays.html#cb94-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb94-3"><a href="arrays.html#cb94-3" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> a<span class="op">[</span>COUNT<span class="op">]</span> <span class="op">=</span> <span class="op">{[</span>COUNT<span class="op">-</span><span class="dv">3</span><span class="op">]=</span><span class="dv">3</span><span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">1</span><span class="op">};</span></span></code></pre></div>
+<p>which gives us:</p>
+<div class="sourceCode" id="cb95"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb95-1"><a href="arrays.html#cb95-1" aria-hidden="true" tabindex="-1"></a>0 0 3 2 1</span></code></pre></div>
+<p>Lastly, you can also have C compute the size of the array from the initializer, just by leaving the size off:</p>
+<div class="sourceCode" id="cb96"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb96-1"><a href="arrays.html#cb96-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> a<span class="op">[</span><span class="dv">3</span><span class="op">]</span> <span class="op">=</span> <span class="op">{</span><span class="dv">22</span><span class="op">,</span> <span class="dv">37</span><span class="op">,</span> <span class="dv">3490</span><span class="op">};</span></span>
+<span id="cb96-2"><a href="arrays.html#cb96-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-3"><a href="arrays.html#cb96-3" aria-hidden="true" tabindex="-1"></a><span class="co">// is the same as:</span></span>
+<span id="cb96-4"><a href="arrays.html#cb96-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-5"><a href="arrays.html#cb96-5" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> a<span class="op">[]</span> <span class="op">=</span> <span class="op">{</span><span class="dv">22</span><span class="op">,</span> <span class="dv">37</span><span class="op">,</span> <span class="dv">3490</span><span class="op">};</span>  <span class="co">// Left the size off!</span></span></code></pre></div>
+<p></p>
+<h2 data-number="6.4" id="out-of-bounds"><span class="header-section-number">6.4</span> Out of Bounds!</h2>
+<p> C doesn’t stop you from accessing arrays out of bounds. It might not even warn you.</p>
+<p>Let’s steal the example from above and keep printing off the end of the array. It only has 5 elements, but let’s try to print 10 and see what happens:</p>
+<div class="sourceCode" id="cb97"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb97-1"><a href="arrays.html#cb97-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb97-2"><a href="arrays.html#cb97-2"></a></span>
+<span id="cb97-3"><a href="arrays.html#cb97-3"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb97-4"><a href="arrays.html#cb97-4"></a><span class="op">{</span></span>
+<span id="cb97-5"><a href="arrays.html#cb97-5"></a>    <span class="dt">int</span> i<span class="op">;</span></span>
+<span id="cb97-6"><a href="arrays.html#cb97-6"></a>    <span class="dt">int</span> a<span class="op">[</span><span class="dv">5</span><span class="op">]</span> <span class="op">=</span> <span class="op">{</span><span class="dv">22</span><span class="op">,</span> <span class="dv">37</span><span class="op">,</span> <span class="dv">3490</span><span class="op">,</span> <span class="dv">18</span><span class="op">,</span> <span class="dv">95</span><span class="op">};</span></span>
+<span id="cb97-7"><a href="arrays.html#cb97-7"></a></span>
+<span id="cb97-8"><a href="arrays.html#cb97-8"></a>    <span class="cf">for</span> <span class="op">(</span>i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> <span class="dv">10</span><span class="op">;</span> i<span class="op">++)</span> <span class="op">{</span>  <span class="co">// BAD NEWS: printing too many elements!</span></span>
+<span id="cb97-9"><a href="arrays.html#cb97-9"></a>        printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> a<span class="op">[</span>i<span class="op">]);</span></span>
+<span id="cb97-10"><a href="arrays.html#cb97-10"></a>    <span class="op">}</span></span>
+<span id="cb97-11"><a href="arrays.html#cb97-11"></a><span class="op">}</span></span></code></pre></div>
+<p>Running it on my computer prints:</p>
+<div class="sourceCode" id="cb98"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb98-1"><a href="arrays.html#cb98-1" aria-hidden="true" tabindex="-1"></a>22</span>
+<span id="cb98-2"><a href="arrays.html#cb98-2" aria-hidden="true" tabindex="-1"></a>37</span>
+<span id="cb98-3"><a href="arrays.html#cb98-3" aria-hidden="true" tabindex="-1"></a>3490</span>
+<span id="cb98-4"><a href="arrays.html#cb98-4" aria-hidden="true" tabindex="-1"></a>18</span>
+<span id="cb98-5"><a href="arrays.html#cb98-5" aria-hidden="true" tabindex="-1"></a>95</span>
+<span id="cb98-6"><a href="arrays.html#cb98-6" aria-hidden="true" tabindex="-1"></a>32765</span>
+<span id="cb98-7"><a href="arrays.html#cb98-7" aria-hidden="true" tabindex="-1"></a>1847052032</span>
+<span id="cb98-8"><a href="arrays.html#cb98-8" aria-hidden="true" tabindex="-1"></a>1780534144</span>
+<span id="cb98-9"><a href="arrays.html#cb98-9" aria-hidden="true" tabindex="-1"></a>-56487472</span>
+<span id="cb98-10"><a href="arrays.html#cb98-10" aria-hidden="true" tabindex="-1"></a>21890</span></code></pre></div>
+<p>Yikes! What’s that? Well, turns out printing off the end of an array results in what C developers call <em>undefined behavior</em>. We’ll talk more about this beast later, but for now it means, “You’ve done something bad, and anything could happen during your program run.”</p>
+<p>And by anything, I mean typically things like finding zeroes, finding garbage numbers, or crashing. But really the C spec says in this circumstance the compiler is allowed to emit code that does <em>anything</em><a href="footnotes.html#fn56" class="footnote-ref" id="fnref56" role="doc-noteref"><sup>56</sup></a>.</p>
+<p>Short version: don’t do anything that causes undefined behavior. Ever<a href="footnotes.html#fn57" class="footnote-ref" id="fnref57" role="doc-noteref"><sup>57</sup></a>. </p>
+<h2 data-number="6.5" id="multidimensional-arrays"><span class="header-section-number">6.5</span> Multidimensional Arrays</h2>
+<p> You can add as many dimensions as you want to your arrays.</p>
+<div class="sourceCode" id="cb99"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb99-1"><a href="arrays.html#cb99-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> a<span class="op">[</span><span class="dv">10</span><span class="op">];</span></span>
+<span id="cb99-2"><a href="arrays.html#cb99-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> b<span class="op">[</span><span class="dv">2</span><span class="op">][</span><span class="dv">7</span><span class="op">];</span></span>
+<span id="cb99-3"><a href="arrays.html#cb99-3" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> c<span class="op">[</span><span class="dv">4</span><span class="op">][</span><span class="dv">5</span><span class="op">][</span><span class="dv">6</span><span class="op">];</span></span></code></pre></div>
+<p>These are stored in memory in <a href="https://en.wikipedia.org/wiki/Row-_and_column-major_order">row-major order</a><a href="footnotes.html#fn58" class="footnote-ref" id="fnref58" role="doc-noteref"><sup>58</sup></a>. This means with a 2D array, the first index listed indicates the row, and the second the column.</p>
+<p>You can also use initializers on multidimensional arrays by nesting them:</p>
+<div class="sourceCode" id="cb100"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb100-1"><a href="arrays.html#cb100-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb100-2"><a href="arrays.html#cb100-2"></a></span>
+<span id="cb100-3"><a href="arrays.html#cb100-3"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb100-4"><a href="arrays.html#cb100-4"></a><span class="op">{</span></span>
+<span id="cb100-5"><a href="arrays.html#cb100-5"></a>    <span class="dt">int</span> row<span class="op">,</span> col<span class="op">;</span></span>
+<span id="cb100-6"><a href="arrays.html#cb100-6"></a></span>
+<span id="cb100-7"><a href="arrays.html#cb100-7"></a>    <span class="dt">int</span> a<span class="op">[</span><span class="dv">2</span><span class="op">][</span><span class="dv">5</span><span class="op">]</span> <span class="op">=</span> <span class="op">{</span>      <span class="co">// Initialize a 2D array</span></span>
+<span id="cb100-8"><a href="arrays.html#cb100-8"></a>        <span class="op">{</span><span class="dv">0</span><span class="op">,</span> <span class="dv">1</span><span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">3</span><span class="op">,</span> <span class="dv">4</span><span class="op">},</span></span>
+<span id="cb100-9"><a href="arrays.html#cb100-9"></a>        <span class="op">{</span><span class="dv">5</span><span class="op">,</span> <span class="dv">6</span><span class="op">,</span> <span class="dv">7</span><span class="op">,</span> <span class="dv">8</span><span class="op">,</span> <span class="dv">9</span><span class="op">}</span></span>
+<span id="cb100-10"><a href="arrays.html#cb100-10"></a>    <span class="op">};</span></span>
+<span id="cb100-11"><a href="arrays.html#cb100-11"></a></span>
+<span id="cb100-12"><a href="arrays.html#cb100-12"></a>    <span class="cf">for</span> <span class="op">(</span>row <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> row <span class="op">&lt;</span> <span class="dv">2</span><span class="op">;</span> row<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb100-13"><a href="arrays.html#cb100-13"></a>        <span class="cf">for</span> <span class="op">(</span>col <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> col <span class="op">&lt;</span> <span class="dv">5</span><span class="op">;</span> col<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb100-14"><a href="arrays.html#cb100-14"></a>            printf<span class="op">(</span><span class="st">&quot;(</span><span class="sc">%d</span><span class="st">,</span><span class="sc">%d</span><span class="st">) = </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> row<span class="op">,</span> col<span class="op">,</span> a<span class="op">[</span>row<span class="op">][</span>col<span class="op">]);</span></span>
+<span id="cb100-15"><a href="arrays.html#cb100-15"></a>        <span class="op">}</span></span>
+<span id="cb100-16"><a href="arrays.html#cb100-16"></a>    <span class="op">}</span></span>
+<span id="cb100-17"><a href="arrays.html#cb100-17"></a><span class="op">}</span></span></code></pre></div>
+<p>For output of:</p>
+<div class="sourceCode" id="cb101"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb101-1"><a href="arrays.html#cb101-1" aria-hidden="true" tabindex="-1"></a>(0,0) = 0</span>
+<span id="cb101-2"><a href="arrays.html#cb101-2" aria-hidden="true" tabindex="-1"></a>(0,1) = 1</span>
+<span id="cb101-3"><a href="arrays.html#cb101-3" aria-hidden="true" tabindex="-1"></a>(0,2) = 2</span>
+<span id="cb101-4"><a href="arrays.html#cb101-4" aria-hidden="true" tabindex="-1"></a>(0,3) = 3</span>
+<span id="cb101-5"><a href="arrays.html#cb101-5" aria-hidden="true" tabindex="-1"></a>(0,4) = 4</span>
+<span id="cb101-6"><a href="arrays.html#cb101-6" aria-hidden="true" tabindex="-1"></a>(1,0) = 5</span>
+<span id="cb101-7"><a href="arrays.html#cb101-7" aria-hidden="true" tabindex="-1"></a>(1,1) = 6</span>
+<span id="cb101-8"><a href="arrays.html#cb101-8" aria-hidden="true" tabindex="-1"></a>(1,2) = 7</span>
+<span id="cb101-9"><a href="arrays.html#cb101-9" aria-hidden="true" tabindex="-1"></a>(1,3) = 8</span>
+<span id="cb101-10"><a href="arrays.html#cb101-10" aria-hidden="true" tabindex="-1"></a>(1,4) = 9</span></code></pre></div>
+<p>And you can initialize with explicit indexes:</p>
+<div class="sourceCode" id="cb102"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb102-1"><a href="arrays.html#cb102-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Make a 3x3 identity matrix</span></span>
+<span id="cb102-2"><a href="arrays.html#cb102-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb102-3"><a href="arrays.html#cb102-3" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> a<span class="op">[</span><span class="dv">3</span><span class="op">][</span><span class="dv">3</span><span class="op">]</span> <span class="op">=</span> <span class="op">{[</span><span class="dv">0</span><span class="op">][</span><span class="dv">0</span><span class="op">]=</span><span class="dv">1</span><span class="op">,</span> <span class="op">[</span><span class="dv">1</span><span class="op">][</span><span class="dv">1</span><span class="op">]=</span><span class="dv">1</span><span class="op">,</span> <span class="op">[</span><span class="dv">2</span><span class="op">][</span><span class="dv">2</span><span class="op">]=</span><span class="dv">1</span><span class="op">};</span></span></code></pre></div>
+<p>which builds a 2D array like this:</p>
+<div class="sourceCode" id="cb103"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb103-1"><a href="arrays.html#cb103-1" aria-hidden="true" tabindex="-1"></a>1 0 0</span>
+<span id="cb103-2"><a href="arrays.html#cb103-2" aria-hidden="true" tabindex="-1"></a>0 1 0</span>
+<span id="cb103-3"><a href="arrays.html#cb103-3" aria-hidden="true" tabindex="-1"></a>0 0 1</span></code></pre></div>
+<p></p>
+<h2 data-number="6.6" id="arrays-and-pointers"><span class="header-section-number">6.6</span> Arrays and Pointers</h2>
+<p> [<em>Casually</em>] So… I kinda might have mentioned up there that arrays were pointers, deep down? We should take a shallow dive into that now so that things aren’t completely confusing. Later on, we’ll look at what the real relationship between arrays and pointers is, but for now I just want to look at passing arrays to functions.</p>
+<h3 data-number="6.6.1" id="getting-a-pointer-to-an-array"><span class="header-section-number">6.6.1</span> Getting a Pointer to an Array</h3>
+<p>I want to tell you a secret. Generally speaking, when a C programmer talks about a pointer to an array, they’re talking about a pointer <em>to the first element</em> of the array<a href="footnotes.html#fn59" class="footnote-ref" id="fnref59" role="doc-noteref"><sup>59</sup></a>.</p>
+<p>So let’s get a pointer to the first element of an array.</p>
+<div class="sourceCode" id="cb104"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb104-1"><a href="arrays.html#cb104-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb104-2"><a href="arrays.html#cb104-2"></a></span>
+<span id="cb104-3"><a href="arrays.html#cb104-3"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb104-4"><a href="arrays.html#cb104-4"></a><span class="op">{</span></span>
+<span id="cb104-5"><a href="arrays.html#cb104-5"></a>    <span class="dt">int</span> a<span class="op">[</span><span class="dv">5</span><span class="op">]</span> <span class="op">=</span> <span class="op">{</span><span class="dv">11</span><span class="op">,</span> <span class="dv">22</span><span class="op">,</span> <span class="dv">33</span><span class="op">,</span> <span class="dv">44</span><span class="op">,</span> <span class="dv">55</span><span class="op">};</span></span>
+<span id="cb104-6"><a href="arrays.html#cb104-6"></a>    <span class="dt">int</span> <span class="op">*</span>p<span class="op">;</span></span>
+<span id="cb104-7"><a href="arrays.html#cb104-7"></a></span>
+<span id="cb104-8"><a href="arrays.html#cb104-8"></a>    p <span class="op">=</span> <span class="op">&amp;</span>a<span class="op">[</span><span class="dv">0</span><span class="op">];</span>  <span class="co">// p points to the array</span></span>
+<span id="cb104-9"><a href="arrays.html#cb104-9"></a>                <span class="co">// Well, to the first element, actually</span></span>
+<span id="cb104-10"><a href="arrays.html#cb104-10"></a></span>
+<span id="cb104-11"><a href="arrays.html#cb104-11"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> <span class="op">*</span>p<span class="op">);</span>  <span class="co">// Prints &quot;11&quot;</span></span>
+<span id="cb104-12"><a href="arrays.html#cb104-12"></a><span class="op">}</span></span></code></pre></div>
+<p>This is so common to do in C that the language allows us a shorthand:</p>
+<div class="sourceCode" id="cb105"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb105-1"><a href="arrays.html#cb105-1"></a>p <span class="op">=</span> <span class="op">&amp;</span>a<span class="op">[</span><span class="dv">0</span><span class="op">];</span>  <span class="co">// p points to the array</span></span>
+<span id="cb105-2"><a href="arrays.html#cb105-2"></a></span>
+<span id="cb105-3"><a href="arrays.html#cb105-3"></a><span class="co">// is the same as:</span></span>
+<span id="cb105-4"><a href="arrays.html#cb105-4"></a></span>
+<span id="cb105-5"><a href="arrays.html#cb105-5"></a>p <span class="op">=</span> a<span class="op">;</span>      <span class="co">// p points to the array, but much nicer-looking!</span></span></code></pre></div>
+<p>Just referring to the array name in isolation is the same as getting a pointer to the first element of the array! We’re going to use this extensively in the upcoming examples.</p>
+<p>But hold on a second—isn’t <code>p</code> an <code>int*</code>? And <code>*p</code> gives us <code>11</code>, same as <code>a[0]</code>? Yessss. You’re starting to get a glimpse of how arrays and pointers are related in C. </p>
+<h3 data-number="6.6.2" id="passing1darrays"><span class="header-section-number">6.6.2</span> Passing Single Dimensional Arrays to Functions</h3>
+<p> Let’s do an example with a single dimensional array. I’m going to write a couple functions that we can pass the array to that do different things.</p>
+<p>Prepare for some mind-blowing function signatures!</p>
+<div class="sourceCode" id="cb106"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb106-1"><a href="arrays.html#cb106-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb106-2"><a href="arrays.html#cb106-2"></a></span>
+<span id="cb106-3"><a href="arrays.html#cb106-3"></a><span class="co">// Passing as a pointer to the first element</span></span>
+<span id="cb106-4"><a href="arrays.html#cb106-4"></a><span class="dt">void</span> times2<span class="op">(</span><span class="dt">int</span> <span class="op">*</span>a<span class="op">,</span> <span class="dt">int</span> len<span class="op">)</span></span>
+<span id="cb106-5"><a href="arrays.html#cb106-5"></a><span class="op">{</span></span>
+<span id="cb106-6"><a href="arrays.html#cb106-6"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> len<span class="op">;</span> i<span class="op">++)</span></span>
+<span id="cb106-7"><a href="arrays.html#cb106-7"></a>        printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> a<span class="op">[</span>i<span class="op">]</span> <span class="op">*</span> <span class="dv">2</span><span class="op">);</span></span>
+<span id="cb106-8"><a href="arrays.html#cb106-8"></a><span class="op">}</span></span>
+<span id="cb106-9"><a href="arrays.html#cb106-9"></a></span>
+<span id="cb106-10"><a href="arrays.html#cb106-10"></a><span class="co">// Same thing, but using array notation</span></span>
+<span id="cb106-11"><a href="arrays.html#cb106-11"></a><span class="dt">void</span> times3<span class="op">(</span><span class="dt">int</span> a<span class="op">[],</span> <span class="dt">int</span> len<span class="op">)</span></span>
+<span id="cb106-12"><a href="arrays.html#cb106-12"></a><span class="op">{</span></span>
+<span id="cb106-13"><a href="arrays.html#cb106-13"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> len<span class="op">;</span> i<span class="op">++)</span></span>
+<span id="cb106-14"><a href="arrays.html#cb106-14"></a>        printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> a<span class="op">[</span>i<span class="op">]</span> <span class="op">*</span> <span class="dv">3</span><span class="op">);</span></span>
+<span id="cb106-15"><a href="arrays.html#cb106-15"></a><span class="op">}</span></span>
+<span id="cb106-16"><a href="arrays.html#cb106-16"></a></span>
+<span id="cb106-17"><a href="arrays.html#cb106-17"></a><span class="co">// Same thing, but using array notation with size</span></span>
+<span id="cb106-18"><a href="arrays.html#cb106-18"></a><span class="dt">void</span> times4<span class="op">(</span><span class="dt">int</span> a<span class="op">[</span><span class="dv">5</span><span class="op">],</span> <span class="dt">int</span> len<span class="op">)</span></span>
+<span id="cb106-19"><a href="arrays.html#cb106-19"></a><span class="op">{</span></span>
+<span id="cb106-20"><a href="arrays.html#cb106-20"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> len<span class="op">;</span> i<span class="op">++)</span></span>
+<span id="cb106-21"><a href="arrays.html#cb106-21"></a>        printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> a<span class="op">[</span>i<span class="op">]</span> <span class="op">*</span> <span class="dv">4</span><span class="op">);</span></span>
+<span id="cb106-22"><a href="arrays.html#cb106-22"></a><span class="op">}</span></span>
+<span id="cb106-23"><a href="arrays.html#cb106-23"></a></span>
+<span id="cb106-24"><a href="arrays.html#cb106-24"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb106-25"><a href="arrays.html#cb106-25"></a><span class="op">{</span></span>
+<span id="cb106-26"><a href="arrays.html#cb106-26"></a>    <span class="dt">int</span> x<span class="op">[</span><span class="dv">5</span><span class="op">]</span> <span class="op">=</span> <span class="op">{</span><span class="dv">11</span><span class="op">,</span> <span class="dv">22</span><span class="op">,</span> <span class="dv">33</span><span class="op">,</span> <span class="dv">44</span><span class="op">,</span> <span class="dv">55</span><span class="op">};</span></span>
+<span id="cb106-27"><a href="arrays.html#cb106-27"></a></span>
+<span id="cb106-28"><a href="arrays.html#cb106-28"></a>    times2<span class="op">(</span>x<span class="op">,</span> <span class="dv">5</span><span class="op">);</span></span>
+<span id="cb106-29"><a href="arrays.html#cb106-29"></a>    times3<span class="op">(</span>x<span class="op">,</span> <span class="dv">5</span><span class="op">);</span></span>
+<span id="cb106-30"><a href="arrays.html#cb106-30"></a>    times4<span class="op">(</span>x<span class="op">,</span> <span class="dv">5</span><span class="op">);</span></span>
+<span id="cb106-31"><a href="arrays.html#cb106-31"></a><span class="op">}</span></span></code></pre></div>
+<p>All those methods of listing the array as a parameter in the function are identical.</p>
+<div class="sourceCode" id="cb107"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb107-1"><a href="arrays.html#cb107-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> times2<span class="op">(</span><span class="dt">int</span> <span class="op">*</span>a<span class="op">,</span> <span class="dt">int</span> len<span class="op">)</span></span>
+<span id="cb107-2"><a href="arrays.html#cb107-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> times3<span class="op">(</span><span class="dt">int</span> a<span class="op">[],</span> <span class="dt">int</span> len<span class="op">)</span></span>
+<span id="cb107-3"><a href="arrays.html#cb107-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> times4<span class="op">(</span><span class="dt">int</span> a<span class="op">[</span><span class="dv">5</span><span class="op">],</span> <span class="dt">int</span> len<span class="op">)</span></span></code></pre></div>
+<p>In usage by C regulars, the first is the most common, by far.</p>
+<p>And, in fact, in the latter situation, the compiler doesn’t even care what number you pass in (other than it has to be greater than zero<a href="footnotes.html#fn60" class="footnote-ref" id="fnref60" role="doc-noteref"><sup>60</sup></a>). It doesn’t enforce anything at all.</p>
+<p>Now that I’ve said that, the size of the array in the function declaration actually <em>does</em> matter when you’re passing multidimensional arrays into functions, but let’s come back to that. </p>
+<h3 data-number="6.6.3" id="changing-arrays-in-functions"><span class="header-section-number">6.6.3</span> Changing Arrays in Functions</h3>
+<p> We’ve said that arrays are just pointers in disguise. This means that if you pass an array to a function, you’re likely passing a pointer to the first element in the array.</p>
+<p>But if the function has a pointer to the data, it is able to manipulate that data! So changes that a function makes to an array will be visible back out in the caller.</p>
+<p>Here’s an example where we pass a pointer to an array to a function, the function manipulates the values in that array, and those changes are visible out in the caller.</p>
+<div class="sourceCode" id="cb108"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb108-1"><a href="arrays.html#cb108-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb108-2"><a href="arrays.html#cb108-2"></a></span>
+<span id="cb108-3"><a href="arrays.html#cb108-3"></a><span class="dt">void</span> double_array<span class="op">(</span><span class="dt">int</span> <span class="op">*</span>a<span class="op">,</span> <span class="dt">int</span> len<span class="op">)</span></span>
+<span id="cb108-4"><a href="arrays.html#cb108-4"></a><span class="op">{</span></span>
+<span id="cb108-5"><a href="arrays.html#cb108-5"></a>    <span class="co">// Multiply each element by 2</span></span>
+<span id="cb108-6"><a href="arrays.html#cb108-6"></a>    <span class="co">//</span></span>
+<span id="cb108-7"><a href="arrays.html#cb108-7"></a>    <span class="co">// This doubles the values in x in main() since x and a both point</span></span>
+<span id="cb108-8"><a href="arrays.html#cb108-8"></a>    <span class="co">// to the same array in memory!</span></span>
+<span id="cb108-9"><a href="arrays.html#cb108-9"></a></span>
+<span id="cb108-10"><a href="arrays.html#cb108-10"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> len<span class="op">;</span> i<span class="op">++)</span></span>
+<span id="cb108-11"><a href="arrays.html#cb108-11"></a>        a<span class="op">[</span>i<span class="op">]</span> <span class="op">*=</span> <span class="dv">2</span><span class="op">;</span></span>
+<span id="cb108-12"><a href="arrays.html#cb108-12"></a><span class="op">}</span></span>
+<span id="cb108-13"><a href="arrays.html#cb108-13"></a></span>
+<span id="cb108-14"><a href="arrays.html#cb108-14"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb108-15"><a href="arrays.html#cb108-15"></a><span class="op">{</span></span>
+<span id="cb108-16"><a href="arrays.html#cb108-16"></a>    <span class="dt">int</span> x<span class="op">[</span><span class="dv">5</span><span class="op">]</span> <span class="op">=</span> <span class="op">{</span><span class="dv">1</span><span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">3</span><span class="op">,</span> <span class="dv">4</span><span class="op">,</span> <span class="dv">5</span><span class="op">};</span></span>
+<span id="cb108-17"><a href="arrays.html#cb108-17"></a></span>
+<span id="cb108-18"><a href="arrays.html#cb108-18"></a>    double_array<span class="op">(</span>x<span class="op">,</span> <span class="dv">5</span><span class="op">);</span></span>
+<span id="cb108-19"><a href="arrays.html#cb108-19"></a></span>
+<span id="cb108-20"><a href="arrays.html#cb108-20"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> <span class="dv">5</span><span class="op">;</span> i<span class="op">++)</span></span>
+<span id="cb108-21"><a href="arrays.html#cb108-21"></a>        printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> x<span class="op">[</span>i<span class="op">]);</span>  <span class="co">// 2, 4, 6, 8, 10!</span></span>
+<span id="cb108-22"><a href="arrays.html#cb108-22"></a><span class="op">}</span></span></code></pre></div>
+<p>Even though we passed the array in as parameter <code>a</code> which is type <code>int*</code>, look at how we access it using array notation with <code>a[i]</code>! Whaaaat. This is totally allowed.</p>
+<p>Later when we talk about the equivalence between arrays and pointers, we’ll see how this makes a lot more sense. For now, it’s enough to know that functions can make changes to arrays that are visible out in the caller. </p>
+<h3 data-number="6.6.4" id="passing-multidimensional-arrays-to-functions"><span class="header-section-number">6.6.4</span> Passing Multidimensional Arrays to Functions</h3>
+<p> The story changes a little when we’re talking about multidimensional arrays. C needs to know all the dimensions (except the first one) so it has enough information to know where in memory to look to find a value.</p>
+<p>Here’s an example where we’re explicit with all the dimensions:</p>
+<div class="sourceCode" id="cb109"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb109-1"><a href="arrays.html#cb109-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb109-2"><a href="arrays.html#cb109-2"></a></span>
+<span id="cb109-3"><a href="arrays.html#cb109-3"></a><span class="dt">void</span> print_2D_array<span class="op">(</span><span class="dt">int</span> a<span class="op">[</span><span class="dv">2</span><span class="op">][</span><span class="dv">3</span><span class="op">])</span></span>
+<span id="cb109-4"><a href="arrays.html#cb109-4"></a><span class="op">{</span></span>
+<span id="cb109-5"><a href="arrays.html#cb109-5"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> row <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> row <span class="op">&lt;</span> <span class="dv">2</span><span class="op">;</span> row<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb109-6"><a href="arrays.html#cb109-6"></a>        <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> col <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> col <span class="op">&lt;</span> <span class="dv">3</span><span class="op">;</span> col<span class="op">++)</span></span>
+<span id="cb109-7"><a href="arrays.html#cb109-7"></a>            printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d</span><span class="st"> &quot;</span><span class="op">,</span> a<span class="op">[</span>row<span class="op">][</span>col<span class="op">]);</span></span>
+<span id="cb109-8"><a href="arrays.html#cb109-8"></a>        printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb109-9"><a href="arrays.html#cb109-9"></a>    <span class="op">}</span></span>
+<span id="cb109-10"><a href="arrays.html#cb109-10"></a><span class="op">}</span></span>
+<span id="cb109-11"><a href="arrays.html#cb109-11"></a></span>
+<span id="cb109-12"><a href="arrays.html#cb109-12"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb109-13"><a href="arrays.html#cb109-13"></a><span class="op">{</span></span>
+<span id="cb109-14"><a href="arrays.html#cb109-14"></a>    <span class="dt">int</span> x<span class="op">[</span><span class="dv">2</span><span class="op">][</span><span class="dv">3</span><span class="op">]</span> <span class="op">=</span> <span class="op">{</span></span>
+<span id="cb109-15"><a href="arrays.html#cb109-15"></a>        <span class="op">{</span><span class="dv">1</span><span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">3</span><span class="op">},</span></span>
+<span id="cb109-16"><a href="arrays.html#cb109-16"></a>        <span class="op">{</span><span class="dv">4</span><span class="op">,</span> <span class="dv">5</span><span class="op">,</span> <span class="dv">6</span><span class="op">}</span></span>
+<span id="cb109-17"><a href="arrays.html#cb109-17"></a>    <span class="op">};</span></span>
+<span id="cb109-18"><a href="arrays.html#cb109-18"></a></span>
+<span id="cb109-19"><a href="arrays.html#cb109-19"></a>    print_2D_array<span class="op">(</span>x<span class="op">);</span></span>
+<span id="cb109-20"><a href="arrays.html#cb109-20"></a><span class="op">}</span></span></code></pre></div>
+<p>But in this case, these two<a href="footnotes.html#fn61" class="footnote-ref" id="fnref61" role="doc-noteref"><sup>61</sup></a> are equivalent:</p>
+<div class="sourceCode" id="cb110"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb110-1"><a href="arrays.html#cb110-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> print_2D_array<span class="op">(</span><span class="dt">int</span> a<span class="op">[</span><span class="dv">2</span><span class="op">][</span><span class="dv">3</span><span class="op">])</span></span>
+<span id="cb110-2"><a href="arrays.html#cb110-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> print_2D_array<span class="op">(</span><span class="dt">int</span> a<span class="op">[][</span><span class="dv">3</span><span class="op">])</span></span></code></pre></div>
+<p>The compiler really only needs the second dimension so it can figure out how far in memory to skip for each increment of the first dimension. In general, it needs to know all the dimensions except the first one.</p>
+<p>Also, remember that the compiler does minimal compile-time bounds checking (if you’re lucky), and C does zero runtime checking of bounds. No seat belts! Don’t crash by accessing array elements out of bounds! </p>
+<!-- Beej's guide to C
+
+# vim: ts=4:sw=4:nosi:et:tw=72
+-->
+<hr><div style="text-align:center"><span><a href="pointers.html">Prev</a> | </span><a href="index.html">Contents</a><span> | <a href="strings.html">Next</a></span></div></body>
+</html>

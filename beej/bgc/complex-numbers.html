@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Beej's Guide to C Programming</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Mono&display=swap" rel="stylesheet"> 
+
+  <!-- BG custom styling -->
+  <style type="text/css">
+  /* Fix for line numbers not visible */
+  pre.numberSource code > span {
+      left: -1em;
+  }
+  pre.numberSource {
+      margin-left: initial;
+  }
+
+  /* Put some space after the section numbers */
+  span.toc-section-number::after {
+      content: "\a0\a0\a0";  /* non-breaking whitespace */
+  }
+
+  /* Hide underlines on code number links */
+  pre > code.sourceCode > span > a:first-child::before {
+      text-decoration: none;
+  }
+
+  /* Color the source blocks */
+  div.sourceCode {
+      background-color: #f0f0f0;
+  }
+
+  /* Fix iOS big text rendering issue */
+  pre > code.sourceCode > span {
+      display: initial;
+  }
+
+
+  /* Color the inline code */
+  code:not(.sourceCode) {
+      background: #f0f0f0;
+      padding-left: 0.2em;
+      padding-right: 0.2em;
+      border-radius: 0.2em;
+  }
+
+  /* Keep code tags from wrapping in tables */
+  tbody code {
+      white-space: nowrap;
+  }
+
+  td {
+      vertical-align: top;
+  }
+
+  body {
+      font-size: 12pt;
+      max-width: 43em;
+  }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<div style="text-align:center"><span><a href="incomplete-types.html">Prev</a> | </span><a href="index.html">Contents</a><span> | <a href="fixed-width-integer-types.html">Next</a></span></div><hr>
+<h1 data-number="36" id="complex-numbers"><span class="header-section-number">36</span> Complex Numbers</h1>
+<p></p>
+<p>A tiny primer on <a href="https://en.wikipedia.org/wiki/Complex_number">Complex numbers</a><a href="footnotes.html#fn183" class="footnote-ref" id="fnref183" role="doc-noteref"><sup>183</sup></a> stolen directly from Wikipedia:</p>
+<blockquote>
+<p>A <strong>complex number</strong> is a number that can be expressed in the form <span class="math inline">\(a+bi\)</span>, where <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> are real numbers [i.e. floating point types in C], and <span class="math inline">\(i\)</span> represents the imaginary unit, satisfying the equation <span class="math inline">\(i^2=−1\)</span>. Because no real number satisfies this equation, <span class="math inline">\(i\)</span> is called an imaginary number. For the complex number <span class="math inline">\(a+bi\)</span>, <span class="math inline">\(a\)</span> is called the <strong>real part</strong>, and <span class="math inline">\(b\)</span> is called the <strong>imaginary part</strong>.</p>
+</blockquote>
+<p>But that’s as far as I’m going to go. We’ll assume that if you’re reading this chapter, you know what a complex number is and what you want to do with them.</p>
+<p>And all we need to cover is C’s faculties for doing so.</p>
+<p>Turns out, though, that complex number support in a compiler is an <em>optional</em> feature. Not all compliant compilers can do it. And the ones that do, might do it to various degrees of completeness.</p>
+<p>You can test if your system supports complex numbers with:</p>
+<p></p>
+<div class="sourceCode" id="cb672"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb672-1"><a href="complex-numbers.html#cb672-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#ifdef __STDC_NO_COMPLEX__</span></span>
+<span id="cb672-2"><a href="complex-numbers.html#cb672-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#error Complex numbers not supported!</span></span>
+<span id="cb672-3"><a href="complex-numbers.html#cb672-3" aria-hidden="true" tabindex="-1"></a><span class="pp">#endif</span></span></code></pre></div>
+<p></p>
+<p></p>
+<p>Furthermore, there is a macro that indicates adherence to the ISO 60559 (IEEE 754) standard for floating point math with complex numbers, as well as the presence of the <code>_Imaginary</code> type.</p>
+<div class="sourceCode" id="cb673"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb673-1"><a href="complex-numbers.html#cb673-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#if __STDC_IEC_559_COMPLEX__ != 1</span></span>
+<span id="cb673-2"><a href="complex-numbers.html#cb673-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#error Need IEC 60559 complex support!</span></span>
+<span id="cb673-3"><a href="complex-numbers.html#cb673-3" aria-hidden="true" tabindex="-1"></a><span class="pp">#endif</span></span></code></pre></div>
+<p></p>
+<p>More details on that are spelled out in Annex G in the C11 spec.</p>
+<h2 data-number="36.1" id="complex-types"><span class="header-section-number">36.1</span> Complex Types</h2>
+<p>To use complex numbers, <code>#include &lt;complex.h&gt;</code>.</p>
+<p>With that, you get at least two types:</p>
+<p> </p>
+<div class="sourceCode" id="cb674"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb674-1"><a href="complex-numbers.html#cb674-1" aria-hidden="true" tabindex="-1"></a><span class="dt">_Complex</span></span>
+<span id="cb674-2"><a href="complex-numbers.html#cb674-2" aria-hidden="true" tabindex="-1"></a><span class="dt">complex</span></span></code></pre></div>
+<p>Those both mean the same thing, so you might as well use the prettier <code>complex</code>.</p>
+<p></p>
+<p>You also get some types for imaginary numbers if you implementation is IEC 60559-compliant:</p>
+<p> </p>
+<div class="sourceCode" id="cb675"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb675-1"><a href="complex-numbers.html#cb675-1" aria-hidden="true" tabindex="-1"></a><span class="dt">_Imaginary</span></span>
+<span id="cb675-2"><a href="complex-numbers.html#cb675-2" aria-hidden="true" tabindex="-1"></a><span class="dt">imaginary</span></span></code></pre></div>
+<p>These also both mean the same thing, so you might as well use the prettier <code>imaginary</code>.</p>
+<p></p>
+<p>You also get values for the imaginary number <span class="math inline">\(i\)</span>, itself:</p>
+<p> </p>
+<div class="sourceCode" id="cb676"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb676-1"><a href="complex-numbers.html#cb676-1" aria-hidden="true" tabindex="-1"></a>I</span>
+<span id="cb676-2"><a href="complex-numbers.html#cb676-2" aria-hidden="true" tabindex="-1"></a>_Complex_I</span>
+<span id="cb676-3"><a href="complex-numbers.html#cb676-3" aria-hidden="true" tabindex="-1"></a>_Imaginary_I</span></code></pre></div>
+<p>The macro <code>I</code> is set to <code>_Imaginary_I</code> (if available), or <code>_Complex_I</code>. So just use <code>I</code> for the imaginary number.</p>
+<p> </p>
+<p></p>
+<p>One aside: I’ve said that if a compiler has <code>__STDC_IEC_559_COMPLEX__</code> set to <code>1</code>, it must support <code>_Imaginary</code> types to be compliant. That’s my read of the spec. However, I don’t know of a single compiler that actually supports <code>_Imaginary</code> even though they have <code>__STDC_IEC_559_COMPLEX__</code> set. So I’m going to write some code with that type in here I have no way of testing. Sorry!</p>
+<p> </p>
+<p>OK, so now we know there’s a <code>complex</code> type, how can we use it?</p>
+<h2 data-number="36.2" id="assigning-complex-numbers"><span class="header-section-number">36.2</span> Assigning Complex Numbers</h2>
+<p></p>
+<p>Since the complex number has a real and imaginary part, but both of them rely on floating point numbers to store values, we need to also tell C what precision to use for those parts of the complex number.</p>
+<p> </p>
+<p>We do that by just pinning a <code>float</code>, <code>double</code>, or <code>long double</code> to the <code>complex</code>, either before or after it.</p>
+<p></p>
+<p>Let’s define a complex number that uses <code>float</code> for its components:</p>
+<div class="sourceCode" id="cb677"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb677-1"><a href="complex-numbers.html#cb677-1" aria-hidden="true" tabindex="-1"></a><span class="dt">float</span> <span class="dt">complex</span> c<span class="op">;</span>   <span class="co">// Spec prefers this way</span></span>
+<span id="cb677-2"><a href="complex-numbers.html#cb677-2" aria-hidden="true" tabindex="-1"></a><span class="dt">complex</span> <span class="dt">float</span> c<span class="op">;</span>   <span class="co">// Same thing--order doesn&#39;t matter</span></span></code></pre></div>
+<p>So that’s great for declarations, but how do we initialize them or assign to them?</p>
+<p>Turns out we get to use some pretty natural notation. Example!</p>
+<p></p>
+<div class="sourceCode" id="cb678"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb678-1"><a href="complex-numbers.html#cb678-1" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> <span class="dt">complex</span> x <span class="op">=</span> <span class="dv">5</span> <span class="op">+</span> <span class="dv">2</span><span class="op">*</span>I<span class="op">;</span></span>
+<span id="cb678-2"><a href="complex-numbers.html#cb678-2" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> <span class="dt">complex</span> y <span class="op">=</span> <span class="dv">10</span> <span class="op">+</span> <span class="dv">3</span><span class="op">*</span>I<span class="op">;</span></span></code></pre></div>
+<p></p>
+<p>For <span class="math inline">\(5+2i\)</span> and <span class="math inline">\(10+3i\)</span>, respectively.</p>
+<p> </p>
+<h2 data-number="36.3" id="constructing-deconstructing-and-printing"><span class="header-section-number">36.3</span> Constructing, Deconstructing, and Printing</h2>
+<p>We’re getting there…</p>
+<p>We’ve already seen one way to write a complex number:</p>
+<div class="sourceCode" id="cb679"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb679-1"><a href="complex-numbers.html#cb679-1" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> <span class="dt">complex</span> x <span class="op">=</span> <span class="dv">5</span> <span class="op">+</span> <span class="dv">2</span><span class="op">*</span>I<span class="op">;</span></span></code></pre></div>
+<p>There’s also no problem using other floating point numbers to build it:</p>
+<div class="sourceCode" id="cb680"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb680-1"><a href="complex-numbers.html#cb680-1" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> a <span class="op">=</span> <span class="dv">5</span><span class="op">;</span></span>
+<span id="cb680-2"><a href="complex-numbers.html#cb680-2" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> b <span class="op">=</span> <span class="dv">2</span><span class="op">;</span></span>
+<span id="cb680-3"><a href="complex-numbers.html#cb680-3" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> <span class="dt">complex</span> x <span class="op">=</span> a <span class="op">+</span> b<span class="op">*</span>I<span class="op">;</span></span></code></pre></div>
+<p></p>
+<p>There is also a set of macros to help build these. The above code could be written using the <code>CMPLX()</code> macro, like so:</p>
+<div class="sourceCode" id="cb681"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb681-1"><a href="complex-numbers.html#cb681-1" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> <span class="dt">complex</span> x <span class="op">=</span> CMPLX<span class="op">(</span><span class="dv">5</span><span class="op">,</span> <span class="dv">2</span><span class="op">);</span></span></code></pre></div>
+<p>As far as I can tell in my research, these are <em>almost</em> equivalent:</p>
+<div class="sourceCode" id="cb682"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb682-1"><a href="complex-numbers.html#cb682-1" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> <span class="dt">complex</span> x <span class="op">=</span> <span class="dv">5</span> <span class="op">+</span> <span class="dv">2</span><span class="op">*</span>I<span class="op">;</span></span>
+<span id="cb682-2"><a href="complex-numbers.html#cb682-2" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> <span class="dt">complex</span> x <span class="op">=</span> CMPLX<span class="op">(</span><span class="dv">5</span><span class="op">,</span> <span class="dv">2</span><span class="op">);</span></span></code></pre></div>
+<p>But the <code>CMPLX()</code> macro will handle negative zeros in the imaginary part correctly every time, whereas the other way might convert them to positive zeros. I <em>think</em><a href="footnotes.html#fn184" class="footnote-ref" id="fnref184" role="doc-noteref"><sup>184</sup></a> This seems to imply that if there’s a chance the imaginary part will be zero, you should use the macro… but someone should correct me on this if I’m mistaken!</p>
+<p>The <code>CMPLX()</code> macro works on <code>double</code> types. There are two other macros for <code>float</code> and <code>long double</code>: <code>CMPLXF()</code> and <code>CMPLXL()</code>. (These “f” and “l” suffixes appear in virtually all the complex-number-related functions.)</p>
+<p></p>
+<p>Now let’s try the reverse: if we have a complex number, how do we break it apart into its real and imaginary parts?</p>
+<p> </p>
+<p>Here we have a couple functions that will extract the real and imaginary parts from the number: <code>creal()</code> and <code>cimag()</code>:</p>
+<div class="sourceCode" id="cb683"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb683-1"><a href="complex-numbers.html#cb683-1" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> <span class="dt">complex</span> x <span class="op">=</span> <span class="dv">5</span> <span class="op">+</span> <span class="dv">2</span><span class="op">*</span>I<span class="op">;</span></span>
+<span id="cb683-2"><a href="complex-numbers.html#cb683-2" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> <span class="dt">complex</span> y <span class="op">=</span> <span class="dv">10</span> <span class="op">+</span> <span class="dv">3</span><span class="op">*</span>I<span class="op">;</span></span>
+<span id="cb683-3"><a href="complex-numbers.html#cb683-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb683-4"><a href="complex-numbers.html#cb683-4" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;x = </span><span class="sc">%f</span><span class="st"> + </span><span class="sc">%f</span><span class="st">i</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">,</span> creal<span class="op">(</span>x<span class="op">),</span> cimag<span class="op">(</span>x<span class="op">));</span></span>
+<span id="cb683-5"><a href="complex-numbers.html#cb683-5" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;y = </span><span class="sc">%f</span><span class="st"> + </span><span class="sc">%f</span><span class="st">i</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">,</span> creal<span class="op">(</span>y<span class="op">),</span> cimag<span class="op">(</span>y<span class="op">));</span></span></code></pre></div>
+<p>for the output:</p>
+<div class="sourceCode" id="cb684"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb684-1"><a href="complex-numbers.html#cb684-1" aria-hidden="true" tabindex="-1"></a>x = 5.000000 + 2.000000i</span>
+<span id="cb684-2"><a href="complex-numbers.html#cb684-2" aria-hidden="true" tabindex="-1"></a>y = 10.000000 + 3.000000i</span></code></pre></div>
+<p>Note that the <code>i</code> I have in the <code>printf()</code> format string is a literal <code>i</code> that gets printed—it’s not part of the format specifier. Both return values from <code>creal()</code> and <code>cimag()</code> are <code>double</code>.</p>
+<p>And as usual, there are <code>float</code> and <code>long double</code> variants of these functions: <code>crealf()</code>, <code>cimagf()</code>, <code>creall()</code>, and <code>cimagl()</code>.</p>
+<p> </p>
+<h2 data-number="36.4" id="complex-arithmetic-and-comparisons"><span class="header-section-number">36.4</span> Complex Arithmetic and Comparisons</h2>
+<p></p>
+<p>Arithmetic can be performed on complex numbers, though how this works mathematically is beyond the scope of the guide.</p>
+<div class="sourceCode" id="cb685"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb685-1"><a href="complex-numbers.html#cb685-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb685-2"><a href="complex-numbers.html#cb685-2"></a><span class="pp">#include </span><span class="im">&lt;complex.h&gt;</span></span>
+<span id="cb685-3"><a href="complex-numbers.html#cb685-3"></a></span>
+<span id="cb685-4"><a href="complex-numbers.html#cb685-4"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb685-5"><a href="complex-numbers.html#cb685-5"></a><span class="op">{</span></span>
+<span id="cb685-6"><a href="complex-numbers.html#cb685-6"></a>    <span class="dt">double</span> <span class="dt">complex</span> x <span class="op">=</span> <span class="dv">1</span> <span class="op">+</span> <span class="dv">2</span><span class="op">*</span>I<span class="op">;</span></span>
+<span id="cb685-7"><a href="complex-numbers.html#cb685-7"></a>    <span class="dt">double</span> <span class="dt">complex</span> y <span class="op">=</span> <span class="dv">3</span> <span class="op">+</span> <span class="dv">4</span><span class="op">*</span>I<span class="op">;</span></span>
+<span id="cb685-8"><a href="complex-numbers.html#cb685-8"></a>    <span class="dt">double</span> <span class="dt">complex</span> z<span class="op">;</span></span>
+<span id="cb685-9"><a href="complex-numbers.html#cb685-9"></a></span>
+<span id="cb685-10"><a href="complex-numbers.html#cb685-10"></a>    z <span class="op">=</span> x <span class="op">+</span> y<span class="op">;</span></span>
+<span id="cb685-11"><a href="complex-numbers.html#cb685-11"></a>    printf<span class="op">(</span><span class="st">&quot;x + y = </span><span class="sc">%f</span><span class="st"> + </span><span class="sc">%f</span><span class="st">i</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">,</span> creal<span class="op">(</span>z<span class="op">),</span> cimag<span class="op">(</span>z<span class="op">));</span></span>
+<span id="cb685-12"><a href="complex-numbers.html#cb685-12"></a></span>
+<span id="cb685-13"><a href="complex-numbers.html#cb685-13"></a>    z <span class="op">=</span> x <span class="op">-</span> y<span class="op">;</span></span>
+<span id="cb685-14"><a href="complex-numbers.html#cb685-14"></a>    printf<span class="op">(</span><span class="st">&quot;x - y = </span><span class="sc">%f</span><span class="st"> + </span><span class="sc">%f</span><span class="st">i</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">,</span> creal<span class="op">(</span>z<span class="op">),</span> cimag<span class="op">(</span>z<span class="op">));</span></span>
+<span id="cb685-15"><a href="complex-numbers.html#cb685-15"></a></span>
+<span id="cb685-16"><a href="complex-numbers.html#cb685-16"></a>    z <span class="op">=</span> x <span class="op">*</span> y<span class="op">;</span></span>
+<span id="cb685-17"><a href="complex-numbers.html#cb685-17"></a>    printf<span class="op">(</span><span class="st">&quot;x * y = </span><span class="sc">%f</span><span class="st"> + </span><span class="sc">%f</span><span class="st">i</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">,</span> creal<span class="op">(</span>z<span class="op">),</span> cimag<span class="op">(</span>z<span class="op">));</span></span>
+<span id="cb685-18"><a href="complex-numbers.html#cb685-18"></a></span>
+<span id="cb685-19"><a href="complex-numbers.html#cb685-19"></a>    z <span class="op">=</span> x <span class="op">/</span> y<span class="op">;</span></span>
+<span id="cb685-20"><a href="complex-numbers.html#cb685-20"></a>    printf<span class="op">(</span><span class="st">&quot;x / y = </span><span class="sc">%f</span><span class="st"> + </span><span class="sc">%f</span><span class="st">i</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">,</span> creal<span class="op">(</span>z<span class="op">),</span> cimag<span class="op">(</span>z<span class="op">));</span></span>
+<span id="cb685-21"><a href="complex-numbers.html#cb685-21"></a><span class="op">}</span></span></code></pre></div>
+<p>for a result of:</p>
+<div class="sourceCode" id="cb686"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb686-1"><a href="complex-numbers.html#cb686-1" aria-hidden="true" tabindex="-1"></a>x + y = 4.000000 + 6.000000i</span>
+<span id="cb686-2"><a href="complex-numbers.html#cb686-2" aria-hidden="true" tabindex="-1"></a>x - y = -2.000000 + -2.000000i</span>
+<span id="cb686-3"><a href="complex-numbers.html#cb686-3" aria-hidden="true" tabindex="-1"></a>x * y = -5.000000 + 10.000000i</span>
+<span id="cb686-4"><a href="complex-numbers.html#cb686-4" aria-hidden="true" tabindex="-1"></a>x / y = 0.440000 + 0.080000i</span></code></pre></div>
+<p>You can also compare two complex numbers for equality (or inequality):</p>
+<div class="sourceCode" id="cb687"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb687-1"><a href="complex-numbers.html#cb687-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb687-2"><a href="complex-numbers.html#cb687-2"></a><span class="pp">#include </span><span class="im">&lt;complex.h&gt;</span></span>
+<span id="cb687-3"><a href="complex-numbers.html#cb687-3"></a></span>
+<span id="cb687-4"><a href="complex-numbers.html#cb687-4"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb687-5"><a href="complex-numbers.html#cb687-5"></a><span class="op">{</span></span>
+<span id="cb687-6"><a href="complex-numbers.html#cb687-6"></a>    <span class="dt">double</span> <span class="dt">complex</span> x <span class="op">=</span> <span class="dv">1</span> <span class="op">+</span> <span class="dv">2</span><span class="op">*</span>I<span class="op">;</span></span>
+<span id="cb687-7"><a href="complex-numbers.html#cb687-7"></a>    <span class="dt">double</span> <span class="dt">complex</span> y <span class="op">=</span> <span class="dv">3</span> <span class="op">+</span> <span class="dv">4</span><span class="op">*</span>I<span class="op">;</span></span>
+<span id="cb687-8"><a href="complex-numbers.html#cb687-8"></a></span>
+<span id="cb687-9"><a href="complex-numbers.html#cb687-9"></a>    printf<span class="op">(</span><span class="st">&quot;x == y = </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> x <span class="op">==</span> y<span class="op">);</span>  <span class="co">// 0</span></span>
+<span id="cb687-10"><a href="complex-numbers.html#cb687-10"></a>    printf<span class="op">(</span><span class="st">&quot;x != y = </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> x <span class="op">!=</span> y<span class="op">);</span>  <span class="co">// 1</span></span>
+<span id="cb687-11"><a href="complex-numbers.html#cb687-11"></a><span class="op">}</span></span></code></pre></div>
+<p>with the output:</p>
+<div class="sourceCode" id="cb688"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb688-1"><a href="complex-numbers.html#cb688-1" aria-hidden="true" tabindex="-1"></a>x == y = 0</span>
+<span id="cb688-2"><a href="complex-numbers.html#cb688-2" aria-hidden="true" tabindex="-1"></a>x != y = 1</span></code></pre></div>
+<p>They are equal if both components test equal. Note that as with all floating point, they could be equal if they’re close enough due to rounding error<a href="footnotes.html#fn185" class="footnote-ref" id="fnref185" role="doc-noteref"><sup>185</sup></a>.</p>
+<p></p>
+<h2 data-number="36.5" id="complex-math"><span class="header-section-number">36.5</span> Complex Math</h2>
+<p>But wait! There’s more than just simple complex arithmetic!</p>
+<p>Here’s a summary table of all the math functions available to you with complex numbers.</p>
+<p>I’m only going to list the <code>double</code> version of each function, but for all of them there is a <code>float</code> version that you can get by appending <code>f</code> to the function name, and a <code>long double</code> version that you can get by appending <code>l</code>.</p>
+<p>For example, the <code>cabs()</code> function for computing the absolute value of a complex number also has <code>cabsf()</code> and <code>cabsl()</code> variants. I’m omitting them for brevity.</p>
+<h3 data-number="36.5.1" id="trigonometry-functions"><span class="header-section-number">36.5.1</span> Trigonometry Functions</h3>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>ccos()</code></td>
+<td>Cosine</td>
+</tr>
+<tr class="even">
+<td><code>csin()</code></td>
+<td>Sine</td>
+</tr>
+<tr class="odd">
+<td><code>ctan()</code></td>
+<td>Tangent</td>
+</tr>
+<tr class="even">
+<td><code>cacos()</code></td>
+<td>Arc cosine</td>
+</tr>
+<tr class="odd">
+<td><code>casin()</code></td>
+<td>Arc sine</td>
+</tr>
+<tr class="even">
+<td><code>catan()</code></td>
+<td>Play <em>Settlers of Catan</em></td>
+</tr>
+<tr class="odd">
+<td><code>ccosh()</code></td>
+<td>Hyperbolic cosine</td>
+</tr>
+<tr class="even">
+<td><code>csinh()</code></td>
+<td>Hyperbolic sine</td>
+</tr>
+<tr class="odd">
+<td><code>ctanh()</code></td>
+<td>Hyperbolic tangent</td>
+</tr>
+<tr class="even">
+<td><code>cacosh()</code></td>
+<td>Arc hyperbolic cosine</td>
+</tr>
+<tr class="odd">
+<td><code>casinh()</code></td>
+<td>Arc hyperbolic sine</td>
+</tr>
+<tr class="even">
+<td><code>catanh()</code></td>
+<td>Arc hyperbolic tangent</td>
+</tr>
+</tbody>
+</table>
+<h3 data-number="36.5.2" id="exponential-and-logarithmic-functions"><span class="header-section-number">36.5.2</span> Exponential and Logarithmic Functions</h3>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>cexp()</code></td>
+<td>Base-<span class="math inline">\(e\)</span> exponential</td>
+</tr>
+<tr class="even">
+<td><code>clog()</code></td>
+<td>Natural (base-<span class="math inline">\(e\)</span>) logarithm</td>
+</tr>
+</tbody>
+</table>
+<h3 data-number="36.5.3" id="power-and-absolute-value-functions"><span class="header-section-number">36.5.3</span> Power and Absolute Value Functions</h3>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>cabs()</code></td>
+<td>Absolute value</td>
+</tr>
+<tr class="even">
+<td><code>cpow()</code></td>
+<td>Power</td>
+</tr>
+<tr class="odd">
+<td><code>csqrt()</code></td>
+<td>Square root</td>
+</tr>
+</tbody>
+</table>
+<h3 data-number="36.5.4" id="manipulation-functions"><span class="header-section-number">36.5.4</span> Manipulation Functions</h3>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>creal()</code></td>
+<td>Return real part</td>
+</tr>
+<tr class="even">
+<td><code>cimag()</code></td>
+<td>Return imaginary part</td>
+</tr>
+<tr class="odd">
+<td><code>CMPLX()</code></td>
+<td>Construct a complex number</td>
+</tr>
+<tr class="even">
+<td><code>carg()</code></td>
+<td>Argument/phase angle</td>
+</tr>
+<tr class="odd">
+<td><code>conj()</code></td>
+<td>Conjugate<a href="footnotes.html#fn186" class="footnote-ref" id="fnref186" role="doc-noteref"><sup>186</sup></a></td>
+</tr>
+<tr class="even">
+<td><code>cproj()</code></td>
+<td>Projection on Riemann sphere</td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<!-- Beej's guide to C
+
+# vim: ts=4:sw=4:nosi:et:tw=72
+-->
+<hr><div style="text-align:center"><span><a href="incomplete-types.html">Prev</a> | </span><a href="index.html">Contents</a><span> | <a href="fixed-width-integer-types.html">Next</a></span></div></body>
+</html>

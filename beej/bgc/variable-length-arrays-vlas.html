@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Beej's Guide to C Programming</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Mono&display=swap" rel="stylesheet"> 
+
+  <!-- BG custom styling -->
+  <style type="text/css">
+  /* Fix for line numbers not visible */
+  pre.numberSource code > span {
+      left: -1em;
+  }
+  pre.numberSource {
+      margin-left: initial;
+  }
+
+  /* Put some space after the section numbers */
+  span.toc-section-number::after {
+      content: "\a0\a0\a0";  /* non-breaking whitespace */
+  }
+
+  /* Hide underlines on code number links */
+  pre > code.sourceCode > span > a:first-child::before {
+      text-decoration: none;
+  }
+
+  /* Color the source blocks */
+  div.sourceCode {
+      background-color: #f0f0f0;
+  }
+
+  /* Fix iOS big text rendering issue */
+  pre > code.sourceCode > span {
+      display: initial;
+  }
+
+
+  /* Color the inline code */
+  code:not(.sourceCode) {
+      background: #f0f0f0;
+      padding-left: 0.2em;
+      padding-right: 0.2em;
+      border-radius: 0.2em;
+  }
+
+  /* Keep code tags from wrapping in tables */
+  tbody code {
+      white-space: nowrap;
+  }
+
+  td {
+      vertical-align: top;
+  }
+
+  body {
+      font-size: 12pt;
+      max-width: 43em;
+  }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<div style="text-align:center"><span><a href="signal-handling.html">Prev</a> | </span><a href="index.html">Contents</a><span> | <a href="goto.html">Next</a></span></div><hr>
+<h1 data-number="30" id="variable-length-arrays-vlas"><span class="header-section-number">30</span> Variable-Length Arrays (VLAs)</h1>
+<p></p>
+<p>C provides a way for you to declare an array whose size is determined at runtime. This gives you the benefits of dynamic runtime sizing like you get with <code>malloc()</code>, but without needing to worry about <code>free()</code>ing the memory after.</p>
+<p>Now, a lot of people don’t like VLAs. They’ve been banned from the Linux kernel, for example. We’ll dig into more of that rationale <a href="variable-length-arrays-vlas.html#vla-general-issues">later</a>.</p>
+<p></p>
+<p>This is an optional feature of the language. The macro <code>__STDC_NO_VLA__</code> is set to <code>1</code> if VLAs are <em>not</em> present. (They were mandatory in C99, and then became optional in C11.)</p>
+<div class="sourceCode" id="cb566"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb566-1"><a href="variable-length-arrays-vlas.html#cb566-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#if __STDC_NO_VLA__ == 1</span></span>
+<span id="cb566-2"><a href="variable-length-arrays-vlas.html#cb566-2" aria-hidden="true" tabindex="-1"></a>   <span class="pp">#error Sorry, need VLAs for this program!</span></span>
+<span id="cb566-3"><a href="variable-length-arrays-vlas.html#cb566-3" aria-hidden="true" tabindex="-1"></a><span class="pp">#endif</span></span></code></pre></div>
+<p></p>
+<p>But since neither GCC nor Clang bother to define this macro, you may get limited mileage from this.</p>
+<p>Let’s dive in first with an example, and then we’ll look for the devil in the details.</p>
+<h2 data-number="30.1" id="the-basics"><span class="header-section-number">30.1</span> The Basics</h2>
+<p>A normal array is declared with a constant size, like this:</p>
+<div class="sourceCode" id="cb567"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb567-1"><a href="variable-length-arrays-vlas.html#cb567-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> v<span class="op">[</span><span class="dv">10</span><span class="op">];</span></span></code></pre></div>
+<p></p>
+<p>But with VLAs, we can use a size determined at runtime to set the array, like this:</p>
+<div class="sourceCode" id="cb568"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb568-1"><a href="variable-length-arrays-vlas.html#cb568-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> n <span class="op">=</span> <span class="dv">10</span><span class="op">;</span></span>
+<span id="cb568-2"><a href="variable-length-arrays-vlas.html#cb568-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> v<span class="op">[</span>n<span class="op">];</span></span></code></pre></div>
+<p>Now, that looks like the same thing, and in many ways is, but this gives you the flexibility to compute the size you need, and then get an array of exactly that size.</p>
+<p>Let’s ask the user to input the size of the array, and then store the index-times-10 in each of those array elements:</p>
+<div class="sourceCode" id="cb569"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb569-1"><a href="variable-length-arrays-vlas.html#cb569-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb569-2"><a href="variable-length-arrays-vlas.html#cb569-2"></a></span>
+<span id="cb569-3"><a href="variable-length-arrays-vlas.html#cb569-3"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb569-4"><a href="variable-length-arrays-vlas.html#cb569-4"></a><span class="op">{</span></span>
+<span id="cb569-5"><a href="variable-length-arrays-vlas.html#cb569-5"></a>    <span class="dt">int</span> n<span class="op">;</span></span>
+<span id="cb569-6"><a href="variable-length-arrays-vlas.html#cb569-6"></a></span>
+<span id="cb569-7"><a href="variable-length-arrays-vlas.html#cb569-7"></a>    printf<span class="op">(</span><span class="st">&quot;Enter a number: &quot;</span><span class="op">);</span> fflush<span class="op">(</span>stdout<span class="op">);</span></span>
+<span id="cb569-8"><a href="variable-length-arrays-vlas.html#cb569-8"></a>    scanf<span class="op">(</span><span class="st">&quot; </span><span class="sc">%d</span><span class="st">&quot;</span><span class="op">,</span> <span class="op">&amp;</span>n<span class="op">);</span></span>
+<span id="cb569-9"><a href="variable-length-arrays-vlas.html#cb569-9"></a></span>
+<span id="cb569-10"><a href="variable-length-arrays-vlas.html#cb569-10"></a>    <span class="dt">int</span> v<span class="op">[</span>n<span class="op">];</span></span>
+<span id="cb569-11"><a href="variable-length-arrays-vlas.html#cb569-11"></a></span>
+<span id="cb569-12"><a href="variable-length-arrays-vlas.html#cb569-12"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> n<span class="op">;</span> i<span class="op">++)</span></span>
+<span id="cb569-13"><a href="variable-length-arrays-vlas.html#cb569-13"></a>        v<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> i <span class="op">*</span> <span class="dv">10</span><span class="op">;</span></span>
+<span id="cb569-14"><a href="variable-length-arrays-vlas.html#cb569-14"></a></span>
+<span id="cb569-15"><a href="variable-length-arrays-vlas.html#cb569-15"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> n<span class="op">;</span> i<span class="op">++)</span></span>
+<span id="cb569-16"><a href="variable-length-arrays-vlas.html#cb569-16"></a>        printf<span class="op">(</span><span class="st">&quot;v[</span><span class="sc">%d</span><span class="st">] = </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> i<span class="op">,</span> v<span class="op">[</span>i<span class="op">]);</span></span>
+<span id="cb569-17"><a href="variable-length-arrays-vlas.html#cb569-17"></a><span class="op">}</span></span></code></pre></div>
+<p>(On line 7, I have an <code>fflush()</code> that should force the line to output even though I don’t have a newline at the end.)</p>
+<p>Line 10 is where we declare the VLA—once execution gets past that line, the size of the array is set to whatever <code>n</code> was at that moment. The array length can’t be changed later.</p>
+<p>You can put an expression in the brackets, as well:</p>
+<div class="sourceCode" id="cb570"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb570-1"><a href="variable-length-arrays-vlas.html#cb570-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> v<span class="op">[</span>x <span class="op">*</span> <span class="dv">100</span><span class="op">];</span></span></code></pre></div>
+<p>Some restrictions:</p>
+<ul>
+<li>You can’t declare a VLA at file scope, and you can’t make a <code>static</code> one in block scope<a href="footnotes.html#fn173" class="footnote-ref" id="fnref173" role="doc-noteref"><sup>173</sup></a>.</li>
+<li>You can’t use an initializer list to initialize the array.</li>
+</ul>
+<p>Also, entering a negative value for the size of the array invokes undefined behavior—in this universe, anyway.</p>
+<p></p>
+<h2 data-number="30.2" id="sizeof-and-vlas"><span class="header-section-number">30.2</span> <code>sizeof</code> and VLAs</h2>
+<p></p>
+<p>We’re used to <code>sizeof</code> giving us the size in bytes of any particular object, including arrays. And VLAs are no exception.</p>
+<p>The main difference is that <code>sizeof</code> on a VLA is executed at <em>runtime</em>, whereas on a non-variably-sized variable it is computed at <em>compile time</em>.</p>
+<p>But the usage is the same.</p>
+<p>You can even compute the number of elements in a VLA with the usual array trick:</p>
+<div class="sourceCode" id="cb571"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb571-1"><a href="variable-length-arrays-vlas.html#cb571-1" aria-hidden="true" tabindex="-1"></a><span class="dt">size_t</span> num_elems <span class="op">=</span> <span class="kw">sizeof</span> v <span class="op">/</span> <span class="kw">sizeof</span> v<span class="op">[</span><span class="dv">0</span><span class="op">];</span></span></code></pre></div>
+<p>There’s a subtle and correct implication from the above line: pointer arithmetic works just like you’d expect for a regular array. So go ahead and use it to your heart’s content:</p>
+<div class="sourceCode" id="cb572"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb572-1"><a href="variable-length-arrays-vlas.html#cb572-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb572-2"><a href="variable-length-arrays-vlas.html#cb572-2"></a></span>
+<span id="cb572-3"><a href="variable-length-arrays-vlas.html#cb572-3"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb572-4"><a href="variable-length-arrays-vlas.html#cb572-4"></a><span class="op">{</span></span>
+<span id="cb572-5"><a href="variable-length-arrays-vlas.html#cb572-5"></a>    <span class="dt">int</span> n <span class="op">=</span> <span class="dv">5</span><span class="op">;</span></span>
+<span id="cb572-6"><a href="variable-length-arrays-vlas.html#cb572-6"></a>    <span class="dt">int</span> v<span class="op">[</span>n<span class="op">];</span></span>
+<span id="cb572-7"><a href="variable-length-arrays-vlas.html#cb572-7"></a></span>
+<span id="cb572-8"><a href="variable-length-arrays-vlas.html#cb572-8"></a>    <span class="dt">int</span> <span class="op">*</span>p <span class="op">=</span> v<span class="op">;</span></span>
+<span id="cb572-9"><a href="variable-length-arrays-vlas.html#cb572-9"></a></span>
+<span id="cb572-10"><a href="variable-length-arrays-vlas.html#cb572-10"></a>    <span class="op">*(</span>p<span class="op">+</span><span class="dv">2</span><span class="op">)</span> <span class="op">=</span> <span class="dv">12</span><span class="op">;</span></span>
+<span id="cb572-11"><a href="variable-length-arrays-vlas.html#cb572-11"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> v<span class="op">[</span><span class="dv">2</span><span class="op">]);</span>  <span class="co">// 12</span></span>
+<span id="cb572-12"><a href="variable-length-arrays-vlas.html#cb572-12"></a></span>
+<span id="cb572-13"><a href="variable-length-arrays-vlas.html#cb572-13"></a>    p<span class="op">[</span><span class="dv">3</span><span class="op">]</span> <span class="op">=</span> <span class="dv">34</span><span class="op">;</span></span>
+<span id="cb572-14"><a href="variable-length-arrays-vlas.html#cb572-14"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> v<span class="op">[</span><span class="dv">3</span><span class="op">]);</span>  <span class="co">// 34</span></span>
+<span id="cb572-15"><a href="variable-length-arrays-vlas.html#cb572-15"></a><span class="op">}</span></span></code></pre></div>
+<p>Like with regular arrays, you can use parentheses with <code>sizeof()</code> to get the size of a would-be VLA without actually declaring one:</p>
+<div class="sourceCode" id="cb573"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb573-1"><a href="variable-length-arrays-vlas.html#cb573-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> x <span class="op">=</span> <span class="dv">12</span><span class="op">;</span></span>
+<span id="cb573-2"><a href="variable-length-arrays-vlas.html#cb573-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb573-3"><a href="variable-length-arrays-vlas.html#cb573-3" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%zu\n</span><span class="st">&quot;</span><span class="op">,</span> <span class="kw">sizeof</span><span class="op">(</span><span class="dt">int</span> <span class="op">[</span>x<span class="op">]));</span>  <span class="co">// Prints 48 on my system</span></span></code></pre></div>
+<p></p>
+<h2 data-number="30.3" id="multidimensional-vlas"><span class="header-section-number">30.3</span> Multidimensional VLAs</h2>
+<p></p>
+<p>You can go ahead and make all kinds of VLAs with one or more dimensions set to a variable</p>
+<div class="sourceCode" id="cb574"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb574-1"><a href="variable-length-arrays-vlas.html#cb574-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> w <span class="op">=</span> <span class="dv">10</span><span class="op">;</span></span>
+<span id="cb574-2"><a href="variable-length-arrays-vlas.html#cb574-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> h <span class="op">=</span> <span class="dv">20</span><span class="op">;</span></span>
+<span id="cb574-3"><a href="variable-length-arrays-vlas.html#cb574-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb574-4"><a href="variable-length-arrays-vlas.html#cb574-4" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> x<span class="op">[</span>h<span class="op">][</span>w<span class="op">];</span></span>
+<span id="cb574-5"><a href="variable-length-arrays-vlas.html#cb574-5" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> y<span class="op">[</span><span class="dv">5</span><span class="op">][</span>w<span class="op">];</span></span>
+<span id="cb574-6"><a href="variable-length-arrays-vlas.html#cb574-6" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> z<span class="op">[</span><span class="dv">10</span><span class="op">][</span>w<span class="op">][</span><span class="dv">20</span><span class="op">];</span></span></code></pre></div>
+<p>Again, you can navigate these just like you would a regular array.</p>
+<p></p>
+<h2 data-number="30.4" id="passing-one-dimensional-vlas-to-functions"><span class="header-section-number">30.4</span> Passing One-Dimensional VLAs to Functions</h2>
+<p></p>
+<p>Passing single-dimensional VLAs into a function can be no different than passing a regular array in. You just go for it.</p>
+<div class="sourceCode" id="cb575"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb575-1"><a href="variable-length-arrays-vlas.html#cb575-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb575-2"><a href="variable-length-arrays-vlas.html#cb575-2"></a></span>
+<span id="cb575-3"><a href="variable-length-arrays-vlas.html#cb575-3"></a><span class="dt">int</span> sum<span class="op">(</span><span class="dt">int</span> count<span class="op">,</span> <span class="dt">int</span> <span class="op">*</span>v<span class="op">)</span></span>
+<span id="cb575-4"><a href="variable-length-arrays-vlas.html#cb575-4"></a><span class="op">{</span></span>
+<span id="cb575-5"><a href="variable-length-arrays-vlas.html#cb575-5"></a>    <span class="dt">int</span> total <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb575-6"><a href="variable-length-arrays-vlas.html#cb575-6"></a></span>
+<span id="cb575-7"><a href="variable-length-arrays-vlas.html#cb575-7"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> count<span class="op">;</span> i<span class="op">++)</span></span>
+<span id="cb575-8"><a href="variable-length-arrays-vlas.html#cb575-8"></a>        total <span class="op">+=</span> v<span class="op">[</span>i<span class="op">];</span></span>
+<span id="cb575-9"><a href="variable-length-arrays-vlas.html#cb575-9"></a></span>
+<span id="cb575-10"><a href="variable-length-arrays-vlas.html#cb575-10"></a>    <span class="cf">return</span> total<span class="op">;</span></span>
+<span id="cb575-11"><a href="variable-length-arrays-vlas.html#cb575-11"></a><span class="op">}</span></span>
+<span id="cb575-12"><a href="variable-length-arrays-vlas.html#cb575-12"></a></span>
+<span id="cb575-13"><a href="variable-length-arrays-vlas.html#cb575-13"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb575-14"><a href="variable-length-arrays-vlas.html#cb575-14"></a><span class="op">{</span></span>
+<span id="cb575-15"><a href="variable-length-arrays-vlas.html#cb575-15"></a>    <span class="dt">int</span> x<span class="op">[</span><span class="dv">5</span><span class="op">];</span>   <span class="co">// Standard array</span></span>
+<span id="cb575-16"><a href="variable-length-arrays-vlas.html#cb575-16"></a></span>
+<span id="cb575-17"><a href="variable-length-arrays-vlas.html#cb575-17"></a>    <span class="dt">int</span> a <span class="op">=</span> <span class="dv">5</span><span class="op">;</span></span>
+<span id="cb575-18"><a href="variable-length-arrays-vlas.html#cb575-18"></a>    <span class="dt">int</span> y<span class="op">[</span>a<span class="op">];</span>   <span class="co">// VLA</span></span>
+<span id="cb575-19"><a href="variable-length-arrays-vlas.html#cb575-19"></a></span>
+<span id="cb575-20"><a href="variable-length-arrays-vlas.html#cb575-20"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> a<span class="op">;</span> i<span class="op">++)</span></span>
+<span id="cb575-21"><a href="variable-length-arrays-vlas.html#cb575-21"></a>        x<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> y<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> i <span class="op">+</span> <span class="dv">1</span><span class="op">;</span></span>
+<span id="cb575-22"><a href="variable-length-arrays-vlas.html#cb575-22"></a></span>
+<span id="cb575-23"><a href="variable-length-arrays-vlas.html#cb575-23"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> sum<span class="op">(</span><span class="dv">5</span><span class="op">,</span> x<span class="op">));</span></span>
+<span id="cb575-24"><a href="variable-length-arrays-vlas.html#cb575-24"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> sum<span class="op">(</span>a<span class="op">,</span> y<span class="op">));</span></span>
+<span id="cb575-25"><a href="variable-length-arrays-vlas.html#cb575-25"></a><span class="op">}</span></span></code></pre></div>
+<p>But there’s a bit more to it than that. You can also let C know that the array is a specific VLA size by passing that in first and then giving that dimension in the parameter list:</p>
+<div class="sourceCode" id="cb576"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb576-1"><a href="variable-length-arrays-vlas.html#cb576-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> sum<span class="op">(</span><span class="dt">int</span> count<span class="op">,</span> <span class="dt">int</span> v<span class="op">[</span>count<span class="op">])</span></span>
+<span id="cb576-2"><a href="variable-length-arrays-vlas.html#cb576-2" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb576-3"><a href="variable-length-arrays-vlas.html#cb576-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">// ...</span></span>
+<span id="cb576-4"><a href="variable-length-arrays-vlas.html#cb576-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p> </p>
+<p>Incidentally, there are a couple ways of listing a prototype for the above function; one of them involves an <code>*</code> if you don’t want to specifically name the value in the VLA. It just indicates that the type is a VLA as opposed to a regular pointer.</p>
+<p>VLA prototypes:</p>
+<div class="sourceCode" id="cb577"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb577-1"><a href="variable-length-arrays-vlas.html#cb577-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> do_something<span class="op">(</span><span class="dt">int</span> count<span class="op">,</span> <span class="dt">int</span> v<span class="op">[</span>count<span class="op">]);</span>  <span class="co">// With names</span></span>
+<span id="cb577-2"><a href="variable-length-arrays-vlas.html#cb577-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> do_something<span class="op">(</span><span class="dt">int</span><span class="op">,</span> <span class="dt">int</span> v<span class="op">[*]);</span>            <span class="co">// Without names</span></span></code></pre></div>
+<p>Again, that <code>*</code> thing only works with the prototype—in the function itself, you’ll have to put the explicit size.</p>
+<p> </p>
+<p>Now—<em>let’s get multidimensional</em>! This is where the fun begins.</p>
+<h2 data-number="30.5" id="passing-multi-dimensional-vlas-to-functions"><span class="header-section-number">30.5</span> Passing Multi-Dimensional VLAs to Functions</h2>
+<p>Same thing as we did with the second form of one-dimensional VLAs, above, but this time we’re passing in two dimensions and using those.</p>
+<p>In the following example, we build a multiplication table matrix of a variable width and height, and then pass it to a function to print it out.</p>
+<div class="sourceCode" id="cb578"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb578-1"><a href="variable-length-arrays-vlas.html#cb578-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb578-2"><a href="variable-length-arrays-vlas.html#cb578-2"></a></span>
+<span id="cb578-3"><a href="variable-length-arrays-vlas.html#cb578-3"></a><span class="dt">void</span> print_matrix<span class="op">(</span><span class="dt">int</span> h<span class="op">,</span> <span class="dt">int</span> w<span class="op">,</span> <span class="dt">int</span> m<span class="op">[</span>h<span class="op">][</span>w<span class="op">])</span></span>
+<span id="cb578-4"><a href="variable-length-arrays-vlas.html#cb578-4"></a><span class="op">{</span></span>
+<span id="cb578-5"><a href="variable-length-arrays-vlas.html#cb578-5"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> row <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> row <span class="op">&lt;</span> h<span class="op">;</span> row<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb578-6"><a href="variable-length-arrays-vlas.html#cb578-6"></a>        <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> col <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> col <span class="op">&lt;</span> w<span class="op">;</span> col<span class="op">++)</span></span>
+<span id="cb578-7"><a href="variable-length-arrays-vlas.html#cb578-7"></a>            printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%2d</span><span class="st"> &quot;</span><span class="op">,</span> m<span class="op">[</span>row<span class="op">][</span>col<span class="op">]);</span></span>
+<span id="cb578-8"><a href="variable-length-arrays-vlas.html#cb578-8"></a>        printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb578-9"><a href="variable-length-arrays-vlas.html#cb578-9"></a>    <span class="op">}</span></span>
+<span id="cb578-10"><a href="variable-length-arrays-vlas.html#cb578-10"></a><span class="op">}</span></span>
+<span id="cb578-11"><a href="variable-length-arrays-vlas.html#cb578-11"></a></span>
+<span id="cb578-12"><a href="variable-length-arrays-vlas.html#cb578-12"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb578-13"><a href="variable-length-arrays-vlas.html#cb578-13"></a><span class="op">{</span></span>
+<span id="cb578-14"><a href="variable-length-arrays-vlas.html#cb578-14"></a>    <span class="dt">int</span> rows <span class="op">=</span> <span class="dv">4</span><span class="op">;</span></span>
+<span id="cb578-15"><a href="variable-length-arrays-vlas.html#cb578-15"></a>    <span class="dt">int</span> cols <span class="op">=</span> <span class="dv">7</span><span class="op">;</span></span>
+<span id="cb578-16"><a href="variable-length-arrays-vlas.html#cb578-16"></a></span>
+<span id="cb578-17"><a href="variable-length-arrays-vlas.html#cb578-17"></a>    <span class="dt">int</span> matrix<span class="op">[</span>rows<span class="op">][</span>cols<span class="op">];</span></span>
+<span id="cb578-18"><a href="variable-length-arrays-vlas.html#cb578-18"></a></span>
+<span id="cb578-19"><a href="variable-length-arrays-vlas.html#cb578-19"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> row <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> row <span class="op">&lt;</span> rows<span class="op">;</span> row<span class="op">++)</span></span>
+<span id="cb578-20"><a href="variable-length-arrays-vlas.html#cb578-20"></a>        <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> col <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> col <span class="op">&lt;</span> cols<span class="op">;</span> col<span class="op">++)</span></span>
+<span id="cb578-21"><a href="variable-length-arrays-vlas.html#cb578-21"></a>            matrix<span class="op">[</span>row<span class="op">][</span>col<span class="op">]</span> <span class="op">=</span> row <span class="op">*</span> col<span class="op">;</span></span>
+<span id="cb578-22"><a href="variable-length-arrays-vlas.html#cb578-22"></a></span>
+<span id="cb578-23"><a href="variable-length-arrays-vlas.html#cb578-23"></a>    print_matrix<span class="op">(</span>rows<span class="op">,</span> cols<span class="op">,</span> matrix<span class="op">);</span></span>
+<span id="cb578-24"><a href="variable-length-arrays-vlas.html#cb578-24"></a><span class="op">}</span></span></code></pre></div>
+<h3 data-number="30.5.1" id="partial-multidimensional-vlas"><span class="header-section-number">30.5.1</span> Partial Multidimensional VLAs</h3>
+<p>You can have some of the dimensions fixed and some variable. Let’s say we have a record length fixed at 5 elements, but we don’t know how many records there are.</p>
+<div class="sourceCode" id="cb579"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb579-1"><a href="variable-length-arrays-vlas.html#cb579-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb579-2"><a href="variable-length-arrays-vlas.html#cb579-2"></a></span>
+<span id="cb579-3"><a href="variable-length-arrays-vlas.html#cb579-3"></a><span class="dt">void</span> print_records<span class="op">(</span><span class="dt">int</span> count<span class="op">,</span> <span class="dt">int</span> record<span class="op">[</span>count<span class="op">][</span><span class="dv">5</span><span class="op">])</span></span>
+<span id="cb579-4"><a href="variable-length-arrays-vlas.html#cb579-4"></a><span class="op">{</span></span>
+<span id="cb579-5"><a href="variable-length-arrays-vlas.html#cb579-5"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> count<span class="op">;</span> i<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb579-6"><a href="variable-length-arrays-vlas.html#cb579-6"></a>        <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> j <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> j <span class="op">&lt;</span> <span class="dv">5</span><span class="op">;</span> j<span class="op">++)</span></span>
+<span id="cb579-7"><a href="variable-length-arrays-vlas.html#cb579-7"></a>            printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%2d</span><span class="st"> &quot;</span><span class="op">,</span> record<span class="op">[</span>i<span class="op">][</span>j<span class="op">]);</span></span>
+<span id="cb579-8"><a href="variable-length-arrays-vlas.html#cb579-8"></a>        printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb579-9"><a href="variable-length-arrays-vlas.html#cb579-9"></a>    <span class="op">}</span></span>
+<span id="cb579-10"><a href="variable-length-arrays-vlas.html#cb579-10"></a><span class="op">}</span></span>
+<span id="cb579-11"><a href="variable-length-arrays-vlas.html#cb579-11"></a></span>
+<span id="cb579-12"><a href="variable-length-arrays-vlas.html#cb579-12"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb579-13"><a href="variable-length-arrays-vlas.html#cb579-13"></a><span class="op">{</span></span>
+<span id="cb579-14"><a href="variable-length-arrays-vlas.html#cb579-14"></a>    <span class="dt">int</span> rec_count <span class="op">=</span> <span class="dv">3</span><span class="op">;</span></span>
+<span id="cb579-15"><a href="variable-length-arrays-vlas.html#cb579-15"></a>    <span class="dt">int</span> records<span class="op">[</span>rec_count<span class="op">][</span><span class="dv">5</span><span class="op">];</span></span>
+<span id="cb579-16"><a href="variable-length-arrays-vlas.html#cb579-16"></a></span>
+<span id="cb579-17"><a href="variable-length-arrays-vlas.html#cb579-17"></a>    <span class="co">// Fill with some dummy data</span></span>
+<span id="cb579-18"><a href="variable-length-arrays-vlas.html#cb579-18"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> rec_count<span class="op">;</span> i<span class="op">++)</span></span>
+<span id="cb579-19"><a href="variable-length-arrays-vlas.html#cb579-19"></a>        <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> j <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> j <span class="op">&lt;</span> <span class="dv">5</span><span class="op">;</span> j<span class="op">++)</span></span>
+<span id="cb579-20"><a href="variable-length-arrays-vlas.html#cb579-20"></a>            records<span class="op">[</span>i<span class="op">][</span>j<span class="op">]</span> <span class="op">=</span> <span class="op">(</span>i<span class="op">+</span><span class="dv">1</span><span class="op">)*(</span>j<span class="op">+</span><span class="dv">2</span><span class="op">);</span></span>
+<span id="cb579-21"><a href="variable-length-arrays-vlas.html#cb579-21"></a></span>
+<span id="cb579-22"><a href="variable-length-arrays-vlas.html#cb579-22"></a>    print_records<span class="op">(</span>rec_count<span class="op">,</span> records<span class="op">);</span></span>
+<span id="cb579-23"><a href="variable-length-arrays-vlas.html#cb579-23"></a><span class="op">}</span></span></code></pre></div>
+<p></p>
+<h2 data-number="30.6" id="compatibility-with-regular-arrays"><span class="header-section-number">30.6</span> Compatibility with Regular Arrays</h2>
+<p></p>
+<p>Because VLAs are just like regular arrays in memory, it’s perfectly permissible to pass them interchangeably… as long as the dimensions match.</p>
+<p>For example, if we have a function that specifically wants a <span class="math inline">\(3\times5\)</span> array, we can still pass a VLA into it.</p>
+<div class="sourceCode" id="cb580"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb580-1"><a href="variable-length-arrays-vlas.html#cb580-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> foo<span class="op">(</span><span class="dt">int</span> m<span class="op">[</span><span class="dv">5</span><span class="op">][</span><span class="dv">3</span><span class="op">])</span> <span class="op">{...}</span></span>
+<span id="cb580-2"><a href="variable-length-arrays-vlas.html#cb580-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb580-3"><a href="variable-length-arrays-vlas.html#cb580-3" aria-hidden="true" tabindex="-1"></a>\\ <span class="op">...</span></span>
+<span id="cb580-4"><a href="variable-length-arrays-vlas.html#cb580-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb580-5"><a href="variable-length-arrays-vlas.html#cb580-5" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> w <span class="op">=</span> <span class="dv">3</span><span class="op">,</span> h <span class="op">=</span> <span class="dv">5</span><span class="op">;</span></span>
+<span id="cb580-6"><a href="variable-length-arrays-vlas.html#cb580-6" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> matrix<span class="op">[</span>h<span class="op">][</span>w<span class="op">];</span></span>
+<span id="cb580-7"><a href="variable-length-arrays-vlas.html#cb580-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb580-8"><a href="variable-length-arrays-vlas.html#cb580-8" aria-hidden="true" tabindex="-1"></a>foo<span class="op">(</span>matrix<span class="op">);</span>   <span class="co">// OK!</span></span></code></pre></div>
+<p>Likewise, if you have a VLA function, you can pass a regular array into it:</p>
+<div class="sourceCode" id="cb581"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb581-1"><a href="variable-length-arrays-vlas.html#cb581-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> foo<span class="op">(</span><span class="dt">int</span> h<span class="op">,</span> <span class="dt">int</span> w<span class="op">,</span> <span class="dt">int</span> m<span class="op">[</span>h<span class="op">][</span>w<span class="op">])</span> <span class="op">{...}</span></span>
+<span id="cb581-2"><a href="variable-length-arrays-vlas.html#cb581-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb581-3"><a href="variable-length-arrays-vlas.html#cb581-3" aria-hidden="true" tabindex="-1"></a>\\ <span class="op">...</span></span>
+<span id="cb581-4"><a href="variable-length-arrays-vlas.html#cb581-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb581-5"><a href="variable-length-arrays-vlas.html#cb581-5" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> matrix<span class="op">[</span><span class="dv">3</span><span class="op">][</span><span class="dv">5</span><span class="op">];</span></span>
+<span id="cb581-6"><a href="variable-length-arrays-vlas.html#cb581-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb581-7"><a href="variable-length-arrays-vlas.html#cb581-7" aria-hidden="true" tabindex="-1"></a>foo<span class="op">(</span><span class="dv">3</span><span class="op">,</span> <span class="dv">5</span><span class="op">,</span> matrix<span class="op">);</span>   <span class="co">// OK!</span></span></code></pre></div>
+<p>Beware, though: if your dimensions mismatch, you’re going to have some undefined behavior going on, likely.</p>
+<p></p>
+<h2 data-number="30.7" id="typedef-and-vlas"><span class="header-section-number">30.7</span> <code>typedef</code> and VLAs</h2>
+<p></p>
+<p>You can <code>typedef</code> a VLA, but the behavior might not be as you expect.</p>
+<p>Basically, <code>typedef</code> makes a new type with the values as they existed the moment the <code>typedef</code> was executed.</p>
+<p>So it’s not a <code>typedef</code> of a VLA so much as a new fixed size array type of the dimensions at the time.</p>
+<div class="sourceCode" id="cb582"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb582-1"><a href="variable-length-arrays-vlas.html#cb582-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb582-2"><a href="variable-length-arrays-vlas.html#cb582-2"></a></span>
+<span id="cb582-3"><a href="variable-length-arrays-vlas.html#cb582-3"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb582-4"><a href="variable-length-arrays-vlas.html#cb582-4"></a><span class="op">{</span></span>
+<span id="cb582-5"><a href="variable-length-arrays-vlas.html#cb582-5"></a>    <span class="dt">int</span> w <span class="op">=</span> <span class="dv">10</span><span class="op">;</span></span>
+<span id="cb582-6"><a href="variable-length-arrays-vlas.html#cb582-6"></a></span>
+<span id="cb582-7"><a href="variable-length-arrays-vlas.html#cb582-7"></a>    <span class="kw">typedef</span> <span class="dt">int</span> goat<span class="op">[</span>w<span class="op">];</span></span>
+<span id="cb582-8"><a href="variable-length-arrays-vlas.html#cb582-8"></a></span>
+<span id="cb582-9"><a href="variable-length-arrays-vlas.html#cb582-9"></a>    <span class="co">// goat is an array of 10 ints</span></span>
+<span id="cb582-10"><a href="variable-length-arrays-vlas.html#cb582-10"></a>    goat x<span class="op">;</span></span>
+<span id="cb582-11"><a href="variable-length-arrays-vlas.html#cb582-11"></a></span>
+<span id="cb582-12"><a href="variable-length-arrays-vlas.html#cb582-12"></a>    <span class="co">// Init with squares of numbers</span></span>
+<span id="cb582-13"><a href="variable-length-arrays-vlas.html#cb582-13"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> w<span class="op">;</span> i<span class="op">++)</span></span>
+<span id="cb582-14"><a href="variable-length-arrays-vlas.html#cb582-14"></a>        x<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> i<span class="op">*</span>i<span class="op">;</span></span>
+<span id="cb582-15"><a href="variable-length-arrays-vlas.html#cb582-15"></a></span>
+<span id="cb582-16"><a href="variable-length-arrays-vlas.html#cb582-16"></a>    <span class="co">// Print them</span></span>
+<span id="cb582-17"><a href="variable-length-arrays-vlas.html#cb582-17"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> w<span class="op">;</span> i<span class="op">++)</span></span>
+<span id="cb582-18"><a href="variable-length-arrays-vlas.html#cb582-18"></a>        printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> x<span class="op">[</span>i<span class="op">]);</span></span>
+<span id="cb582-19"><a href="variable-length-arrays-vlas.html#cb582-19"></a></span>
+<span id="cb582-20"><a href="variable-length-arrays-vlas.html#cb582-20"></a>    <span class="co">// Now let&#39;s change w...</span></span>
+<span id="cb582-21"><a href="variable-length-arrays-vlas.html#cb582-21"></a></span>
+<span id="cb582-22"><a href="variable-length-arrays-vlas.html#cb582-22"></a>    w <span class="op">=</span> <span class="dv">20</span><span class="op">;</span></span>
+<span id="cb582-23"><a href="variable-length-arrays-vlas.html#cb582-23"></a></span>
+<span id="cb582-24"><a href="variable-length-arrays-vlas.html#cb582-24"></a>    <span class="co">// But goat is STILL an array of 10 ints, because that was the</span></span>
+<span id="cb582-25"><a href="variable-length-arrays-vlas.html#cb582-25"></a>    <span class="co">// value of w when the typedef executed.</span></span>
+<span id="cb582-26"><a href="variable-length-arrays-vlas.html#cb582-26"></a><span class="op">}</span></span></code></pre></div>
+<p>So it acts like an array of fixed size.</p>
+<p>But you still can’t use an initializer list on it.</p>
+<p></p>
+<h2 data-number="30.8" id="jumping-pitfalls"><span class="header-section-number">30.8</span> Jumping Pitfalls</h2>
+<p></p>
+<p>You have to watch out when using <code>goto</code> near VLAs because a lot of things aren’t legal.</p>
+<p> </p>
+<p>And when you’re using <code>longjmp()</code> there’s a case where you could leak memory with VLAs.</p>
+<p></p>
+<p>But both of these things we’ll cover in their respective chapters.</p>
+<h2 data-number="30.9" id="vla-general-issues"><span class="header-section-number">30.9</span> General Issues</h2>
+<p></p>
+<p>VLAs have been banned from the Linux kernel for a few reasons:</p>
+<ul>
+<li>Lots of places they were used should have just been fixed-size.</li>
+<li>The code behind VLAs is slower (to a degree that most people wouldn’t notice, but makes a difference in an operating system).</li>
+<li>VLAs are not supported to the same degree by all C compilers.</li>
+<li>Stack size is limited, and VLAs go on the stack. If some code accidentally (or maliciously) passes a large value into a kernel function that allocates a VLA, <em>Bad Things</em>™ could happen.</li>
+</ul>
+<p>Other folks online point out that there’s no way to detect a VLA’s failure to allocate, and programs that suffered such problems would likely just crash. While fixed-size arrays also have the same issue, it’s far more likely that someone accidentally make a <em>VLA Of Unusual Size</em> than somehow accidentally declare a fixed-size, say, 30 megabyte array.</p>
+<p> </p>
+<!-- Beej's guide to C
+
+# vim: ts=4:sw=4:nosi:et:tw=72
+-->
+<hr><div style="text-align:center"><span><a href="signal-handling.html">Prev</a> | </span><a href="index.html">Contents</a><span> | <a href="goto.html">Next</a></span></div></body>
+</html>

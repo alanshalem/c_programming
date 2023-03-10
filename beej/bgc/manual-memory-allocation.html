@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Beej's Guide to C Programming</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Mono&display=swap" rel="stylesheet"> 
+
+  <!-- BG custom styling -->
+  <style type="text/css">
+  /* Fix for line numbers not visible */
+  pre.numberSource code > span {
+      left: -1em;
+  }
+  pre.numberSource {
+      margin-left: initial;
+  }
+
+  /* Put some space after the section numbers */
+  span.toc-section-number::after {
+      content: "\a0\a0\a0";  /* non-breaking whitespace */
+  }
+
+  /* Hide underlines on code number links */
+  pre > code.sourceCode > span > a:first-child::before {
+      text-decoration: none;
+  }
+
+  /* Color the source blocks */
+  div.sourceCode {
+      background-color: #f0f0f0;
+  }
+
+  /* Fix iOS big text rendering issue */
+  pre > code.sourceCode > span {
+      display: initial;
+  }
+
+
+  /* Color the inline code */
+  code:not(.sourceCode) {
+      background: #f0f0f0;
+      padding-left: 0.2em;
+      padding-right: 0.2em;
+      border-radius: 0.2em;
+  }
+
+  /* Keep code tags from wrapping in tables */
+  tbody code {
+      white-space: nowrap;
+  }
+
+  td {
+      vertical-align: top;
+  }
+
+  body {
+      font-size: 12pt;
+      max-width: 43em;
+  }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<div style="text-align:center"><span><a href="pointers2.html">Prev</a> | </span><a href="index.html">Contents</a><span> | <a href="scope.html">Next</a></span></div><hr>
+<h1 data-number="12" id="manual-memory-allocation"><span class="header-section-number">12</span> Manual Memory Allocation</h1>
+<p> This is one of the big areas where C likely diverges from languages you already know: <em>manual memory management</em>.</p>
+<p>Other languages uses reference counting, garbage collection, or other means to determine when to allocate new memory for some data—and when to deallocate it when no variables refer to it.</p>
+<p>And that’s nice. It’s nice to be able to not worry about it, to just drop all the references to an item and trust that at some point the memory associated with it will be freed.</p>
+<p>But C’s not like that, entirely.</p>
+<p> Of course, in C, some variables are automatically allocated and deallocated when they come into scope and leave scope. We call these automatic variables. They’re your average run-of-the-mill block scope “local” variables. No problem. </p>
+<p>But what if you want something to persist longer than a particular block? This is where manual memory management comes into play.</p>
+<p>You can tell C explicitly to allocate for you a certain number of bytes that you can use as you please. And these bytes will remain allocated until you explicitly free that memory<a href="footnotes.html#fn88" class="footnote-ref" id="fnref88" role="doc-noteref"><sup>88</sup></a>.</p>
+<p>It’s important to free the memory you’re done with! If you don’t, we call that a <em>memory leak</em> and your process will continue to reserve that memory until it exits.</p>
+<p><em>If you manually allocated it, you have to manually free it when you’re done with it.</em></p>
+<p>So how do we do this? We’re going to learn a couple new functions, and make use of the <code>sizeof</code> operator to help us learn how many bytes to allocate.</p>
+<p> In common C parlance, devs say that automatic local variables are allocated “on the stack”, and manually-allocated memory is “on the heap”. The spec doesn’t talk about either of those things, but all C devs will know what you’re talking about if you bring them up. </p>
+<p>All functions we’re going to learn in this chapter can be found in <code>&lt;stdlib.h&gt;</code>.</p>
+<h2 data-number="12.1" id="allocating-and-deallocating-malloc-and-free"><span class="header-section-number">12.1</span> Allocating and Deallocating, <code>malloc()</code> and <code>free()</code></h2>
+<p> The <code>malloc()</code> function accepts a number of bytes to allocate, and returns a void pointer to that block of newly-allocated memory.</p>
+<p>Since it’s a <code>void*</code>, you can assign it into whatever pointer type you want… normally this will correspond in some way to the number of bytes you’re allocating.</p>
+<p> So… how many bytes should I allocate? We can use <code>sizeof</code> to help with that. If we want to allocate enough room for a single <code>int</code>, we can use <code>sizeof(int)</code> and pass that to <code>malloc()</code>. </p>
+<p> After we’re done with some allocated memory, we can call <code>free()</code> to indicate we’re done with that memory and it can be used for something else. As an argument, you pass the same pointer you got from <code>malloc()</code> (or a copy of it). It’s undefined behavior to use a memory region after you <code>free()</code> it.</p>
+<p>Let’s try. We’ll allocate enough memory for an <code>int</code>, and then store something there, and the print it.</p>
+<div class="sourceCode" id="cb192"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb192-1"><a href="manual-memory-allocation.html#cb192-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Allocate space for a single int (sizeof(int) bytes-worth):</span></span>
+<span id="cb192-2"><a href="manual-memory-allocation.html#cb192-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb192-3"><a href="manual-memory-allocation.html#cb192-3" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> <span class="op">*</span>p <span class="op">=</span> malloc<span class="op">(</span><span class="kw">sizeof</span><span class="op">(</span><span class="dt">int</span><span class="op">));</span></span>
+<span id="cb192-4"><a href="manual-memory-allocation.html#cb192-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb192-5"><a href="manual-memory-allocation.html#cb192-5" aria-hidden="true" tabindex="-1"></a><span class="op">*</span>p <span class="op">=</span> <span class="dv">12</span><span class="op">;</span>  <span class="co">// Store something there</span></span>
+<span id="cb192-6"><a href="manual-memory-allocation.html#cb192-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb192-7"><a href="manual-memory-allocation.html#cb192-7" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> <span class="op">*</span>p<span class="op">);</span>  <span class="co">// Print it: 12</span></span>
+<span id="cb192-8"><a href="manual-memory-allocation.html#cb192-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb192-9"><a href="manual-memory-allocation.html#cb192-9" aria-hidden="true" tabindex="-1"></a>free<span class="op">(</span>p<span class="op">);</span>  <span class="co">// All done with that memory</span></span>
+<span id="cb192-10"><a href="manual-memory-allocation.html#cb192-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb192-11"><a href="manual-memory-allocation.html#cb192-11" aria-hidden="true" tabindex="-1"></a><span class="co">//*p = 3490;  // ERROR: undefined behavior! Use after free()!</span></span></code></pre></div>
+<p></p>
+<p>Now, in that contrived example, there’s really no benefit to it. We could have just used an automatic <code>int</code> and it would have worked. But we’ll see how the ability to allocate memory this way has its advantages, especially with more complex data structures.</p>
+<p> One more thing you’ll commonly see takes advantage of the fact that <code>sizeof</code> can give you the size of the result type of any constant expression. So you could put a variable name in there, too, and use that. Here’s an example of that, just like the previous one:</p>
+<div class="sourceCode" id="cb193"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb193-1"><a href="manual-memory-allocation.html#cb193-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> <span class="op">*</span>p <span class="op">=</span> malloc<span class="op">(</span><span class="kw">sizeof</span> <span class="op">*</span>p<span class="op">);</span>  <span class="co">// *p is an int, so same as sizeof(int)</span></span></code></pre></div>
+<p> </p>
+<h2 data-number="12.2" id="error-checking"><span class="header-section-number">12.2</span> Error Checking</h2>
+<p> All the allocation functions return a pointer to the newly-allocated stretch of memory, or <code>NULL</code> if the memory cannot be allocated for some reason.</p>
+<p>Some OSes like Linux can be configured in such a way that <code>malloc()</code> never returns <code>NULL</code>, even if you’re out of memory. But despite this, you should always code it up with protections in mind.</p>
+<div class="sourceCode" id="cb194"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb194-1"><a href="manual-memory-allocation.html#cb194-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> <span class="op">*</span>x<span class="op">;</span></span>
+<span id="cb194-2"><a href="manual-memory-allocation.html#cb194-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb194-3"><a href="manual-memory-allocation.html#cb194-3" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> malloc<span class="op">(</span><span class="kw">sizeof</span><span class="op">(</span><span class="dt">int</span><span class="op">)</span> <span class="op">*</span> <span class="dv">10</span><span class="op">);</span></span>
+<span id="cb194-4"><a href="manual-memory-allocation.html#cb194-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb194-5"><a href="manual-memory-allocation.html#cb194-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(</span>x <span class="op">==</span> NULL<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb194-6"><a href="manual-memory-allocation.html#cb194-6" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;Error allocating 10 ints</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb194-7"><a href="manual-memory-allocation.html#cb194-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">// do something here to handle it</span></span>
+<span id="cb194-8"><a href="manual-memory-allocation.html#cb194-8" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>Here’s a common pattern that you’ll see, where we do the assignment and the condition on the same line:</p>
+<div class="sourceCode" id="cb195"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb195-1"><a href="manual-memory-allocation.html#cb195-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> <span class="op">*</span>x<span class="op">;</span></span>
+<span id="cb195-2"><a href="manual-memory-allocation.html#cb195-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb195-3"><a href="manual-memory-allocation.html#cb195-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">((</span>x <span class="op">=</span> malloc<span class="op">(</span><span class="kw">sizeof</span><span class="op">(</span><span class="dt">int</span><span class="op">)</span> <span class="op">*</span> <span class="dv">10</span><span class="op">))</span> <span class="op">==</span> NULL<span class="op">)</span></span>
+<span id="cb195-4"><a href="manual-memory-allocation.html#cb195-4" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;Error allocating 10 ints</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb195-5"><a href="manual-memory-allocation.html#cb195-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">// do something here to handle it</span></span>
+<span id="cb195-6"><a href="manual-memory-allocation.html#cb195-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p></p>
+<h2 data-number="12.3" id="allocating-space-for-an-array"><span class="header-section-number">12.3</span> Allocating Space for an Array</h2>
+<p> We’ve seen how to allocate space for a single thing; now what about for a bunch of them in an array?</p>
+<p>In C, an array is a bunch of the same thing back-to-back in a contiguous stretch of memory.</p>
+<p>We can allocate a contiguous stretch of memory—we’ve seen how to do that. If we wanted 3490 bytes of memory, we could just ask for it:</p>
+<div class="sourceCode" id="cb196"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb196-1"><a href="manual-memory-allocation.html#cb196-1" aria-hidden="true" tabindex="-1"></a><span class="dt">char</span> <span class="op">*</span>p <span class="op">=</span> malloc<span class="op">(</span><span class="dv">3490</span><span class="op">);</span>  <span class="co">// Voila</span></span></code></pre></div>
+<p>And—indeed!—that’s an array of 3490 <code>char</code>s (AKA a string!) since each <code>char</code> is 1 byte. In other words, <code>sizeof(char)</code> is <code>1</code>.</p>
+<p>Note: there’s no initialization done on the newly-allocated memory—it’s full of garbage. Clear it with <code>memset()</code> if you want to, or see <code>calloc()</code>, below.</p>
+<p>But we can just multiply the size of the thing we want by the number of elements we want, and then access them using either pointer or array notation. Example!</p>
+<p></p>
+<div class="sourceCode" id="cb197"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb197-1"><a href="manual-memory-allocation.html#cb197-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb197-2"><a href="manual-memory-allocation.html#cb197-2"></a><span class="pp">#include </span><span class="im">&lt;stdlib.h&gt;</span></span>
+<span id="cb197-3"><a href="manual-memory-allocation.html#cb197-3"></a></span>
+<span id="cb197-4"><a href="manual-memory-allocation.html#cb197-4"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb197-5"><a href="manual-memory-allocation.html#cb197-5"></a><span class="op">{</span></span>
+<span id="cb197-6"><a href="manual-memory-allocation.html#cb197-6"></a>    <span class="co">// Allocate space for 10 ints</span></span>
+<span id="cb197-7"><a href="manual-memory-allocation.html#cb197-7"></a>    <span class="dt">int</span> <span class="op">*</span>p <span class="op">=</span> malloc<span class="op">(</span><span class="kw">sizeof</span><span class="op">(</span><span class="dt">int</span><span class="op">)</span> <span class="op">*</span> <span class="dv">10</span><span class="op">);</span></span>
+<span id="cb197-8"><a href="manual-memory-allocation.html#cb197-8"></a></span>
+<span id="cb197-9"><a href="manual-memory-allocation.html#cb197-9"></a>    <span class="co">// Assign them values 0-45:</span></span>
+<span id="cb197-10"><a href="manual-memory-allocation.html#cb197-10"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> <span class="dv">10</span><span class="op">;</span> i<span class="op">++)</span></span>
+<span id="cb197-11"><a href="manual-memory-allocation.html#cb197-11"></a>        p<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> i <span class="op">*</span> <span class="dv">5</span><span class="op">;</span></span>
+<span id="cb197-12"><a href="manual-memory-allocation.html#cb197-12"></a></span>
+<span id="cb197-13"><a href="manual-memory-allocation.html#cb197-13"></a>    <span class="co">// Print all values 0, 5, 10, 15, ..., 40, 45</span></span>
+<span id="cb197-14"><a href="manual-memory-allocation.html#cb197-14"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> <span class="dv">10</span><span class="op">;</span> i<span class="op">++)</span></span>
+<span id="cb197-15"><a href="manual-memory-allocation.html#cb197-15"></a>        printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> p<span class="op">[</span>i<span class="op">]);</span></span>
+<span id="cb197-16"><a href="manual-memory-allocation.html#cb197-16"></a></span>
+<span id="cb197-17"><a href="manual-memory-allocation.html#cb197-17"></a>    <span class="co">// Free the space</span></span>
+<span id="cb197-18"><a href="manual-memory-allocation.html#cb197-18"></a>    free<span class="op">(</span>p<span class="op">);</span></span>
+<span id="cb197-19"><a href="manual-memory-allocation.html#cb197-19"></a><span class="op">}</span></span></code></pre></div>
+<p>The key’s in that <code>malloc()</code> line. If we know each <code>int</code> takes <code>sizeof(int)</code> bytes to hold it, and we know we want 10 of them, we can just allocate exactly that many bytes with:</p>
+<div class="sourceCode" id="cb198"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb198-1"><a href="manual-memory-allocation.html#cb198-1" aria-hidden="true" tabindex="-1"></a><span class="kw">sizeof</span><span class="op">(</span><span class="dt">int</span><span class="op">)</span> <span class="op">*</span> <span class="dv">10</span></span></code></pre></div>
+<p>And this trick works for every type. Just pass it to <code>sizeof</code> and multiply by the size of the array. </p>
+<h2 data-number="12.4" id="an-alternative-calloc"><span class="header-section-number">12.4</span> An Alternative: <code>calloc()</code></h2>
+<p> This is another allocation function that works similarly to <code>malloc()</code>, with two key differences:</p>
+<ul>
+<li>Instead of a single argument, you pass the size of one element, and the number of elements you wish to allocate. It’s like it’s made for allocating arrays.</li>
+<li>It clears the memory to zero.</li>
+</ul>
+<p>You still use <code>free()</code> to deallocate memory obtained through <code>calloc()</code>.</p>
+<p>Here’s a comparison of <code>calloc()</code> and <code>malloc()</code>.</p>
+<div class="sourceCode" id="cb199"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb199-1"><a href="manual-memory-allocation.html#cb199-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Allocate space for 10 ints with calloc(), initialized to 0:</span></span>
+<span id="cb199-2"><a href="manual-memory-allocation.html#cb199-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> <span class="op">*</span>p <span class="op">=</span> calloc<span class="op">(</span><span class="dv">10</span><span class="op">,</span> <span class="kw">sizeof</span><span class="op">(</span><span class="dt">int</span><span class="op">));</span></span>
+<span id="cb199-3"><a href="manual-memory-allocation.html#cb199-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb199-4"><a href="manual-memory-allocation.html#cb199-4" aria-hidden="true" tabindex="-1"></a><span class="co">// Allocate space for 10 ints with malloc(), initialized to 0:</span></span>
+<span id="cb199-5"><a href="manual-memory-allocation.html#cb199-5" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> <span class="op">*</span>q <span class="op">=</span> malloc<span class="op">(</span><span class="dv">10</span> <span class="op">*</span> <span class="kw">sizeof</span><span class="op">(</span><span class="dt">int</span><span class="op">));</span></span>
+<span id="cb199-6"><a href="manual-memory-allocation.html#cb199-6" aria-hidden="true" tabindex="-1"></a>memset<span class="op">(</span>q<span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="dv">10</span> <span class="op">*</span> <span class="kw">sizeof</span><span class="op">(</span><span class="dt">int</span><span class="op">));</span>   <span class="co">// set to 0</span></span></code></pre></div>
+<p>Again, the result is the same for both except <code>malloc()</code> doesn’t zero the memory by default. </p>
+<h2 data-number="12.5" id="changing-allocated-size-with-realloc"><span class="header-section-number">12.5</span> Changing Allocated Size with <code>realloc()</code></h2>
+<p> If you’ve already allocated 10 <code>int</code>s, but later you decide you need 20, what can you do?</p>
+<p>One option is to allocate some new space, and then <code>memcpy()</code> the memory over… but it turns out that sometimes you don’t need to move anything. And there’s one function that’s just smart enough to do the right thing in all the right circumstances: <code>realloc()</code>.</p>
+<p>It takes a pointer to some previously-allocted memory (by <code>malloc()</code> or <code>calloc()</code>) and a new size for the memory region to be.</p>
+<p>It then grows or shrinks that memory, and returns a pointer to it. Sometimes it might return the same pointer (if the data didn’t have to be copied elsewhere), or it might return a different one (if the data did have to be copied).</p>
+<p>Be sure when you call <code>realloc()</code>, you specify the number of <em>bytes</em> to allocate, and not just the number of array elements! That is:</p>
+<div class="sourceCode" id="cb200"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb200-1"><a href="manual-memory-allocation.html#cb200-1" aria-hidden="true" tabindex="-1"></a>num_floats <span class="op">*=</span> <span class="dv">2</span><span class="op">;</span></span>
+<span id="cb200-2"><a href="manual-memory-allocation.html#cb200-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb200-3"><a href="manual-memory-allocation.html#cb200-3" aria-hidden="true" tabindex="-1"></a>np <span class="op">=</span> realloc<span class="op">(</span>p<span class="op">,</span> num_floats<span class="op">);</span>  <span class="co">// WRONG: need bytes, not number of elements!</span></span>
+<span id="cb200-4"><a href="manual-memory-allocation.html#cb200-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb200-5"><a href="manual-memory-allocation.html#cb200-5" aria-hidden="true" tabindex="-1"></a>np <span class="op">=</span> realloc<span class="op">(</span>p<span class="op">,</span> num_floats <span class="op">*</span> <span class="kw">sizeof</span><span class="op">(</span><span class="dt">float</span><span class="op">));</span>  <span class="co">// Better!</span></span></code></pre></div>
+<p>Let’s allocate an array of 20 <code>float</code>s, and then change our mind and make it an array of 40.</p>
+<p>We’re going to assign the return value of <code>realloc()</code> into another pointer just to make sure it’s not <code>NULL</code>. If it’s not, then we can reassign it into our original pointer. (If we just assigned the return value directly into the original pointer, we’d lose that pointer if the function returned <code>NULL</code> and we’d have no way to get it back.)</p>
+<div class="sourceCode" id="cb201"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb201-1"><a href="manual-memory-allocation.html#cb201-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb201-2"><a href="manual-memory-allocation.html#cb201-2"></a><span class="pp">#include </span><span class="im">&lt;stdlib.h&gt;</span></span>
+<span id="cb201-3"><a href="manual-memory-allocation.html#cb201-3"></a></span>
+<span id="cb201-4"><a href="manual-memory-allocation.html#cb201-4"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb201-5"><a href="manual-memory-allocation.html#cb201-5"></a><span class="op">{</span></span>
+<span id="cb201-6"><a href="manual-memory-allocation.html#cb201-6"></a>    <span class="co">// Allocate space for 20 floats</span></span>
+<span id="cb201-7"><a href="manual-memory-allocation.html#cb201-7"></a>    <span class="dt">float</span> <span class="op">*</span>p <span class="op">=</span> malloc<span class="op">(</span><span class="kw">sizeof</span> <span class="op">*</span>p <span class="op">*</span> <span class="dv">20</span><span class="op">);</span>  <span class="co">// sizeof *p same as sizeof(float)</span></span>
+<span id="cb201-8"><a href="manual-memory-allocation.html#cb201-8"></a></span>
+<span id="cb201-9"><a href="manual-memory-allocation.html#cb201-9"></a>    <span class="co">// Assign them fractional values 0.0-1.0:</span></span>
+<span id="cb201-10"><a href="manual-memory-allocation.html#cb201-10"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> <span class="dv">20</span><span class="op">;</span> i<span class="op">++)</span></span>
+<span id="cb201-11"><a href="manual-memory-allocation.html#cb201-11"></a>        p<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> i <span class="op">/</span> <span class="fl">20.0</span><span class="op">;</span></span>
+<span id="cb201-12"><a href="manual-memory-allocation.html#cb201-12"></a></span>
+<span id="cb201-13"><a href="manual-memory-allocation.html#cb201-13"></a>    <span class="co">// But wait! Let&#39;s actually make this an array of 40 elements</span></span>
+<span id="cb201-14"><a href="manual-memory-allocation.html#cb201-14"></a>    <span class="dt">float</span> <span class="op">*</span>new_p <span class="op">=</span> realloc<span class="op">(</span>p<span class="op">,</span> <span class="kw">sizeof</span> <span class="op">*</span>p <span class="op">*</span> <span class="dv">40</span><span class="op">);</span></span>
+<span id="cb201-15"><a href="manual-memory-allocation.html#cb201-15"></a></span>
+<span id="cb201-16"><a href="manual-memory-allocation.html#cb201-16"></a>    <span class="co">// Check to see if we successfully reallocated</span></span>
+<span id="cb201-17"><a href="manual-memory-allocation.html#cb201-17"></a>    <span class="cf">if</span> <span class="op">(</span>new_p <span class="op">==</span> NULL<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb201-18"><a href="manual-memory-allocation.html#cb201-18"></a>        printf<span class="op">(</span><span class="st">&quot;Error reallocing</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb201-19"><a href="manual-memory-allocation.html#cb201-19"></a>        <span class="cf">return</span> <span class="dv">1</span><span class="op">;</span></span>
+<span id="cb201-20"><a href="manual-memory-allocation.html#cb201-20"></a>    <span class="op">}</span></span>
+<span id="cb201-21"><a href="manual-memory-allocation.html#cb201-21"></a></span>
+<span id="cb201-22"><a href="manual-memory-allocation.html#cb201-22"></a>    <span class="co">// If we did, we can just reassign p</span></span>
+<span id="cb201-23"><a href="manual-memory-allocation.html#cb201-23"></a>    p <span class="op">=</span> new_p<span class="op">;</span></span>
+<span id="cb201-24"><a href="manual-memory-allocation.html#cb201-24"></a></span>
+<span id="cb201-25"><a href="manual-memory-allocation.html#cb201-25"></a>    <span class="co">// And assign the new elements values in the range 1.0-2.0</span></span>
+<span id="cb201-26"><a href="manual-memory-allocation.html#cb201-26"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">20</span><span class="op">;</span> i <span class="op">&lt;</span> <span class="dv">40</span><span class="op">;</span> i<span class="op">++)</span></span>
+<span id="cb201-27"><a href="manual-memory-allocation.html#cb201-27"></a>        p<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> <span class="fl">1.0</span> <span class="op">+</span> <span class="op">(</span>i <span class="op">-</span> <span class="dv">20</span><span class="op">)</span> <span class="op">/</span> <span class="fl">20.0</span><span class="op">;</span></span>
+<span id="cb201-28"><a href="manual-memory-allocation.html#cb201-28"></a></span>
+<span id="cb201-29"><a href="manual-memory-allocation.html#cb201-29"></a>    <span class="co">// Print all values 0.0-2.0 in the 40 elements:</span></span>
+<span id="cb201-30"><a href="manual-memory-allocation.html#cb201-30"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> <span class="dv">40</span><span class="op">;</span> i<span class="op">++)</span></span>
+<span id="cb201-31"><a href="manual-memory-allocation.html#cb201-31"></a>        printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%f\n</span><span class="st">&quot;</span><span class="op">,</span> p<span class="op">[</span>i<span class="op">]);</span></span>
+<span id="cb201-32"><a href="manual-memory-allocation.html#cb201-32"></a></span>
+<span id="cb201-33"><a href="manual-memory-allocation.html#cb201-33"></a>    <span class="co">// Free the space</span></span>
+<span id="cb201-34"><a href="manual-memory-allocation.html#cb201-34"></a>    free<span class="op">(</span>p<span class="op">);</span></span>
+<span id="cb201-35"><a href="manual-memory-allocation.html#cb201-35"></a><span class="op">}</span></span></code></pre></div>
+<p>Notice in there how we took the return value from <code>realloc()</code> and reassigned it into the same pointer variable <code>p</code> that we passed in. That’s pretty common to do.</p>
+<p>Also if line 7 is looking weird, with that <code>sizeof *p</code> in there, remember that <code>sizeof</code> works on the size of the type of the expression. And the type of <code>*p</code> is <code>float</code>, so that line is equivalent to <code>sizeof(float)</code>. </p>
+<h3 data-number="12.5.1" id="reading-in-lines-of-arbitrary-length"><span class="header-section-number">12.5.1</span> Reading in Lines of Arbitrary Length</h3>
+<p>I want to demonstrate two things with this full-blown example.</p>
+<ol type="1">
+<li>Use of <code>realloc()</code> to grow a buffer as we read in more data.</li>
+<li>Use of <code>realloc()</code> to shrink the buffer down to the perfect size after we’ve completed the read.</li>
+</ol>
+<p>What we see here is a loop that calls <code>fgetc()</code> over and over to append to a buffer until we see that the last character is a newline.</p>
+<p>Once it finds the newline, it shrinks the buffer to just the right size and returns it.</p>
+<div class="sourceCode" id="cb202"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb202-1"><a href="manual-memory-allocation.html#cb202-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb202-2"><a href="manual-memory-allocation.html#cb202-2"></a><span class="pp">#include </span><span class="im">&lt;stdlib.h&gt;</span></span>
+<span id="cb202-3"><a href="manual-memory-allocation.html#cb202-3"></a></span>
+<span id="cb202-4"><a href="manual-memory-allocation.html#cb202-4"></a><span class="co">// Read a line of arbitrary size from a file</span></span>
+<span id="cb202-5"><a href="manual-memory-allocation.html#cb202-5"></a><span class="co">//</span></span>
+<span id="cb202-6"><a href="manual-memory-allocation.html#cb202-6"></a><span class="co">// Returns a pointer to the line.</span></span>
+<span id="cb202-7"><a href="manual-memory-allocation.html#cb202-7"></a><span class="co">// Returns NULL on EOF or error.</span></span>
+<span id="cb202-8"><a href="manual-memory-allocation.html#cb202-8"></a><span class="co">//</span></span>
+<span id="cb202-9"><a href="manual-memory-allocation.html#cb202-9"></a><span class="co">// It&#39;s up to the caller to free() this pointer when done with it.</span></span>
+<span id="cb202-10"><a href="manual-memory-allocation.html#cb202-10"></a><span class="co">//</span></span>
+<span id="cb202-11"><a href="manual-memory-allocation.html#cb202-11"></a><span class="co">// Note that this strips the newline from the result. If you need</span></span>
+<span id="cb202-12"><a href="manual-memory-allocation.html#cb202-12"></a><span class="co">// it in there, probably best to switch this to a do-while.</span></span>
+<span id="cb202-13"><a href="manual-memory-allocation.html#cb202-13"></a></span>
+<span id="cb202-14"><a href="manual-memory-allocation.html#cb202-14"></a><span class="dt">char</span> <span class="op">*</span>readline<span class="op">(</span><span class="dt">FILE</span> <span class="op">*</span>fp<span class="op">)</span></span>
+<span id="cb202-15"><a href="manual-memory-allocation.html#cb202-15"></a><span class="op">{</span></span>
+<span id="cb202-16"><a href="manual-memory-allocation.html#cb202-16"></a>    <span class="dt">int</span> offset <span class="op">=</span> <span class="dv">0</span><span class="op">;</span>   <span class="co">// Index next char goes in the buffer</span></span>
+<span id="cb202-17"><a href="manual-memory-allocation.html#cb202-17"></a>    <span class="dt">int</span> bufsize <span class="op">=</span> <span class="dv">4</span><span class="op">;</span>  <span class="co">// Preferably power of 2 initial size</span></span>
+<span id="cb202-18"><a href="manual-memory-allocation.html#cb202-18"></a>    <span class="dt">char</span> <span class="op">*</span>buf<span class="op">;</span>        <span class="co">// The buffer</span></span>
+<span id="cb202-19"><a href="manual-memory-allocation.html#cb202-19"></a>    <span class="dt">int</span> c<span class="op">;</span>            <span class="co">// The character we&#39;ve read in</span></span>
+<span id="cb202-20"><a href="manual-memory-allocation.html#cb202-20"></a></span>
+<span id="cb202-21"><a href="manual-memory-allocation.html#cb202-21"></a>    buf <span class="op">=</span> malloc<span class="op">(</span>bufsize<span class="op">);</span>  <span class="co">// Allocate initial buffer</span></span>
+<span id="cb202-22"><a href="manual-memory-allocation.html#cb202-22"></a></span>
+<span id="cb202-23"><a href="manual-memory-allocation.html#cb202-23"></a>    <span class="cf">if</span> <span class="op">(</span>buf <span class="op">==</span> NULL<span class="op">)</span>   <span class="co">// Error check</span></span>
+<span id="cb202-24"><a href="manual-memory-allocation.html#cb202-24"></a>        <span class="cf">return</span> NULL<span class="op">;</span></span>
+<span id="cb202-25"><a href="manual-memory-allocation.html#cb202-25"></a></span>
+<span id="cb202-26"><a href="manual-memory-allocation.html#cb202-26"></a>    <span class="co">// Main loop--read until newline or EOF</span></span>
+<span id="cb202-27"><a href="manual-memory-allocation.html#cb202-27"></a>    <span class="cf">while</span> <span class="op">(</span>c <span class="op">=</span> fgetc<span class="op">(</span>fp<span class="op">),</span> c <span class="op">!=</span> <span class="ch">&#39;</span><span class="sc">\n</span><span class="ch">&#39;</span> <span class="op">&amp;&amp;</span> c <span class="op">!=</span> EOF<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb202-28"><a href="manual-memory-allocation.html#cb202-28"></a></span>
+<span id="cb202-29"><a href="manual-memory-allocation.html#cb202-29"></a>        <span class="co">// Check if we&#39;re out of room in the buffer accounting</span></span>
+<span id="cb202-30"><a href="manual-memory-allocation.html#cb202-30"></a>        <span class="co">// for the extra byte for the NUL terminator</span></span>
+<span id="cb202-31"><a href="manual-memory-allocation.html#cb202-31"></a>        <span class="cf">if</span> <span class="op">(</span>offset <span class="op">==</span> bufsize <span class="op">-</span> <span class="dv">1</span><span class="op">)</span> <span class="op">{</span>  <span class="co">// -1 for the NUL terminator</span></span>
+<span id="cb202-32"><a href="manual-memory-allocation.html#cb202-32"></a>            bufsize <span class="op">*=</span> <span class="dv">2</span><span class="op">;</span>  <span class="co">// 2x the space</span></span>
+<span id="cb202-33"><a href="manual-memory-allocation.html#cb202-33"></a></span>
+<span id="cb202-34"><a href="manual-memory-allocation.html#cb202-34"></a>            <span class="dt">char</span> <span class="op">*</span>new_buf <span class="op">=</span> realloc<span class="op">(</span>buf<span class="op">,</span> bufsize<span class="op">);</span></span>
+<span id="cb202-35"><a href="manual-memory-allocation.html#cb202-35"></a></span>
+<span id="cb202-36"><a href="manual-memory-allocation.html#cb202-36"></a>            <span class="cf">if</span> <span class="op">(</span>new_buf <span class="op">==</span> NULL<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb202-37"><a href="manual-memory-allocation.html#cb202-37"></a>                free<span class="op">(</span>buf<span class="op">);</span>   <span class="co">// On error, free and bail</span></span>
+<span id="cb202-38"><a href="manual-memory-allocation.html#cb202-38"></a>                <span class="cf">return</span> NULL<span class="op">;</span></span>
+<span id="cb202-39"><a href="manual-memory-allocation.html#cb202-39"></a>            <span class="op">}</span></span>
+<span id="cb202-40"><a href="manual-memory-allocation.html#cb202-40"></a></span>
+<span id="cb202-41"><a href="manual-memory-allocation.html#cb202-41"></a>            buf <span class="op">=</span> new_buf<span class="op">;</span>  <span class="co">// Successful realloc</span></span>
+<span id="cb202-42"><a href="manual-memory-allocation.html#cb202-42"></a>        <span class="op">}</span></span>
+<span id="cb202-43"><a href="manual-memory-allocation.html#cb202-43"></a></span>
+<span id="cb202-44"><a href="manual-memory-allocation.html#cb202-44"></a>        buf<span class="op">[</span>offset<span class="op">++]</span> <span class="op">=</span> c<span class="op">;</span>  <span class="co">// Add the byte onto the buffer</span></span>
+<span id="cb202-45"><a href="manual-memory-allocation.html#cb202-45"></a>    <span class="op">}</span></span>
+<span id="cb202-46"><a href="manual-memory-allocation.html#cb202-46"></a></span>
+<span id="cb202-47"><a href="manual-memory-allocation.html#cb202-47"></a>    <span class="co">// We hit newline or EOF...</span></span>
+<span id="cb202-48"><a href="manual-memory-allocation.html#cb202-48"></a></span>
+<span id="cb202-49"><a href="manual-memory-allocation.html#cb202-49"></a>    <span class="co">// If at EOF and we read no bytes, free the buffer and</span></span>
+<span id="cb202-50"><a href="manual-memory-allocation.html#cb202-50"></a>    <span class="co">// return NULL to indicate we&#39;re at EOF:</span></span>
+<span id="cb202-51"><a href="manual-memory-allocation.html#cb202-51"></a>    <span class="cf">if</span> <span class="op">(</span>c <span class="op">==</span> EOF <span class="op">&amp;&amp;</span> offset <span class="op">==</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb202-52"><a href="manual-memory-allocation.html#cb202-52"></a>        free<span class="op">(</span>buf<span class="op">);</span></span>
+<span id="cb202-53"><a href="manual-memory-allocation.html#cb202-53"></a>        <span class="cf">return</span> NULL<span class="op">;</span></span>
+<span id="cb202-54"><a href="manual-memory-allocation.html#cb202-54"></a>    <span class="op">}</span></span>
+<span id="cb202-55"><a href="manual-memory-allocation.html#cb202-55"></a></span>
+<span id="cb202-56"><a href="manual-memory-allocation.html#cb202-56"></a>    <span class="co">// Shrink to fit</span></span>
+<span id="cb202-57"><a href="manual-memory-allocation.html#cb202-57"></a>    <span class="cf">if</span> <span class="op">(</span>offset <span class="op">&lt;</span> bufsize <span class="op">-</span> <span class="dv">1</span><span class="op">)</span> <span class="op">{</span>  <span class="co">// If we&#39;re short of the end</span></span>
+<span id="cb202-58"><a href="manual-memory-allocation.html#cb202-58"></a>        <span class="dt">char</span> <span class="op">*</span>new_buf <span class="op">=</span> realloc<span class="op">(</span>buf<span class="op">,</span> offset <span class="op">+</span> <span class="dv">1</span><span class="op">);</span> <span class="co">// +1 for NUL terminator</span></span>
+<span id="cb202-59"><a href="manual-memory-allocation.html#cb202-59"></a></span>
+<span id="cb202-60"><a href="manual-memory-allocation.html#cb202-60"></a>        <span class="co">// If successful, point buf to new_buf;</span></span>
+<span id="cb202-61"><a href="manual-memory-allocation.html#cb202-61"></a>        <span class="co">// otherwise we&#39;ll just leave buf where it is</span></span>
+<span id="cb202-62"><a href="manual-memory-allocation.html#cb202-62"></a>        <span class="cf">if</span> <span class="op">(</span>new_buf <span class="op">!=</span> NULL<span class="op">)</span></span>
+<span id="cb202-63"><a href="manual-memory-allocation.html#cb202-63"></a>            buf <span class="op">=</span> new_buf<span class="op">;</span></span>
+<span id="cb202-64"><a href="manual-memory-allocation.html#cb202-64"></a>    <span class="op">}</span></span>
+<span id="cb202-65"><a href="manual-memory-allocation.html#cb202-65"></a></span>
+<span id="cb202-66"><a href="manual-memory-allocation.html#cb202-66"></a>    <span class="co">// Add the NUL terminator</span></span>
+<span id="cb202-67"><a href="manual-memory-allocation.html#cb202-67"></a>    buf<span class="op">[</span>offset<span class="op">]</span> <span class="op">=</span> <span class="ch">&#39;</span><span class="sc">\0</span><span class="ch">&#39;</span><span class="op">;</span></span>
+<span id="cb202-68"><a href="manual-memory-allocation.html#cb202-68"></a></span>
+<span id="cb202-69"><a href="manual-memory-allocation.html#cb202-69"></a>    <span class="cf">return</span> buf<span class="op">;</span></span>
+<span id="cb202-70"><a href="manual-memory-allocation.html#cb202-70"></a><span class="op">}</span></span>
+<span id="cb202-71"><a href="manual-memory-allocation.html#cb202-71"></a></span>
+<span id="cb202-72"><a href="manual-memory-allocation.html#cb202-72"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb202-73"><a href="manual-memory-allocation.html#cb202-73"></a><span class="op">{</span></span>
+<span id="cb202-74"><a href="manual-memory-allocation.html#cb202-74"></a>    <span class="dt">FILE</span> <span class="op">*</span>fp <span class="op">=</span> fopen<span class="op">(</span><span class="st">&quot;foo.txt&quot;</span><span class="op">,</span> <span class="st">&quot;r&quot;</span><span class="op">);</span></span>
+<span id="cb202-75"><a href="manual-memory-allocation.html#cb202-75"></a></span>
+<span id="cb202-76"><a href="manual-memory-allocation.html#cb202-76"></a>    <span class="dt">char</span> <span class="op">*</span>line<span class="op">;</span></span>
+<span id="cb202-77"><a href="manual-memory-allocation.html#cb202-77"></a></span>
+<span id="cb202-78"><a href="manual-memory-allocation.html#cb202-78"></a>    <span class="cf">while</span> <span class="op">((</span>line <span class="op">=</span> readline<span class="op">(</span>fp<span class="op">))</span> <span class="op">!=</span> NULL<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb202-79"><a href="manual-memory-allocation.html#cb202-79"></a>        printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> line<span class="op">);</span></span>
+<span id="cb202-80"><a href="manual-memory-allocation.html#cb202-80"></a>        free<span class="op">(</span>line<span class="op">);</span></span>
+<span id="cb202-81"><a href="manual-memory-allocation.html#cb202-81"></a>    <span class="op">}</span></span>
+<span id="cb202-82"><a href="manual-memory-allocation.html#cb202-82"></a></span>
+<span id="cb202-83"><a href="manual-memory-allocation.html#cb202-83"></a>    fclose<span class="op">(</span>fp<span class="op">);</span></span>
+<span id="cb202-84"><a href="manual-memory-allocation.html#cb202-84"></a><span class="op">}</span></span></code></pre></div>
+<p>When growing memory like this, it’s common (though hardly a law) to double the space needed each step just to minimize the number of <code>realloc()</code>s that occur.</p>
+<p>Finally you might note that <code>readline()</code> returns a pointer to a <code>malloc()</code>d buffer. As such, it’s up to the caller to explicitly <code>free()</code> that memory when it’s done with it.</p>
+<h3 data-number="12.5.2" id="realloc-with-null"><span class="header-section-number">12.5.2</span> <code>realloc()</code> with <code>NULL</code></h3>
+<p> Trivia time! These two lines are equivalent:</p>
+<div class="sourceCode" id="cb203"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb203-1"><a href="manual-memory-allocation.html#cb203-1" aria-hidden="true" tabindex="-1"></a><span class="dt">char</span> <span class="op">*</span>p <span class="op">=</span> malloc<span class="op">(</span><span class="dv">3490</span><span class="op">);</span></span>
+<span id="cb203-2"><a href="manual-memory-allocation.html#cb203-2" aria-hidden="true" tabindex="-1"></a><span class="dt">char</span> <span class="op">*</span>p <span class="op">=</span> realloc<span class="op">(</span>NULL<span class="op">,</span> <span class="dv">3490</span><span class="op">);</span></span></code></pre></div>
+<p>That could be convenient if you have some kind of allocation loop and you don’t want to special-case the first <code>malloc()</code>.</p>
+<div class="sourceCode" id="cb204"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb204-1"><a href="manual-memory-allocation.html#cb204-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> <span class="op">*</span>p <span class="op">=</span> NULL<span class="op">;</span></span>
+<span id="cb204-2"><a href="manual-memory-allocation.html#cb204-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> length <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb204-3"><a href="manual-memory-allocation.html#cb204-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb204-4"><a href="manual-memory-allocation.html#cb204-4" aria-hidden="true" tabindex="-1"></a><span class="cf">while</span> <span class="op">(!</span>done<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb204-5"><a href="manual-memory-allocation.html#cb204-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Allocate 10 more ints:</span></span>
+<span id="cb204-6"><a href="manual-memory-allocation.html#cb204-6" aria-hidden="true" tabindex="-1"></a>    length <span class="op">+=</span> <span class="dv">10</span><span class="op">;</span></span>
+<span id="cb204-7"><a href="manual-memory-allocation.html#cb204-7" aria-hidden="true" tabindex="-1"></a>    p <span class="op">=</span> realloc<span class="op">(</span>p<span class="op">,</span> <span class="kw">sizeof</span> <span class="op">*</span>p <span class="op">*</span> length<span class="op">);</span></span>
+<span id="cb204-8"><a href="manual-memory-allocation.html#cb204-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb204-9"><a href="manual-memory-allocation.html#cb204-9" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Do amazing things</span></span>
+<span id="cb204-10"><a href="manual-memory-allocation.html#cb204-10" aria-hidden="true" tabindex="-1"></a>    <span class="co">// ...</span></span>
+<span id="cb204-11"><a href="manual-memory-allocation.html#cb204-11" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>In that example, we didn’t need an initial <code>malloc()</code> since <code>p</code> was <code>NULL</code> to start. </p>
+<h2 data-number="12.6" id="aligned-allocations"><span class="header-section-number">12.6</span> Aligned Allocations</h2>
+<p> You probably aren’t going to need to use this.</p>
+<p>And I don’t want to get too far off in the weeds talking about it right now, but there’s this thing called <em>memory alignment</em>, which has to do with the memory address (pointer value) being a multiple of a certain number.</p>
+<p>For example, a system might require that 16-bit values begin on memory addresses that are multiples of 2. Or that 64-bit values begin on memory addresses that are multiples of 2, 4, or 8, for example. It depends on the CPU.</p>
+<p>Some systems require this kind of alignment for fast memory access, or some even for memory access at all.</p>
+<p>Now, if you use <code>malloc()</code>, <code>calloc()</code>, or <code>realloc()</code>, C will give you a chunk of memory that’s well-aligned for any value at all, even <code>struct</code>s. Works in all cases.</p>
+<p>But there might be times that you know that some data can be aligned at a smaller boundary, or must be aligned at a larger one for some reason. I imagine this is more common with embedded systems programming.</p>
+<p> In those cases, you can specify an alignment with <code>aligned_alloc()</code>.</p>
+<p>The alignment is an integer power of two greater than zero, so <code>2</code>, <code>4</code>, <code>8</code>, <code>16</code>, etc. and you give that to <code>aligned_alloc()</code> before the number of bytes you’re interested in.</p>
+<p>The other restriction is that the number of bytes you allocate needs to be a multiple of the alignment. But this might be changing. See <a href="http://www.open-std.org/jtc1/sc22/wg14/www/docs/summary.htm#dr_460">C Defect Report 460</a><a href="footnotes.html#fn89" class="footnote-ref" id="fnref89" role="doc-noteref"><sup>89</sup></a></p>
+<p>Let’s do an example, allocating on a 64-byte boundary:</p>
+<div class="sourceCode" id="cb205"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb205-1"><a href="manual-memory-allocation.html#cb205-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb205-2"><a href="manual-memory-allocation.html#cb205-2"></a><span class="pp">#include </span><span class="im">&lt;stdlib.h&gt;</span></span>
+<span id="cb205-3"><a href="manual-memory-allocation.html#cb205-3"></a><span class="pp">#include </span><span class="im">&lt;string.h&gt;</span></span>
+<span id="cb205-4"><a href="manual-memory-allocation.html#cb205-4"></a></span>
+<span id="cb205-5"><a href="manual-memory-allocation.html#cb205-5"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb205-6"><a href="manual-memory-allocation.html#cb205-6"></a><span class="op">{</span></span>
+<span id="cb205-7"><a href="manual-memory-allocation.html#cb205-7"></a>    <span class="co">// Allocate 256 bytes aligned on a 64-byte boundary</span></span>
+<span id="cb205-8"><a href="manual-memory-allocation.html#cb205-8"></a>    <span class="dt">char</span> <span class="op">*</span>p <span class="op">=</span> aligned_alloc<span class="op">(</span><span class="dv">64</span><span class="op">,</span> <span class="dv">256</span><span class="op">);</span>  <span class="co">// 256 == 64 * 4</span></span>
+<span id="cb205-9"><a href="manual-memory-allocation.html#cb205-9"></a></span>
+<span id="cb205-10"><a href="manual-memory-allocation.html#cb205-10"></a>    <span class="co">// Copy a string in there and print it</span></span>
+<span id="cb205-11"><a href="manual-memory-allocation.html#cb205-11"></a>    strcpy<span class="op">(</span>p<span class="op">,</span> <span class="st">&quot;Hello, world!&quot;</span><span class="op">);</span></span>
+<span id="cb205-12"><a href="manual-memory-allocation.html#cb205-12"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> p<span class="op">);</span></span>
+<span id="cb205-13"><a href="manual-memory-allocation.html#cb205-13"></a></span>
+<span id="cb205-14"><a href="manual-memory-allocation.html#cb205-14"></a>    <span class="co">// Free the space</span></span>
+<span id="cb205-15"><a href="manual-memory-allocation.html#cb205-15"></a>    free<span class="op">(</span>p<span class="op">);</span></span>
+<span id="cb205-16"><a href="manual-memory-allocation.html#cb205-16"></a><span class="op">}</span></span></code></pre></div>
+<p>I want to throw a note here about <code>realloc()</code> and <code>aligned_alloc()</code>. <code>realloc()</code> doesn’t have any alignment guarantees, so if you need to get some aligned reallocated space, you’ll have to do it the hard way with <code>memcpy()</code>. </p>
+<p>Here’s a non-standard <code>aligned_realloc()</code> function, if you need it:</p>
+<div class="sourceCode" id="cb206"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb206-1"><a href="manual-memory-allocation.html#cb206-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> <span class="op">*</span>aligned_realloc<span class="op">(</span><span class="dt">void</span> <span class="op">*</span>ptr<span class="op">,</span> <span class="dt">size_t</span> old_size<span class="op">,</span> <span class="dt">size_t</span> alignment<span class="op">,</span> <span class="dt">size_t</span> size<span class="op">)</span></span>
+<span id="cb206-2"><a href="manual-memory-allocation.html#cb206-2" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb206-3"><a href="manual-memory-allocation.html#cb206-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">char</span> <span class="op">*</span>new_ptr <span class="op">=</span> aligned_alloc<span class="op">(</span>alignment<span class="op">,</span> size<span class="op">);</span></span>
+<span id="cb206-4"><a href="manual-memory-allocation.html#cb206-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb206-5"><a href="manual-memory-allocation.html#cb206-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>new_ptr <span class="op">==</span> NULL<span class="op">)</span></span>
+<span id="cb206-6"><a href="manual-memory-allocation.html#cb206-6" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> NULL<span class="op">;</span></span>
+<span id="cb206-7"><a href="manual-memory-allocation.html#cb206-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb206-8"><a href="manual-memory-allocation.html#cb206-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">size_t</span> copy_size <span class="op">=</span> old_size <span class="op">&lt;</span> size<span class="op">?</span> old_size<span class="op">:</span> size<span class="op">;</span>  <span class="co">// get min</span></span>
+<span id="cb206-9"><a href="manual-memory-allocation.html#cb206-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb206-10"><a href="manual-memory-allocation.html#cb206-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>ptr <span class="op">!=</span> NULL<span class="op">)</span></span>
+<span id="cb206-11"><a href="manual-memory-allocation.html#cb206-11" aria-hidden="true" tabindex="-1"></a>        memcpy<span class="op">(</span>new_ptr<span class="op">,</span> ptr<span class="op">,</span> copy_size<span class="op">);</span></span>
+<span id="cb206-12"><a href="manual-memory-allocation.html#cb206-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb206-13"><a href="manual-memory-allocation.html#cb206-13" aria-hidden="true" tabindex="-1"></a>    free<span class="op">(</span>ptr<span class="op">);</span></span>
+<span id="cb206-14"><a href="manual-memory-allocation.html#cb206-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb206-15"><a href="manual-memory-allocation.html#cb206-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> new_ptr<span class="op">;</span></span>
+<span id="cb206-16"><a href="manual-memory-allocation.html#cb206-16" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>Note that it <em>always</em> copies data, taking time, while real <code>realloc()</code> will avoid that if it can. So this is hardly efficient. Avoid needing to reallocate custom-aligned data. </p>
+<!-- Beej's guide to C
+
+# vim: ts=4:sw=4:nosi:et:tw=72
+-->
+<hr><div style="text-align:center"><span><a href="pointers2.html">Prev</a> | </span><a href="index.html">Contents</a><span> | <a href="scope.html">Next</a></span></div></body>
+</html>

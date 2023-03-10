@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Beej's Guide to C Programming</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Mono&display=swap" rel="stylesheet"> 
+
+  <!-- BG custom styling -->
+  <style type="text/css">
+  /* Fix for line numbers not visible */
+  pre.numberSource code > span {
+      left: -1em;
+  }
+  pre.numberSource {
+      margin-left: initial;
+  }
+
+  /* Put some space after the section numbers */
+  span.toc-section-number::after {
+      content: "\a0\a0\a0";  /* non-breaking whitespace */
+  }
+
+  /* Hide underlines on code number links */
+  pre > code.sourceCode > span > a:first-child::before {
+      text-decoration: none;
+  }
+
+  /* Color the source blocks */
+  div.sourceCode {
+      background-color: #f0f0f0;
+  }
+
+  /* Fix iOS big text rendering issue */
+  pre > code.sourceCode > span {
+      display: initial;
+  }
+
+
+  /* Color the inline code */
+  code:not(.sourceCode) {
+      background: #f0f0f0;
+      padding-left: 0.2em;
+      padding-right: 0.2em;
+      border-radius: 0.2em;
+  }
+
+  /* Keep code tags from wrapping in tables */
+  tbody code {
+      white-space: nowrap;
+  }
+
+  td {
+      vertical-align: top;
+  }
+
+  body {
+      font-size: 12pt;
+      max-width: 43em;
+  }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<div style="text-align:center"><span><a href="structs-ii-more-fun-with-structs.html">Prev</a> | </span><a href="index.html">Contents</a><span> | <a href="enumerated-types-enum.html">Next</a></span></div><hr>
+<h1 data-number="21" id="characters-and-strings-ii"><span class="header-section-number">21</span> Characters and Strings II</h1>
+<p>We’ve talked about how <code>char</code> types are actually just small integer types… but it’s the same for a character in single quotes.</p>
+<p>But a string in double quotes is type <code>const char *</code>.</p>
+<p>Turns out there are few more types of strings and characters, and it leads down one of the most infamous rabbit holes in the language: the whole multibyte/wide/Unicode/localization thingy.</p>
+<p>We’re going to peer into that rabbit hole, but not go in. …Yet!</p>
+<h2 data-number="21.1" id="escape-sequences"><span class="header-section-number">21.1</span> Escape Sequences</h2>
+<p></p>
+<p>We’re used to strings and characters with regular letters, punctuation, and numbers:</p>
+<div class="sourceCode" id="cb453"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb453-1"><a href="characters-and-strings-ii.html#cb453-1" aria-hidden="true" tabindex="-1"></a><span class="dt">char</span> <span class="op">*</span>s <span class="op">=</span> <span class="st">&quot;Hello!&quot;</span><span class="op">;</span></span>
+<span id="cb453-2"><a href="characters-and-strings-ii.html#cb453-2" aria-hidden="true" tabindex="-1"></a><span class="dt">char</span> t <span class="op">=</span> <span class="ch">&#39;c&#39;</span><span class="op">;</span></span></code></pre></div>
+<p>But what if we want some special characters in there that we can’t type on the keyboard because they don’t exist (e.g. “€”), or even if we want a character that’s a single quote? We clearly can’t do this:</p>
+<div class="sourceCode" id="cb454"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb454-1"><a href="characters-and-strings-ii.html#cb454-1" aria-hidden="true" tabindex="-1"></a><span class="dt">char</span> t <span class="op">=</span> <span class="ch">&#39;</span><span class="er">&#39;</span><span class="ch">&#39;;</span></span></code></pre></div>
+<p></p>
+<p>To do these things, we use something called <em>escape sequences</em>. These are the backslash character (<code>\</code>) followed by another character. The two (or more) characters together have special meaning.</p>
+<p>For our single quote character example, we can put an escape (that is, <code>\</code>) in front of the central single quote to solve it:</p>
+<p></p>
+<div class="sourceCode" id="cb455"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb455-1"><a href="characters-and-strings-ii.html#cb455-1" aria-hidden="true" tabindex="-1"></a><span class="dt">char</span> t <span class="op">=</span> <span class="ch">&#39;</span><span class="sc">\&#39;</span><span class="ch">&#39;</span><span class="op">;</span></span></code></pre></div>
+<p>Now C knows that <code>\'</code> means just a regular quote we want to print, not the end of the character sequence.</p>
+<p></p>
+<p>You can say either “backslash” or “escape” in this context (“escape that quote”) and C devs will know what you’re talking about. Also, “escape” in this context is different than your <code>Esc</code> key or the ASCII <code>ESC</code> code.</p>
+<h3 data-number="21.1.1" id="frequently-used-escapes"><span class="header-section-number">21.1.1</span> Frequently-used Escapes</h3>
+<p>In my humble opinion, these escape characters make up 99.2%<a href="footnotes.html#fn138" class="footnote-ref" id="fnref138" role="doc-noteref"><sup>138</sup></a> of all escapes.</p>
+<table>
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 85%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Code</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>\n</code></td>
+<td>Newline character—when printing, continue subsequent output on the next line</td>
+</tr>
+<tr class="even">
+<td><code>\'</code></td>
+<td>Single quote—used for a single quote character constant</td>
+</tr>
+<tr class="odd">
+<td><code>\"</code></td>
+<td>Double quote—used for a double quote in a string literal</td>
+</tr>
+<tr class="even">
+<td><code>\\</code></td>
+<td>Backslash—used for a literal <code>\</code> in a string or character</td>
+</tr>
+</tbody>
+</table>
+<p>Here are some examples of the escapes and what they output when printed.</p>
+<div class="sourceCode" id="cb456"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb456-1"><a href="characters-and-strings-ii.html#cb456-1" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;Use </span><span class="sc">\\</span><span class="st">n for newline</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span>  <span class="co">// Use \n for newline</span></span>
+<span id="cb456-2"><a href="characters-and-strings-ii.html#cb456-2" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;Say </span><span class="sc">\&quot;</span><span class="st">hello</span><span class="sc">\&quot;</span><span class="st">!</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span>       <span class="co">// Say &quot;hello&quot;!</span></span>
+<span id="cb456-3"><a href="characters-and-strings-ii.html#cb456-3" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%c\n</span><span class="st">&quot;</span><span class="op">,</span> <span class="ch">&#39;</span><span class="sc">\&#39;</span><span class="ch">&#39;</span><span class="op">);</span>             <span class="co">// &#39;</span></span></code></pre></div>
+<h3 data-number="21.1.2" id="rarely-used-escapes"><span class="header-section-number">21.1.2</span> Rarely-used Escapes</h3>
+<p>But there are more escapes! You just don’t see these as often.</p>
+<table>
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 85%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Code</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>\a</code></td>
+<td>Alert. This makes the terminal make a sound or flash, or both!</td>
+</tr>
+<tr class="even">
+<td><code>\b</code></td>
+<td>Backspace. Moves the cursor back a character. Doesn’t delete the character.</td>
+</tr>
+<tr class="odd">
+<td><code>\f</code></td>
+<td>Formfeed. This moves to the next “page”, but that doesn’t have much modern meaning. On my system, this behaves like <code>\v</code>.</td>
+</tr>
+<tr class="even">
+<td><code>\r</code></td>
+<td>Return. Move to the beginning of the same line.</td>
+</tr>
+<tr class="odd">
+<td><code>\t</code></td>
+<td>Horizontal tab. Moves to the next horizontal tab stop. On my machine, this lines up on columns that are multiples of 8, but YMMV.</td>
+</tr>
+<tr class="even">
+<td><code>\v</code></td>
+<td>Vertical tab. Moves to the next vertical tab stop. On my machine, this moves to the same column on the next line.</td>
+</tr>
+<tr class="odd">
+<td><code>\?</code></td>
+<td>Literal question mark. Sometimes you need this to avoid trigraphs, as shown below.</td>
+</tr>
+</tbody>
+</table>
+<h4 data-number="21.1.2.1" id="single-line-status-updates"><span class="header-section-number">21.1.2.1</span> Single Line Status Updates</h4>
+<p> </p>
+<p>A use case for <code>\b</code> or <code>\r</code> is to show status updates that appear on the same line on the screen and don’t cause the display to scroll. Here’s an example that does a countdown from 10. (Note this makes use of the non-standard POSIX function <code>sleep()</code> from <code>&lt;unistd.h&gt;</code>—if you’re not on a Unix-like, search for your platform and <code>sleep</code> for the equivalent.)</p>
+<div class="sourceCode" id="cb457"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb457-1"><a href="characters-and-strings-ii.html#cb457-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb457-2"><a href="characters-and-strings-ii.html#cb457-2"></a><span class="pp">#include </span><span class="im">&lt;threads.h&gt;</span></span>
+<span id="cb457-3"><a href="characters-and-strings-ii.html#cb457-3"></a></span>
+<span id="cb457-4"><a href="characters-and-strings-ii.html#cb457-4"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb457-5"><a href="characters-and-strings-ii.html#cb457-5"></a><span class="op">{</span></span>
+<span id="cb457-6"><a href="characters-and-strings-ii.html#cb457-6"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">10</span><span class="op">;</span> i <span class="op">&gt;=</span> <span class="dv">0</span><span class="op">;</span> i<span class="op">--)</span> <span class="op">{</span></span>
+<span id="cb457-7"><a href="characters-and-strings-ii.html#cb457-7"></a>        printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">\r</span><span class="st">T minus </span><span class="sc">%d</span><span class="st"> second</span><span class="sc">%s</span><span class="st">... </span><span class="sc">\b</span><span class="st">&quot;</span><span class="op">,</span> i<span class="op">,</span> i <span class="op">!=</span> <span class="dv">1</span><span class="op">?</span> <span class="st">&quot;s&quot;</span><span class="op">:</span> <span class="st">&quot;&quot;</span><span class="op">);</span></span>
+<span id="cb457-8"><a href="characters-and-strings-ii.html#cb457-8"></a></span>
+<span id="cb457-9"><a href="characters-and-strings-ii.html#cb457-9"></a>        fflush<span class="op">(</span>stdout<span class="op">);</span>  <span class="co">// Force output to update</span></span>
+<span id="cb457-10"><a href="characters-and-strings-ii.html#cb457-10"></a></span>
+<span id="cb457-11"><a href="characters-and-strings-ii.html#cb457-11"></a>        <span class="co">// Sleep for 1 second</span></span>
+<span id="cb457-12"><a href="characters-and-strings-ii.html#cb457-12"></a>        thrd_sleep<span class="op">(&amp;(</span><span class="kw">struct</span> timespec<span class="op">){.</span>tv_sec<span class="op">=</span><span class="dv">1</span><span class="op">},</span> NULL<span class="op">);</span></span>
+<span id="cb457-13"><a href="characters-and-strings-ii.html#cb457-13"></a>    <span class="op">}</span></span>
+<span id="cb457-14"><a href="characters-and-strings-ii.html#cb457-14"></a></span>
+<span id="cb457-15"><a href="characters-and-strings-ii.html#cb457-15"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">\r</span><span class="st">Liftoff!             </span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb457-16"><a href="characters-and-strings-ii.html#cb457-16"></a><span class="op">}</span></span></code></pre></div>
+<p>Quite a few things are happening on line 7. First of all, we lead with a <code>\r</code> to get us to the beginning of the current line, then we overwrite whatever’s there with the current countdown. (There’s ternary operator out there to make sure we print <code>1 second</code> instead of <code>1 seconds</code>.)</p>
+<p>Also, there’s a space after the <code>...</code> That’s so that we properly overwrite the last <code>.</code> when <code>i</code> drops from <code>10</code> to <code>9</code> and we get a column narrower. Try it without the space to see what I mean.</p>
+<p>And we wrap it up with a <code>\b</code> to back up over that space so the cursor sits at the exact end of the line in an aesthetically-pleasing way.</p>
+<p></p>
+<p>Note that line 14 also has a lot of spaces at the end to overwrite the characters that were already there from the countdown.</p>
+<p>Finally, we have a weird <code>fflush(stdout)</code> in there, whatever that means. Short answer is that most terminals are <em>line buffered</em> by default, meaning they don’t actually display anything until a newline character is encountered. Since we don’t have a newline (we just have <code>\r</code>), without this line, the program would just sit there until <code>Liftoff!</code> and then print everything all in one instant. <code>fflush()</code> overrides this behavior and forces output to happen <em>right now</em>.</p>
+<p></p>
+<h4 data-number="21.1.2.2" id="the-question-mark-escape"><span class="header-section-number">21.1.2.2</span> The Question Mark Escape</h4>
+<p></p>
+<p>Why bother with this? After all, this works just fine:</p>
+<div class="sourceCode" id="cb458"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb458-1"><a href="characters-and-strings-ii.html#cb458-1" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;Doesn&#39;t it?</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span></code></pre></div>
+<p>And it works fine with the escape, too:</p>
+<div class="sourceCode" id="cb459"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb459-1"><a href="characters-and-strings-ii.html#cb459-1" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;Doesn&#39;t it</span><span class="sc">\?\n</span><span class="st">&quot;</span><span class="op">);</span>   <span class="co">// Note \?</span></span></code></pre></div>
+<p>So what’s the point??!</p>
+<p></p>
+<p>Let’s get more emphatic with another question mark and an exclamation point:</p>
+<div class="sourceCode" id="cb460"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb460-1"><a href="characters-and-strings-ii.html#cb460-1" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;Doesn&#39;t it??!</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span></code></pre></div>
+<p>When I compile this, I get this warning:</p>
+<div class="sourceCode" id="cb461"><pre class="sourceCode zsh"><code class="sourceCode zsh"><span id="cb461-1"><a href="characters-and-strings-ii.html#cb461-1" aria-hidden="true" tabindex="-1"></a><span class="ex">foo.c:</span> In function ‘main’:</span>
+<span id="cb461-2"><a href="characters-and-strings-ii.html#cb461-2" aria-hidden="true" tabindex="-1"></a><span class="ex">foo.c:5:23:</span> warning: trigraph <span class="pp">??</span>! converted to <span class="kw">|</span> <span class="ex">[-Wtrigraphs]</span></span>
+<span id="cb461-3"><a href="characters-and-strings-ii.html#cb461-3" aria-hidden="true" tabindex="-1"></a>    <span class="ex">5</span> <span class="kw">|</span>     <span class="bu">printf</span><span class="op">(</span><span class="st">&quot;Doesn&#39;t it??!\n&quot;</span><span class="op">)</span><span class="kw">;</span></span>
+<span id="cb461-4"><a href="characters-and-strings-ii.html#cb461-4" aria-hidden="true" tabindex="-1"></a>      <span class="kw">|</span>    </span></code></pre></div>
+<p>And running it gives this unlikely result:</p>
+<div class="sourceCode" id="cb462"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb462-1"><a href="characters-and-strings-ii.html#cb462-1" aria-hidden="true" tabindex="-1"></a>Doesn&#39;t it|</span></code></pre></div>
+<p>So <em>trigraphs</em>? What the heck is this??!</p>
+<p>I’m sure we’ll revisit this dusty corner of the language later, but the short of it is the compiler looks for certain triplets of characters starting with <code>??</code> and it substitutes other characters in their place. So if you’re on some ancient terminal without a pipe symbol (<code>|</code>) on the keyboard, you can type <code>??!</code> instead.</p>
+<p>You can fix this by escaping the second question mark, like so:</p>
+<div class="sourceCode" id="cb463"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb463-1"><a href="characters-and-strings-ii.html#cb463-1" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;Doesn&#39;t it?</span><span class="sc">\?</span><span class="st">!</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span></code></pre></div>
+<p>And then it compiles and works as-expected.</p>
+<p>These days, of course, no one ever uses trigraphs. But that whole <code>??!</code> does sometimes appear if you decide to use it in a string for emphasis.</p>
+<p> </p>
+<h3 data-number="21.1.3" id="numeric-escapes"><span class="header-section-number">21.1.3</span> Numeric Escapes</h3>
+<p>In addition, there are ways to specify numeric constants or other character values inside strings or character constants.</p>
+<p>If you know an octal or hexadecimal representation of a byte, you can include that in a string or character constant.</p>
+<p>The following table has example numbers, but any hex or octal numbers may be used. Pad with leading zeros if necessary to read the proper digit count.</p>
+<table>
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 85%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Code</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>\123</code></td>
+<td>Embed the byte with octal value <code>123</code>, 3 digits exactly.</td>
+</tr>
+<tr class="even">
+<td><code>\x4D</code></td>
+<td>Embed the byte with hex value <code>4D</code>, 2 digits.</td>
+</tr>
+<tr class="odd">
+<td><code>\u2620</code></td>
+<td>Embed the Unicode character at code point with hex value <code>2620</code>, 4 digits.</td>
+</tr>
+<tr class="even">
+<td><code>\U0001243F</code></td>
+<td>Embed the Unicode character at code point with hex value <code>1243F</code>, 8 digits.</td>
+</tr>
+</tbody>
+</table>
+<p>Here’s an example of the less-commonly used octal notation to represent the letter <code>B</code> in between <code>A</code> and <code>C</code>. Normally this would be used for some kind of special unprintable character, but we have other ways to do that, below, and this is just an octal demo:</p>
+<p></p>
+<div class="sourceCode" id="cb464"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb464-1"><a href="characters-and-strings-ii.html#cb464-1" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;A</span><span class="er">\1</span><span class="st">02C</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span>  <span class="co">// 102 is `B` in ASCII/UTF-8</span></span></code></pre></div>
+<p>Note there’s no leading zero on the octal number when you include it this way. But it does need to be three characters, so pad with leading zeros if you need to.</p>
+<p></p>
+<p></p>
+<p>But far more common is to use hex constants these days. Here’s a demo that you shouldn’t use, but it demos embedding the UTF-8 bytes 0xE2, 0x80, and 0xA2 in a string, which corresponds to the Unicode “bullet” character (•).</p>
+<div class="sourceCode" id="cb465"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb465-1"><a href="characters-and-strings-ii.html#cb465-1" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">\xE2\x80\xA2</span><span class="st"> Bullet 1</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb465-2"><a href="characters-and-strings-ii.html#cb465-2" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">\xE2\x80\xA2</span><span class="st"> Bullet 2</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb465-3"><a href="characters-and-strings-ii.html#cb465-3" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">\xE2\x80\xA2</span><span class="st"> Bullet 3</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span></code></pre></div>
+<p>Produces the following output if you’re on a UTF-8 console (or probably garbage if you’re not):</p>
+<div class="sourceCode" id="cb466"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb466-1"><a href="characters-and-strings-ii.html#cb466-1" aria-hidden="true" tabindex="-1"></a>• Bullet 1</span>
+<span id="cb466-2"><a href="characters-and-strings-ii.html#cb466-2" aria-hidden="true" tabindex="-1"></a>• Bullet 2</span>
+<span id="cb466-3"><a href="characters-and-strings-ii.html#cb466-3" aria-hidden="true" tabindex="-1"></a>• Bullet 3</span></code></pre></div>
+<p></p>
+<p> </p>
+<p>But that’s a crummy way to do Unicode. You can use the escapes <code>\u</code> (16-bit) or <code>\U</code> (32-bit) to just refer to Unicode by code point number. The bullet is <code>2022</code> (hex) in Unicode, so you can do this and get more portable results:</p>
+<div class="sourceCode" id="cb467"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb467-1"><a href="characters-and-strings-ii.html#cb467-1" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">\u2022</span><span class="st"> Bullet 1</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb467-2"><a href="characters-and-strings-ii.html#cb467-2" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">\u2022</span><span class="st"> Bullet 2</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb467-3"><a href="characters-and-strings-ii.html#cb467-3" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">\u2022</span><span class="st"> Bullet 3</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span></code></pre></div>
+<p>Be sure to pad <code>\u</code> with enough leading zeros to get to four characters, and <code>\U</code> with enough to get to eight.</p>
+<p></p>
+<p>For example, that bullet could be done with <code>\U</code> and four leading zeros:</p>
+<div class="sourceCode" id="cb468"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb468-1"><a href="characters-and-strings-ii.html#cb468-1" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">\U00002022</span><span class="st"> Bullet 1</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span></code></pre></div>
+<p></p>
+<p>But who has time to be that verbose?</p>
+<p> </p>
+<!-- Beej's guide to C
+
+# vim: ts=4:sw=4:nosi:et:tw=72
+-->
+<hr><div style="text-align:center"><span><a href="structs-ii-more-fun-with-structs.html">Prev</a> | </span><a href="index.html">Contents</a><span> | <a href="enumerated-types-enum.html">Next</a></span></div></body>
+</html>

@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Beej's Guide to C Programming</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Mono&display=swap" rel="stylesheet"> 
+
+  <!-- BG custom styling -->
+  <style type="text/css">
+  /* Fix for line numbers not visible */
+  pre.numberSource code > span {
+      left: -1em;
+  }
+  pre.numberSource {
+      margin-left: initial;
+  }
+
+  /* Put some space after the section numbers */
+  span.toc-section-number::after {
+      content: "\a0\a0\a0";  /* non-breaking whitespace */
+  }
+
+  /* Hide underlines on code number links */
+  pre > code.sourceCode > span > a:first-child::before {
+      text-decoration: none;
+  }
+
+  /* Color the source blocks */
+  div.sourceCode {
+      background-color: #f0f0f0;
+  }
+
+  /* Fix iOS big text rendering issue */
+  pre > code.sourceCode > span {
+      display: initial;
+  }
+
+
+  /* Color the inline code */
+  code:not(.sourceCode) {
+      background: #f0f0f0;
+      padding-left: 0.2em;
+      padding-right: 0.2em;
+      border-radius: 0.2em;
+  }
+
+  /* Keep code tags from wrapping in tables */
+  tbody code {
+      white-space: nowrap;
+  }
+
+  td {
+      vertical-align: top;
+  }
+
+  body {
+      font-size: 12pt;
+      max-width: 43em;
+  }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<div style="text-align:center"><span><a href="the-outside-environment.html">Prev</a> | </span><a href="index.html">Contents</a><span> | <a href="structs-ii-more-fun-with-structs.html">Next</a></span></div><hr>
+<h1 data-number="19" id="the-c-preprocessor"><span class="header-section-number">19</span> The C Preprocessor</h1>
+<p></p>
+<p>Before your program gets compiled, it actually runs through a phase called <em>preprocessing</em>. It’s almost like there’s a language <em>on top</em> of the C language that runs first. And it outputs the C code, which then gets compiled.</p>
+<p>We’ve already seen this to an extent with <code>#include</code>! That’s the C Preprocessor! Where it sees that directive, it includes the named file right there, just as if you’d typed it in there. And <em>then</em> the compiler builds the whole thing.</p>
+<p>But it turns out it’s a lot more powerful than just being able to include things. You can define <em>macros</em> that are substituted… and even macros that take arguments!</p>
+<h2 data-number="19.1" id="include"><span class="header-section-number">19.1</span> <code>#include</code></h2>
+<p></p>
+<p>Let’s start with the one we’ve already seen a bunch. This is, of course, a way to include other sources in your source. Very commonly used with header files.</p>
+<p>While the spec allows for all kinds of behavior with <code>#include</code>, we’re going to take a more pragmatic approach and talk about the way it works on every system I’ve ever seen.</p>
+<p>We can split header files into two categories: system and local. Things that are built-in, like <code>stdio.h</code>, <code>stdlib.h</code>, <code>math.h</code>, and so on, you can include with angle brackets:</p>
+<div class="sourceCode" id="cb333"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb333-1"><a href="the-c-preprocessor.html#cb333-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb333-2"><a href="the-c-preprocessor.html#cb333-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;stdlib.h&gt;</span></span></code></pre></div>
+<p>The angle brackets tell C, “Hey, don’t look in the current directory for this header file—look in the system-wide include directory instead.”</p>
+<p></p>
+<p>Which, of course, implies that there must be a way to include local files from the current directory. And there is: with double quotes:</p>
+<div class="sourceCode" id="cb334"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb334-1"><a href="the-c-preprocessor.html#cb334-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&quot;myheader.h&quot;</span></span></code></pre></div>
+<p>Or you can very probably look in relative directories using forward slashes and dots, like this:</p>
+<div class="sourceCode" id="cb335"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb335-1"><a href="the-c-preprocessor.html#cb335-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&quot;mydir/myheader.h&quot;</span></span>
+<span id="cb335-2"><a href="the-c-preprocessor.html#cb335-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&quot;../someheader.py&quot;</span></span></code></pre></div>
+<p>Don’t use a backslash (<code>\</code>) for your path separators in your <code>#include</code>! It’s undefined behavior! Use forward slash (<code>/</code>) only, even on Windows.</p>
+<p>In summary, used angle brackets (<code>&lt;</code> and <code>&gt;</code>) for the system includes, and use double quotes (<code>"</code>) for your personal includes.</p>
+<p> </p>
+<h2 data-number="19.2" id="simple-macros"><span class="header-section-number">19.2</span> Simple Macros</h2>
+<p></p>
+<p>A <em>macro</em> is an identifier that gets <em>expanded</em> to another piece of code before the compiler even sees it. Think of it like a placeholder—when the preprocessor sees one of those identifiers, it replaces it with another value that you’ve defined.</p>
+<p></p>
+<p>We do this with <code>#define</code> (often read “pound define”). Here’s an example:</p>
+<div class="sourceCode" id="cb336"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb336-1"><a href="the-c-preprocessor.html#cb336-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb336-2"><a href="the-c-preprocessor.html#cb336-2"></a></span>
+<span id="cb336-3"><a href="the-c-preprocessor.html#cb336-3"></a><span class="pp">#define HELLO </span><span class="st">&quot;Hello, world&quot;</span></span>
+<span id="cb336-4"><a href="the-c-preprocessor.html#cb336-4"></a><span class="pp">#define PI </span><span class="fl">3.14159</span></span>
+<span id="cb336-5"><a href="the-c-preprocessor.html#cb336-5"></a></span>
+<span id="cb336-6"><a href="the-c-preprocessor.html#cb336-6"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb336-7"><a href="the-c-preprocessor.html#cb336-7"></a><span class="op">{</span></span>
+<span id="cb336-8"><a href="the-c-preprocessor.html#cb336-8"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%s</span><span class="st">, </span><span class="sc">%f\n</span><span class="st">&quot;</span><span class="op">,</span> HELLO<span class="op">,</span> PI<span class="op">);</span></span>
+<span id="cb336-9"><a href="the-c-preprocessor.html#cb336-9"></a><span class="op">}</span></span></code></pre></div>
+<p>On lines 3 and 4 we defined a couple macros. Wherever these appear elsewhere in the code (line 8), they’ll be substituted with the defined values.</p>
+<p>From the C compiler’s perspective, it’s exactly as if we’d written this, instead:</p>
+<div class="sourceCode" id="cb337"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb337-1"><a href="the-c-preprocessor.html#cb337-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb337-2"><a href="the-c-preprocessor.html#cb337-2"></a></span>
+<span id="cb337-3"><a href="the-c-preprocessor.html#cb337-3"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb337-4"><a href="the-c-preprocessor.html#cb337-4"></a><span class="op">{</span></span>
+<span id="cb337-5"><a href="the-c-preprocessor.html#cb337-5"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%s</span><span class="st">, </span><span class="sc">%f\n</span><span class="st">&quot;</span><span class="op">,</span> <span class="st">&quot;Hello, world&quot;</span><span class="op">,</span> <span class="fl">3.14159</span><span class="op">);</span></span>
+<span id="cb337-6"><a href="the-c-preprocessor.html#cb337-6"></a><span class="op">}</span></span></code></pre></div>
+<p>See how <code>HELLO</code> was replaced with <code>"Hello, world"</code> and <code>PI</code> was replaced with <code>3.14159</code>? From the compiler’s perspective, it’s just like those values had appeared right there in the code.</p>
+<p>Note that the macros don’t have a specific type, <em>per se</em>. Really all that happens is they get replaced wholesale with whatever they’re <code>#define</code>d as. If the resulting C code is invalid, the compiler will puke.</p>
+<p>You can also define a macro with no value:</p>
+<div class="sourceCode" id="cb338"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb338-1"><a href="the-c-preprocessor.html#cb338-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#define EXTRA_HAPPY</span></span></code></pre></div>
+<p>in that case, the macro exists and is defined, but is defined to be nothing. So anyplace it occurs in the text will just be replaced with nothing. We’ll see a use for this later.</p>
+<p>It’s conventional to write macro names in <code>ALL_CAPS</code> even though that’s not technically required.</p>
+<p></p>
+<p>Overall, this gives you a way to define constant values that are effectively global and can be used <em>any</em> place. Even in those places where a <code>const</code> variable won’t work, e.g. in <code>switch</code> <code>case</code>s and fixed array lengths.</p>
+<p>That said, the debate rages online whether a typed <code>const</code> variable is better than <code>#define</code> macro in the general case.</p>
+<p>It can also be used to replace or modify keywords, a concept completely foreign to <code>const</code>, though this practice should be used sparingly.</p>
+<p> </p>
+<h2 data-number="19.3" id="conditional-compilation"><span class="header-section-number">19.3</span> Conditional Compilation</h2>
+<p></p>
+<p>It’s possible to get the preprocessor to decide whether or not to present certain blocks of code to the compiler, or just remove them entirely before compilation.</p>
+<p>We do that by basically wrapping up the code in conditional blocks, similar to <code>if</code>-<code>else</code> statements.</p>
+<h3 data-number="19.3.1" id="if-defined-ifdef-and-endif"><span class="header-section-number">19.3.1</span> If Defined, <code>#ifdef</code> and <code>#endif</code></h3>
+<p>First of all, let’s try to compile specific code depending on whether or not a macro is even defined.</p>
+<p> </p>
+<div class="sourceCode" id="cb339"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb339-1"><a href="the-c-preprocessor.html#cb339-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb339-2"><a href="the-c-preprocessor.html#cb339-2"></a></span>
+<span id="cb339-3"><a href="the-c-preprocessor.html#cb339-3"></a><span class="pp">#define EXTRA_HAPPY</span></span>
+<span id="cb339-4"><a href="the-c-preprocessor.html#cb339-4"></a></span>
+<span id="cb339-5"><a href="the-c-preprocessor.html#cb339-5"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb339-6"><a href="the-c-preprocessor.html#cb339-6"></a><span class="op">{</span></span>
+<span id="cb339-7"><a href="the-c-preprocessor.html#cb339-7"></a></span>
+<span id="cb339-8"><a href="the-c-preprocessor.html#cb339-8"></a><span class="pp">#ifdef EXTRA_HAPPY</span></span>
+<span id="cb339-9"><a href="the-c-preprocessor.html#cb339-9"></a>    printf<span class="op">(</span><span class="st">&quot;I&#39;m extra happy!</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb339-10"><a href="the-c-preprocessor.html#cb339-10"></a><span class="pp">#endif</span></span>
+<span id="cb339-11"><a href="the-c-preprocessor.html#cb339-11"></a></span>
+<span id="cb339-12"><a href="the-c-preprocessor.html#cb339-12"></a>    printf<span class="op">(</span><span class="st">&quot;OK!</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb339-13"><a href="the-c-preprocessor.html#cb339-13"></a><span class="op">}</span></span></code></pre></div>
+<p>In that example, we define <code>EXTRA_HAPPY</code> (to be nothing, but it <em>is</em> defined), then on line 8 we check to see if it is defined with an <code>#ifdef</code> directive. If it is defined, the subsequent code will be included up until the <code>#endif</code>.</p>
+<p> </p>
+<p>So because it is defined, the code will be included for compilation and the output will be:</p>
+<div class="sourceCode" id="cb340"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb340-1"><a href="the-c-preprocessor.html#cb340-1" aria-hidden="true" tabindex="-1"></a>I&#39;m extra happy!</span>
+<span id="cb340-2"><a href="the-c-preprocessor.html#cb340-2" aria-hidden="true" tabindex="-1"></a>OK!</span></code></pre></div>
+<p>If we were to comment out the <code>#define</code>, like so:</p>
+<div class="sourceCode" id="cb341"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb341-1"><a href="the-c-preprocessor.html#cb341-1" aria-hidden="true" tabindex="-1"></a><span class="co">//#define EXTRA_HAPPY</span></span></code></pre></div>
+<p>then it wouldn’t be defined, and the code wouldn’t be included in compilation. And the output would just be:</p>
+<div class="sourceCode" id="cb342"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb342-1"><a href="the-c-preprocessor.html#cb342-1" aria-hidden="true" tabindex="-1"></a>OK!</span></code></pre></div>
+<p>It’s important to remember that these decisions happen at compile time! The code actually gets compiled or removed depending on the condition. This is in contrast to a standard <code>if</code> statement that gets evaluated while the program is running.</p>
+<h3 data-number="19.3.2" id="if-not-defined-ifndef"><span class="header-section-number">19.3.2</span> If Not Defined, <code>#ifndef</code></h3>
+<p>There’s also the negative sense of “if defined”: “if not defined”, or <code>#ifndef</code>. We could change the previous example to output different things based on whether or not something was defined:</p>
+<p> </p>
+<div class="sourceCode" id="cb343" data-startfrom="8"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c" style="counter-reset: source-line 7;"><span id="cb343-8"><a href="the-c-preprocessor.html#cb343-8"></a><span class="pp">#ifdef EXTRA_HAPPY</span></span>
+<span id="cb343-9"><a href="the-c-preprocessor.html#cb343-9"></a>    printf<span class="op">(</span><span class="st">&quot;I&#39;m extra happy!</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb343-10"><a href="the-c-preprocessor.html#cb343-10"></a><span class="pp">#endif</span></span>
+<span id="cb343-11"><a href="the-c-preprocessor.html#cb343-11"></a></span>
+<span id="cb343-12"><a href="the-c-preprocessor.html#cb343-12"></a><span class="pp">#ifndef EXTRA_HAPPY</span></span>
+<span id="cb343-13"><a href="the-c-preprocessor.html#cb343-13"></a>    printf<span class="op">(</span><span class="st">&quot;I&#39;m just regular</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb343-14"><a href="the-c-preprocessor.html#cb343-14"></a><span class="pp">#endif</span></span></code></pre></div>
+<p>We’ll see a cleaner way to do that in the next section.</p>
+<p>Tying it all back in to header files, we’ve seen how we can cause header files to only be included one time by wrapping them in preprocessor directives like this:</p>
+<div class="sourceCode" id="cb344"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb344-1"><a href="the-c-preprocessor.html#cb344-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#ifndef MYHEADER_H  </span><span class="co">// First line of myheader.h</span></span>
+<span id="cb344-2"><a href="the-c-preprocessor.html#cb344-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#define MYHEADER_H</span></span>
+<span id="cb344-3"><a href="the-c-preprocessor.html#cb344-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb344-4"><a href="the-c-preprocessor.html#cb344-4" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> x <span class="op">=</span> <span class="dv">12</span><span class="op">;</span></span>
+<span id="cb344-5"><a href="the-c-preprocessor.html#cb344-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb344-6"><a href="the-c-preprocessor.html#cb344-6" aria-hidden="true" tabindex="-1"></a><span class="pp">#endif  </span><span class="co">// Last line of myheader.h</span></span></code></pre></div>
+<p> </p>
+<p>This demonstrates how a macro persists across files and multiple <code>#include</code>s. If it’s not yet defined, let’s define it and compile the whole header file.</p>
+<p>But the next time it’s included, we see that <code>MYHEADER_H</code> <em>is</em> defined, so we don’t send the header file to the compiler—it gets effectively removed.</p>
+<h3 data-number="19.3.3" id="else"><span class="header-section-number">19.3.3</span> <code>#else</code></h3>
+<p></p>
+<p>But that’s not all we can do! There’s also an <code>#else</code> that we can throw in the mix.</p>
+<p> </p>
+<p>Let’s mod the previous example:</p>
+<div class="sourceCode" id="cb345" data-startfrom="8"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c" style="counter-reset: source-line 7;"><span id="cb345-8"><a href="the-c-preprocessor.html#cb345-8"></a><span class="pp">#ifdef EXTRA_HAPPY</span></span>
+<span id="cb345-9"><a href="the-c-preprocessor.html#cb345-9"></a>    printf<span class="op">(</span><span class="st">&quot;I&#39;m extra happy!</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb345-10"><a href="the-c-preprocessor.html#cb345-10"></a><span class="pp">#else</span></span>
+<span id="cb345-11"><a href="the-c-preprocessor.html#cb345-11"></a>    printf<span class="op">(</span><span class="st">&quot;I&#39;m just regular</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb345-12"><a href="the-c-preprocessor.html#cb345-12"></a><span class="pp">#endif</span></span></code></pre></div>
+<p> </p>
+<p>Now if <code>EXTRA_HAPPY</code> is not defined, it’ll hit the <code>#else</code> clause and print:</p>
+<div class="sourceCode" id="cb346"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb346-1"><a href="the-c-preprocessor.html#cb346-1" aria-hidden="true" tabindex="-1"></a>I&#39;m just regular</span></code></pre></div>
+<h3 data-number="19.3.4" id="general-conditional-if-elif"><span class="header-section-number">19.3.4</span> General Conditional: <code>#if</code>, <code>#elif</code></h3>
+<p> </p>
+<p>This works very much like the <code>#ifdef</code> and <code>#ifndef</code> directives in that you can also have an <code>#else</code> and the whole thing wraps up with <code>#endif</code>.</p>
+<p>The only difference is that the constant expression after the <code>#if</code> must evaluate to true (non-zero) for the code in the <code>#if</code> to be compiled. So instead of whether or not something is defined, we want an expression that evaluates to true.</p>
+<div class="sourceCode" id="cb347"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb347-1"><a href="the-c-preprocessor.html#cb347-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb347-2"><a href="the-c-preprocessor.html#cb347-2"></a></span>
+<span id="cb347-3"><a href="the-c-preprocessor.html#cb347-3"></a><span class="pp">#define HAPPY_FACTOR </span><span class="dv">1</span></span>
+<span id="cb347-4"><a href="the-c-preprocessor.html#cb347-4"></a></span>
+<span id="cb347-5"><a href="the-c-preprocessor.html#cb347-5"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb347-6"><a href="the-c-preprocessor.html#cb347-6"></a><span class="op">{</span></span>
+<span id="cb347-7"><a href="the-c-preprocessor.html#cb347-7"></a></span>
+<span id="cb347-8"><a href="the-c-preprocessor.html#cb347-8"></a><span class="pp">#if HAPPY_FACTOR == 0</span></span>
+<span id="cb347-9"><a href="the-c-preprocessor.html#cb347-9"></a>    printf<span class="op">(</span><span class="st">&quot;I&#39;m not happy!</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb347-10"><a href="the-c-preprocessor.html#cb347-10"></a><span class="pp">#elif HAPPY_FACTOR == 1</span></span>
+<span id="cb347-11"><a href="the-c-preprocessor.html#cb347-11"></a>    printf<span class="op">(</span><span class="st">&quot;I&#39;m just regular</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb347-12"><a href="the-c-preprocessor.html#cb347-12"></a><span class="pp">#else</span></span>
+<span id="cb347-13"><a href="the-c-preprocessor.html#cb347-13"></a>    printf<span class="op">(</span><span class="st">&quot;I&#39;m extra happy!</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb347-14"><a href="the-c-preprocessor.html#cb347-14"></a><span class="pp">#endif</span></span>
+<span id="cb347-15"><a href="the-c-preprocessor.html#cb347-15"></a></span>
+<span id="cb347-16"><a href="the-c-preprocessor.html#cb347-16"></a>    printf<span class="op">(</span><span class="st">&quot;OK!</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb347-17"><a href="the-c-preprocessor.html#cb347-17"></a><span class="op">}</span></span></code></pre></div>
+<p></p>
+<p>Again, for the unmatched <code>#if</code> clauses, the compiler won’t even see those lines. For the above code, after the preprocessor gets finished with it, all the compiler sees is:</p>
+<div class="sourceCode" id="cb348"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb348-1"><a href="the-c-preprocessor.html#cb348-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb348-2"><a href="the-c-preprocessor.html#cb348-2"></a></span>
+<span id="cb348-3"><a href="the-c-preprocessor.html#cb348-3"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb348-4"><a href="the-c-preprocessor.html#cb348-4"></a><span class="op">{</span></span>
+<span id="cb348-5"><a href="the-c-preprocessor.html#cb348-5"></a></span>
+<span id="cb348-6"><a href="the-c-preprocessor.html#cb348-6"></a>    printf<span class="op">(</span><span class="st">&quot;I&#39;m just regular</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb348-7"><a href="the-c-preprocessor.html#cb348-7"></a></span>
+<span id="cb348-8"><a href="the-c-preprocessor.html#cb348-8"></a>    printf<span class="op">(</span><span class="st">&quot;OK!</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb348-9"><a href="the-c-preprocessor.html#cb348-9"></a><span class="op">}</span></span></code></pre></div>
+<p>One hackish thing this is used for is to comment out large numbers of lines quickly<a href="footnotes.html#fn127" class="footnote-ref" id="fnref127" role="doc-noteref"><sup>127</sup></a>.</p>
+<p></p>
+<p>If you put an <code>#if 0</code> (“if false”) at the front of the block to be commented out and an <code>#endif</code> at the end, you can get this effect:</p>
+<div class="sourceCode" id="cb349"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb349-1"><a href="the-c-preprocessor.html#cb349-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#if 0</span></span>
+<span id="cb349-2"><a href="the-c-preprocessor.html#cb349-2" aria-hidden="true" tabindex="-1"></a><span class="co">    printf(</span><span class="st">&quot;All this code&quot;</span><span class="co">); /* is effectively */</span></span>
+<span id="cb349-3"><a href="the-c-preprocessor.html#cb349-3" aria-hidden="true" tabindex="-1"></a><span class="co">    printf(</span><span class="st">&quot;commented out&quot;</span><span class="co">); // by the #if 0</span></span>
+<span id="cb349-4"><a href="the-c-preprocessor.html#cb349-4" aria-hidden="true" tabindex="-1"></a><span class="pp">#endif</span></span></code></pre></div>
+<p></p>
+<p>You might have noticed that there’s no <code>#elifdef</code> or <code>#elifndef</code> directives. How can we get the same effect with <code>#if</code>? That is, what if I wanted this:</p>
+<div class="sourceCode" id="cb350"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb350-1"><a href="the-c-preprocessor.html#cb350-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#ifdef FOO</span></span>
+<span id="cb350-2"><a href="the-c-preprocessor.html#cb350-2" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> <span class="dv">2</span><span class="op">;</span></span>
+<span id="cb350-3"><a href="the-c-preprocessor.html#cb350-3" aria-hidden="true" tabindex="-1"></a><span class="pp">#elifdef BAR  </span><span class="co">// ERROR: Not supported by standard C</span></span>
+<span id="cb350-4"><a href="the-c-preprocessor.html#cb350-4" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> <span class="dv">3</span><span class="op">;</span></span>
+<span id="cb350-5"><a href="the-c-preprocessor.html#cb350-5" aria-hidden="true" tabindex="-1"></a><span class="pp">#endif</span></span></code></pre></div>
+<p>How could I do it?</p>
+<p>Turns out there’s a preprocessor operator called <code>defined</code> that we can use with an <code>#if</code> statement.</p>
+<p>These are equivalent:</p>
+<p></p>
+<div class="sourceCode" id="cb351"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb351-1"><a href="the-c-preprocessor.html#cb351-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#ifdef FOO</span></span>
+<span id="cb351-2"><a href="the-c-preprocessor.html#cb351-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#if defined FOO</span></span>
+<span id="cb351-3"><a href="the-c-preprocessor.html#cb351-3" aria-hidden="true" tabindex="-1"></a><span class="pp">#if defined(FOO)   </span><span class="co">// Parentheses optional</span></span></code></pre></div>
+<p>As are these:</p>
+<div class="sourceCode" id="cb352"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb352-1"><a href="the-c-preprocessor.html#cb352-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#ifndef FOO</span></span>
+<span id="cb352-2"><a href="the-c-preprocessor.html#cb352-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#if !defined FOO</span></span>
+<span id="cb352-3"><a href="the-c-preprocessor.html#cb352-3" aria-hidden="true" tabindex="-1"></a><span class="pp">#if !defined(FOO)   </span><span class="co">// Parentheses optional</span></span></code></pre></div>
+<p>Notice how we can use the standard logical NOT operator (<code>!</code>) for “not defined”.</p>
+<p>So now we’re back in <code>#if</code> land and we can use <code>#elif</code> with impunity!</p>
+<p>This broken code:</p>
+<div class="sourceCode" id="cb353"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb353-1"><a href="the-c-preprocessor.html#cb353-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#ifdef FOO</span></span>
+<span id="cb353-2"><a href="the-c-preprocessor.html#cb353-2" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> <span class="dv">2</span><span class="op">;</span></span>
+<span id="cb353-3"><a href="the-c-preprocessor.html#cb353-3" aria-hidden="true" tabindex="-1"></a><span class="pp">#elifdef BAR  </span><span class="co">// ERROR: Not supported by standard C</span></span>
+<span id="cb353-4"><a href="the-c-preprocessor.html#cb353-4" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> <span class="dv">3</span><span class="op">;</span></span>
+<span id="cb353-5"><a href="the-c-preprocessor.html#cb353-5" aria-hidden="true" tabindex="-1"></a><span class="pp">#endif</span></span></code></pre></div>
+<p>can be replaced with:</p>
+<div class="sourceCode" id="cb354"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb354-1"><a href="the-c-preprocessor.html#cb354-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#if defined FOO</span></span>
+<span id="cb354-2"><a href="the-c-preprocessor.html#cb354-2" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> <span class="dv">2</span><span class="op">;</span></span>
+<span id="cb354-3"><a href="the-c-preprocessor.html#cb354-3" aria-hidden="true" tabindex="-1"></a><span class="pp">#elif defined BAR</span></span>
+<span id="cb354-4"><a href="the-c-preprocessor.html#cb354-4" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> <span class="dv">3</span><span class="op">;</span></span>
+<span id="cb354-5"><a href="the-c-preprocessor.html#cb354-5" aria-hidden="true" tabindex="-1"></a><span class="pp">#endif</span></span></code></pre></div>
+<p> </p>
+<h3 data-number="19.3.5" id="losing-a-macro-undef"><span class="header-section-number">19.3.5</span> Losing a Macro: <code>#undef</code></h3>
+<p></p>
+<p>If you’ve defined something but you don’t need it any longer, you can undefine it with <code>#undef</code>.</p>
+<div class="sourceCode" id="cb355"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb355-1"><a href="the-c-preprocessor.html#cb355-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb355-2"><a href="the-c-preprocessor.html#cb355-2"></a></span>
+<span id="cb355-3"><a href="the-c-preprocessor.html#cb355-3"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb355-4"><a href="the-c-preprocessor.html#cb355-4"></a><span class="op">{</span></span>
+<span id="cb355-5"><a href="the-c-preprocessor.html#cb355-5"></a><span class="pp">#define GOATS</span></span>
+<span id="cb355-6"><a href="the-c-preprocessor.html#cb355-6"></a></span>
+<span id="cb355-7"><a href="the-c-preprocessor.html#cb355-7"></a><span class="pp">#ifdef GOATS</span></span>
+<span id="cb355-8"><a href="the-c-preprocessor.html#cb355-8"></a>    printf<span class="op">(</span><span class="st">&quot;Goats detected!</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span>  <span class="co">// prints</span></span>
+<span id="cb355-9"><a href="the-c-preprocessor.html#cb355-9"></a><span class="pp">#endif</span></span>
+<span id="cb355-10"><a href="the-c-preprocessor.html#cb355-10"></a></span>
+<span id="cb355-11"><a href="the-c-preprocessor.html#cb355-11"></a><span class="pp">#undef GOATS  </span><span class="co">// Make GOATS no longer defined</span></span>
+<span id="cb355-12"><a href="the-c-preprocessor.html#cb355-12"></a></span>
+<span id="cb355-13"><a href="the-c-preprocessor.html#cb355-13"></a><span class="pp">#ifdef GOATS</span></span>
+<span id="cb355-14"><a href="the-c-preprocessor.html#cb355-14"></a>    printf<span class="op">(</span><span class="st">&quot;Goats detected, again!</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span> <span class="co">// doesn&#39;t print</span></span>
+<span id="cb355-15"><a href="the-c-preprocessor.html#cb355-15"></a><span class="pp">#endif</span></span>
+<span id="cb355-16"><a href="the-c-preprocessor.html#cb355-16"></a><span class="op">}</span></span></code></pre></div>
+<p></p>
+<h2 data-number="19.4" id="built-in-macros"><span class="header-section-number">19.4</span> Built-in Macros</h2>
+<p></p>
+<p>The standard defines a lot of built-in macros that you can test and use for conditional compilation. Let’s look at those here.</p>
+<h3 data-number="19.4.1" id="mandatory-macros"><span class="header-section-number">19.4.1</span> Mandatory Macros</h3>
+<p>These are all defined:</p>
+<p> </p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Macro</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>__DATE__</code></td>
+<td>The date of compilation—like when you’re compiling this file—in <code>Mmm dd yyyy</code> format</td>
+</tr>
+<tr class="even">
+<td><code>__TIME__</code></td>
+<td>The time of compilation in <code>hh:mm:ss</code> format</td>
+</tr>
+<tr class="odd">
+<td><code>__FILE__</code></td>
+<td>A string containing this file’s name</td>
+</tr>
+<tr class="even">
+<td><code>__LINE__</code></td>
+<td>The line number of the file this macro appears on</td>
+</tr>
+<tr class="odd">
+<td><code>__func__</code></td>
+<td>The name of the function this appears in, as a string<a href="footnotes.html#fn128" class="footnote-ref" id="fnref128" role="doc-noteref"><sup>128</sup></a></td>
+</tr>
+<tr class="even">
+<td><code>__STDC__</code></td>
+<td>Defined with <code>1</code> if this is a standard C compiler</td>
+</tr>
+<tr class="odd">
+<td><code>__STDC_HOSTED__</code></td>
+<td>This will be <code>1</code> if the compiler is a <em>hosted implementation</em><a href="footnotes.html#fn129" class="footnote-ref" id="fnref129" role="doc-noteref"><sup>129</sup></a>, otherwise <code>0</code></td>
+</tr>
+<tr class="even">
+<td><code>__STDC_VERSION__</code></td>
+<td>This version of C, a constant <code>long int</code> in the form <code>yyyymmL</code>, e.g. <code>201710L</code></td>
+</tr>
+</tbody>
+</table>
+<p>Let’s put these together.</p>
+<div class="sourceCode" id="cb356"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb356-1"><a href="the-c-preprocessor.html#cb356-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb356-2"><a href="the-c-preprocessor.html#cb356-2"></a></span>
+<span id="cb356-3"><a href="the-c-preprocessor.html#cb356-3"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb356-4"><a href="the-c-preprocessor.html#cb356-4"></a><span class="op">{</span></span>
+<span id="cb356-5"><a href="the-c-preprocessor.html#cb356-5"></a>    printf<span class="op">(</span><span class="st">&quot;This function: </span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> __func__<span class="op">);</span></span>
+<span id="cb356-6"><a href="the-c-preprocessor.html#cb356-6"></a>    printf<span class="op">(</span><span class="st">&quot;This file: </span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> __FILE__<span class="op">);</span></span>
+<span id="cb356-7"><a href="the-c-preprocessor.html#cb356-7"></a>    printf<span class="op">(</span><span class="st">&quot;This line: </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> __LINE__<span class="op">);</span></span>
+<span id="cb356-8"><a href="the-c-preprocessor.html#cb356-8"></a>    printf<span class="op">(</span><span class="st">&quot;Compiled on: </span><span class="sc">%s</span><span class="st"> </span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> __DATE__<span class="op">,</span> __TIME__<span class="op">);</span></span>
+<span id="cb356-9"><a href="the-c-preprocessor.html#cb356-9"></a>    printf<span class="op">(</span><span class="st">&quot;C Version: </span><span class="sc">%ld\n</span><span class="st">&quot;</span><span class="op">,</span> __STDC_VERSION__<span class="op">);</span></span>
+<span id="cb356-10"><a href="the-c-preprocessor.html#cb356-10"></a><span class="op">}</span></span></code></pre></div>
+<p> </p>
+<p>The output on my system is:</p>
+<div class="sourceCode" id="cb357"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb357-1"><a href="the-c-preprocessor.html#cb357-1" aria-hidden="true" tabindex="-1"></a>This function: main</span>
+<span id="cb357-2"><a href="the-c-preprocessor.html#cb357-2" aria-hidden="true" tabindex="-1"></a>This file: foo.c</span>
+<span id="cb357-3"><a href="the-c-preprocessor.html#cb357-3" aria-hidden="true" tabindex="-1"></a>This line: 7</span>
+<span id="cb357-4"><a href="the-c-preprocessor.html#cb357-4" aria-hidden="true" tabindex="-1"></a>Compiled on: Nov 23 2020 17:16:27</span>
+<span id="cb357-5"><a href="the-c-preprocessor.html#cb357-5" aria-hidden="true" tabindex="-1"></a>C Version: 201710</span></code></pre></div>
+<p><code>__FILE__</code>, <code>__func__</code> and <code>__LINE__</code> are particularly useful to report error conditions in messages to developers. The <code>assert()</code> macro in <code>&lt;assert.h&gt;</code> uses these to call out where in the code the assertion failed.</p>
+<p> </p>
+<h4 data-number="19.4.1.1" id="stdc_version__s"><span class="header-section-number">19.4.1.1</span> <code>__STDC_VERSION__</code>s</h4>
+<p></p>
+<p>In case you’re wondering, here are the version numbers for different major releases of the C Language Spec:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Release</th>
+<th>ISO/IEC version</th>
+<th><code>__STDC_VERSION__</code></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>C89</td>
+<td>ISO/IEC 9899:1990</td>
+<td>undefined</td>
+</tr>
+<tr class="even">
+<td><strong>C89</strong></td>
+<td>ISO/IEC 9899:1990/Amd.1:1995</td>
+<td><code>199409L</code></td>
+</tr>
+<tr class="odd">
+<td><strong>C99</strong></td>
+<td>ISO/IEC 9899:1999</td>
+<td><code>199901L</code></td>
+</tr>
+<tr class="even">
+<td><strong>C11</strong></td>
+<td>ISO/IEC 9899:2011/Amd.1:2012</td>
+<td><code>201112L</code></td>
+</tr>
+</tbody>
+</table>
+<p>Note the macro did not exist originally in C89.</p>
+<p>Also note that the plan is that the version numbers will strictly increase, so you could always check for, say, “at least C99” with:</p>
+<div class="sourceCode" id="cb358"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb358-1"><a href="the-c-preprocessor.html#cb358-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#if __STDC_VERSION__ &gt;= 1999901L</span></span></code></pre></div>
+<p> </p>
+<h3 data-number="19.4.2" id="optional-macros"><span class="header-section-number">19.4.2</span> Optional Macros</h3>
+<p>Your implementation might define these, as well. Or it might not.</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Macro</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>__STDC_ISO_10646__</code></td>
+<td>If defined, <code>wchar_t</code> holds Unicode values, otherwise something else</td>
+</tr>
+<tr class="even">
+<td><code>__STDC_MB_MIGHT_NEQ_WC__</code></td>
+<td>A <code>1</code> indicates that the values in multibyte characters might not map equally to values in wide characters</td>
+</tr>
+<tr class="odd">
+<td><code>__STDC_UTF_16__</code></td>
+<td>A <code>1</code> indicates that the system uses UTF-16 encoding in type <code>char16_t</code></td>
+</tr>
+<tr class="even">
+<td><code>__STDC_UTF_32__</code></td>
+<td>A <code>1</code> indicates that the system uses UTF-32 encoding in type <code>char32_t</code></td>
+</tr>
+<tr class="odd">
+<td><code>__STDC_ANALYZABLE__</code></td>
+<td>A <code>1</code> indicates the code is analyzable<a href="footnotes.html#fn130" class="footnote-ref" id="fnref130" role="doc-noteref"><sup>130</sup></a></td>
+</tr>
+<tr class="even">
+<td><code>__STDC_IEC_559__</code></td>
+<td><code>1</code> if IEEE-754 (aka IEC 60559) floating point is supported</td>
+</tr>
+<tr class="odd">
+<td><code>__STDC_IEC_559_COMPLEX__</code></td>
+<td><code>1</code> if IEC 60559 complex floating point is supported</td>
+</tr>
+<tr class="even">
+<td><code>__STDC_LIB_EXT1__</code></td>
+<td><code>1</code> if this implementation supports a variety of “safe” alternate standard library functions (they have <code>_s</code> suffixes on the name)</td>
+</tr>
+<tr class="odd">
+<td><code>__STDC_NO_ATOMICS__</code></td>
+<td><code>1</code> if this implementation does <strong>not</strong> support <code>_Atomic</code> or <code>&lt;stdatomic.h&gt;</code></td>
+</tr>
+<tr class="even">
+<td><code>__STDC_NO_COMPLEX__</code></td>
+<td><code>1</code> if this implementation does <strong>not</strong> support complex types or <code>&lt;complex.h&gt;</code></td>
+</tr>
+<tr class="odd">
+<td><code>__STDC_NO_THREADS__</code></td>
+<td><code>1</code> if this implementation does <strong>not</strong> support <code>&lt;threads.h&gt;</code></td>
+</tr>
+<tr class="even">
+<td><code>__STDC_NO_VLA__</code></td>
+<td><code>1</code> if this implementation does <strong>not</strong> support variable-length arrays</td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<h2 data-number="19.5" id="macros-with-arguments"><span class="header-section-number">19.5</span> Macros with Arguments</h2>
+<p></p>
+<p>Macros are more powerful than simple substitution, though. You can set them up to take arguments that are substituted in, as well.</p>
+<p>A question often arises for when to use parameterized macros versus functions. Short answer: use functions. But you’ll see lots of macros in the wild and in the standard library. People tend to use them for short, mathy things, and also for features that might change from platform to platform. You can define different keywords for one platform or another.</p>
+<h3 data-number="19.5.1" id="macros-with-one-argument"><span class="header-section-number">19.5.1</span> Macros with One Argument</h3>
+<p>Let’s start with a simple one that squares a number:</p>
+<p></p>
+<div class="sourceCode" id="cb359"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb359-1"><a href="the-c-preprocessor.html#cb359-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb359-2"><a href="the-c-preprocessor.html#cb359-2"></a></span>
+<span id="cb359-3"><a href="the-c-preprocessor.html#cb359-3"></a><span class="pp">#define SQR</span><span class="op">(</span><span class="pp">x</span><span class="op">)</span><span class="pp"> x </span><span class="op">*</span><span class="pp"> x  </span><span class="co">// Not quite right, but bear with me</span></span>
+<span id="cb359-4"><a href="the-c-preprocessor.html#cb359-4"></a></span>
+<span id="cb359-5"><a href="the-c-preprocessor.html#cb359-5"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb359-6"><a href="the-c-preprocessor.html#cb359-6"></a><span class="op">{</span></span>
+<span id="cb359-7"><a href="the-c-preprocessor.html#cb359-7"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> SQR<span class="op">(</span><span class="dv">12</span><span class="op">));</span>  <span class="co">// 144</span></span>
+<span id="cb359-8"><a href="the-c-preprocessor.html#cb359-8"></a><span class="op">}</span></span></code></pre></div>
+<p>What that’s saying is “everywhere you see <code>SQR</code> with some value, replace it with that value times itself”.</p>
+<p>So line 7 will be changed to:</p>
+<div class="sourceCode" id="cb360" data-startfrom="7"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c" style="counter-reset: source-line 6;"><span id="cb360-7"><a href="the-c-preprocessor.html#cb360-7"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> <span class="dv">12</span> <span class="op">*</span> <span class="dv">12</span><span class="op">);</span>  <span class="co">// 144</span></span></code></pre></div>
+<p>which C comfortably converts to 144.</p>
+<p>But we’ve made an elementary error in that macro, one that we need to avoid.</p>
+<p>Let’s check it out. What if we wanted to compute <code>SQR(3 + 4)</code>? Well, <span class="math inline">\(3+4=7\)</span>, so we must want to compute <span class="math inline">\(7^2=49\)</span>. That’s it; <code>49</code>—final answer.</p>
+<p>Let’s drop it in our code and see that we get… 19?</p>
+<div class="sourceCode" id="cb361" data-startfrom="7"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c" style="counter-reset: source-line 6;"><span id="cb361-7"><a href="the-c-preprocessor.html#cb361-7"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> SQR<span class="op">(</span><span class="dv">3</span> <span class="op">+</span> <span class="dv">4</span><span class="op">));</span>  <span class="co">// 19!!??</span></span></code></pre></div>
+<p>What happened?</p>
+<p>If we follow the macro expansion, we get</p>
+<div class="sourceCode" id="cb362" data-startfrom="7"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c" style="counter-reset: source-line 6;"><span id="cb362-7"><a href="the-c-preprocessor.html#cb362-7"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> <span class="dv">3</span> <span class="op">+</span> <span class="dv">4</span> <span class="op">*</span> <span class="dv">3</span> <span class="op">+</span> <span class="dv">4</span><span class="op">);</span>  <span class="co">// 19!</span></span></code></pre></div>
+<p>Oops! Since multiplication takes precedence, we do the <span class="math inline">\(4\times3=12\)</span> first, and get <span class="math inline">\(3+12+4=19\)</span>. Not what we were after.</p>
+<p>So we have to fix this to make it right.</p>
+<p><strong>This is so common that you should automatically do it every time you make a parameterized math macro!</strong></p>
+<p>The fix is easy: just add some parentheses!</p>
+<div class="sourceCode" id="cb363" data-startfrom="3"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c" style="counter-reset: source-line 2;"><span id="cb363-3"><a href="the-c-preprocessor.html#cb363-3"></a><span class="pp">#define SQR</span><span class="op">(</span><span class="pp">x</span><span class="op">)</span><span class="pp"> </span><span class="op">(</span><span class="pp">x</span><span class="op">)</span><span class="pp"> </span><span class="op">*</span><span class="pp"> </span><span class="op">(</span><span class="pp">x</span><span class="op">)</span><span class="pp">   </span><span class="co">// Better... but still not quite good enough!</span></span></code></pre></div>
+<p>And now our macro expands to:</p>
+<div class="sourceCode" id="cb364" data-startfrom="7"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c" style="counter-reset: source-line 6;"><span id="cb364-7"><a href="the-c-preprocessor.html#cb364-7"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> <span class="op">(</span><span class="dv">3</span> <span class="op">+</span> <span class="dv">4</span><span class="op">)</span> <span class="op">*</span> <span class="op">(</span><span class="dv">3</span> <span class="op">+</span> <span class="dv">4</span><span class="op">));</span>  <span class="co">// 49! Woo hoo!</span></span></code></pre></div>
+<p>But we actually still have the same problem which might manifest if we have a higher-precedence operator than multiply (<code>*</code>) nearby.</p>
+<p>So the safe, proper way to put the macro together is to wrap the whole thing in additional parentheses, like so:</p>
+<div class="sourceCode" id="cb365" data-startfrom="3"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c" style="counter-reset: source-line 2;"><span id="cb365-3"><a href="the-c-preprocessor.html#cb365-3"></a><span class="pp">#define SQR</span><span class="op">(</span><span class="pp">x</span><span class="op">)</span><span class="pp"> </span><span class="op">((</span><span class="pp">x</span><span class="op">)</span><span class="pp"> </span><span class="op">*</span><span class="pp"> </span><span class="op">(</span><span class="pp">x</span><span class="op">))</span><span class="pp">   </span><span class="co">// Good!</span></span></code></pre></div>
+<p>Just make it a habit to do that when you make a math macro and you can’t go wrong.</p>
+<h3 data-number="19.5.2" id="macros-with-more-than-one-argument"><span class="header-section-number">19.5.2</span> Macros with More than One Argument</h3>
+<p>You can stack these things up as much as you want:</p>
+<div class="sourceCode" id="cb366"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb366-1"><a href="the-c-preprocessor.html#cb366-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#define TRIANGLE_AREA</span><span class="op">(</span><span class="pp">w</span><span class="op">,</span><span class="pp"> h</span><span class="op">)</span><span class="pp"> </span><span class="op">(</span><span class="dv">0</span><span class="er">.5</span><span class="pp"> </span><span class="op">*</span><span class="pp"> </span><span class="op">(</span><span class="pp">w</span><span class="op">)</span><span class="pp"> </span><span class="op">*</span><span class="pp"> </span><span class="op">(</span><span class="pp">h</span><span class="op">))</span></span></code></pre></div>
+<p>Let’s do some macros that solve for <span class="math inline">\(x\)</span> using the quadratic formula. Just in case you don’t have it on the top of your head, it says for equations of the form:</p>
+<p><span class="math inline">\(ax^2+bx+c=0\)</span></p>
+<p>you can solve for <span class="math inline">\(x\)</span> with the quadratic formula:</p>
+<p><span class="math inline">\(x=\displaystyle\frac{-b\pm\sqrt{b^2-4ac}}{2a}\)</span></p>
+<p>Which is crazy. Also notice the plus-or-minus (<span class="math inline">\(\pm\)</span>) in there, indicating that there are actually two solutions.</p>
+<p>So let’s make macros for both:</p>
+<div class="sourceCode" id="cb367"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb367-1"><a href="the-c-preprocessor.html#cb367-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#define QUADP</span><span class="op">(</span><span class="pp">a</span><span class="op">,</span><span class="pp"> b</span><span class="op">,</span><span class="pp"> c</span><span class="op">)</span><span class="pp"> </span><span class="op">((-(</span><span class="pp">b</span><span class="op">)</span><span class="pp"> </span><span class="op">+</span><span class="pp"> sqrt</span><span class="op">((</span><span class="pp">b</span><span class="op">)</span><span class="pp"> </span><span class="op">*</span><span class="pp"> </span><span class="op">(</span><span class="pp">b</span><span class="op">)</span><span class="pp"> </span><span class="op">-</span><span class="pp"> </span><span class="dv">4</span><span class="pp"> </span><span class="op">*</span><span class="pp"> </span><span class="op">(</span><span class="pp">a</span><span class="op">)</span><span class="pp"> </span><span class="op">*</span><span class="pp"> </span><span class="op">(</span><span class="pp">c</span><span class="op">)))</span><span class="pp"> </span><span class="op">/</span><span class="pp"> </span><span class="op">(</span><span class="dv">2</span><span class="pp"> </span><span class="op">*</span><span class="pp"> </span><span class="op">(</span><span class="pp">a</span><span class="op">)))</span></span>
+<span id="cb367-2"><a href="the-c-preprocessor.html#cb367-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#define QUADM</span><span class="op">(</span><span class="pp">a</span><span class="op">,</span><span class="pp"> b</span><span class="op">,</span><span class="pp"> c</span><span class="op">)</span><span class="pp"> </span><span class="op">((-(</span><span class="pp">b</span><span class="op">)</span><span class="pp"> </span><span class="op">-</span><span class="pp"> sqrt</span><span class="op">((</span><span class="pp">b</span><span class="op">)</span><span class="pp"> </span><span class="op">*</span><span class="pp"> </span><span class="op">(</span><span class="pp">b</span><span class="op">)</span><span class="pp"> </span><span class="op">-</span><span class="pp"> </span><span class="dv">4</span><span class="pp"> </span><span class="op">*</span><span class="pp"> </span><span class="op">(</span><span class="pp">a</span><span class="op">)</span><span class="pp"> </span><span class="op">*</span><span class="pp"> </span><span class="op">(</span><span class="pp">c</span><span class="op">)))</span><span class="pp"> </span><span class="op">/</span><span class="pp"> </span><span class="op">(</span><span class="dv">2</span><span class="pp"> </span><span class="op">*</span><span class="pp"> </span><span class="op">(</span><span class="pp">a</span><span class="op">)))</span></span></code></pre></div>
+<p>So that gets us some math. But let’s define one more that we can use as arguments to <code>printf()</code> to print both answers.</p>
+<div class="sourceCode" id="cb368"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb368-1"><a href="the-c-preprocessor.html#cb368-1" aria-hidden="true" tabindex="-1"></a><span class="co">//          macro              replacement</span></span>
+<span id="cb368-2"><a href="the-c-preprocessor.html#cb368-2" aria-hidden="true" tabindex="-1"></a><span class="co">//      |-----------| |----------------------------|</span></span>
+<span id="cb368-3"><a href="the-c-preprocessor.html#cb368-3" aria-hidden="true" tabindex="-1"></a><span class="pp">#define QUAD</span><span class="op">(</span><span class="pp">a</span><span class="op">,</span><span class="pp"> b</span><span class="op">,</span><span class="pp"> c</span><span class="op">)</span><span class="pp"> QUADP</span><span class="op">(</span><span class="pp">a</span><span class="op">,</span><span class="pp"> b</span><span class="op">,</span><span class="pp"> c</span><span class="op">),</span><span class="pp"> QUADM</span><span class="op">(</span><span class="pp">a</span><span class="op">,</span><span class="pp"> b</span><span class="op">,</span><span class="pp"> c</span><span class="op">)</span></span></code></pre></div>
+<p>That’s just a couple values separated by a comma—and we can use that as a “combined” argument of sorts to <code>printf()</code> like this:</p>
+<div class="sourceCode" id="cb369"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb369-1"><a href="the-c-preprocessor.html#cb369-1" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;x = </span><span class="sc">%f</span><span class="st"> or x = </span><span class="sc">%f\n</span><span class="st">&quot;</span><span class="op">,</span> QUAD<span class="op">(</span><span class="dv">2</span><span class="op">,</span> <span class="dv">10</span><span class="op">,</span> <span class="dv">5</span><span class="op">));</span></span></code></pre></div>
+<p>Let’s put it together into some code:</p>
+<div class="sourceCode" id="cb370"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb370-1"><a href="the-c-preprocessor.html#cb370-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb370-2"><a href="the-c-preprocessor.html#cb370-2"></a><span class="pp">#include </span><span class="im">&lt;math.h&gt;</span><span class="pp">  </span><span class="co">// For sqrt()</span></span>
+<span id="cb370-3"><a href="the-c-preprocessor.html#cb370-3"></a></span>
+<span id="cb370-4"><a href="the-c-preprocessor.html#cb370-4"></a><span class="pp">#define QUADP</span><span class="op">(</span><span class="pp">a</span><span class="op">,</span><span class="pp"> b</span><span class="op">,</span><span class="pp"> c</span><span class="op">)</span><span class="pp"> </span><span class="op">((-(</span><span class="pp">b</span><span class="op">)</span><span class="pp"> </span><span class="op">+</span><span class="pp"> sqrt</span><span class="op">((</span><span class="pp">b</span><span class="op">)</span><span class="pp"> </span><span class="op">*</span><span class="pp"> </span><span class="op">(</span><span class="pp">b</span><span class="op">)</span><span class="pp"> </span><span class="op">-</span><span class="pp"> </span><span class="dv">4</span><span class="pp"> </span><span class="op">*</span><span class="pp"> </span><span class="op">(</span><span class="pp">a</span><span class="op">)</span><span class="pp"> </span><span class="op">*</span><span class="pp"> </span><span class="op">(</span><span class="pp">c</span><span class="op">)))</span><span class="pp"> </span><span class="op">/</span><span class="pp"> </span><span class="op">(</span><span class="dv">2</span><span class="pp"> </span><span class="op">*</span><span class="pp"> </span><span class="op">(</span><span class="pp">a</span><span class="op">)))</span></span>
+<span id="cb370-5"><a href="the-c-preprocessor.html#cb370-5"></a><span class="pp">#define QUADM</span><span class="op">(</span><span class="pp">a</span><span class="op">,</span><span class="pp"> b</span><span class="op">,</span><span class="pp"> c</span><span class="op">)</span><span class="pp"> </span><span class="op">((-(</span><span class="pp">b</span><span class="op">)</span><span class="pp"> </span><span class="op">-</span><span class="pp"> sqrt</span><span class="op">((</span><span class="pp">b</span><span class="op">)</span><span class="pp"> </span><span class="op">*</span><span class="pp"> </span><span class="op">(</span><span class="pp">b</span><span class="op">)</span><span class="pp"> </span><span class="op">-</span><span class="pp"> </span><span class="dv">4</span><span class="pp"> </span><span class="op">*</span><span class="pp"> </span><span class="op">(</span><span class="pp">a</span><span class="op">)</span><span class="pp"> </span><span class="op">*</span><span class="pp"> </span><span class="op">(</span><span class="pp">c</span><span class="op">)))</span><span class="pp"> </span><span class="op">/</span><span class="pp"> </span><span class="op">(</span><span class="dv">2</span><span class="pp"> </span><span class="op">*</span><span class="pp"> </span><span class="op">(</span><span class="pp">a</span><span class="op">)))</span></span>
+<span id="cb370-6"><a href="the-c-preprocessor.html#cb370-6"></a><span class="pp">#define QUAD</span><span class="op">(</span><span class="pp">a</span><span class="op">,</span><span class="pp"> b</span><span class="op">,</span><span class="pp"> c</span><span class="op">)</span><span class="pp"> QUADP</span><span class="op">(</span><span class="pp">a</span><span class="op">,</span><span class="pp"> b</span><span class="op">,</span><span class="pp"> c</span><span class="op">),</span><span class="pp"> QUADM</span><span class="op">(</span><span class="pp">a</span><span class="op">,</span><span class="pp"> b</span><span class="op">,</span><span class="pp"> c</span><span class="op">)</span></span>
+<span id="cb370-7"><a href="the-c-preprocessor.html#cb370-7"></a></span>
+<span id="cb370-8"><a href="the-c-preprocessor.html#cb370-8"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb370-9"><a href="the-c-preprocessor.html#cb370-9"></a><span class="op">{</span></span>
+<span id="cb370-10"><a href="the-c-preprocessor.html#cb370-10"></a>    printf<span class="op">(</span><span class="st">&quot;2*x^2 + 10*x + 5 = 0</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb370-11"><a href="the-c-preprocessor.html#cb370-11"></a>    printf<span class="op">(</span><span class="st">&quot;x = </span><span class="sc">%f</span><span class="st"> or x = </span><span class="sc">%f\n</span><span class="st">&quot;</span><span class="op">,</span> QUAD<span class="op">(</span><span class="dv">2</span><span class="op">,</span> <span class="dv">10</span><span class="op">,</span> <span class="dv">5</span><span class="op">));</span></span>
+<span id="cb370-12"><a href="the-c-preprocessor.html#cb370-12"></a><span class="op">}</span></span></code></pre></div>
+<p>And this gives us the output:</p>
+<div class="sourceCode" id="cb371"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb371-1"><a href="the-c-preprocessor.html#cb371-1" aria-hidden="true" tabindex="-1"></a>2*x^2 + 10*x + 5 = 0</span>
+<span id="cb371-2"><a href="the-c-preprocessor.html#cb371-2" aria-hidden="true" tabindex="-1"></a>x = -0.563508 or x = -4.436492</span></code></pre></div>
+<p>Plugging in either of those values gives us roughly zero (a bit off because the numbers aren’t exact):</p>
+<p><span class="math inline">\(2\times-0.563508^2+10\times-0.563508+5\approx0.000003\)</span></p>
+<h3 data-number="19.5.3" id="macros-with-variable-arguments"><span class="header-section-number">19.5.3</span> Macros with Variable Arguments</h3>
+<p></p>
+<p>There’s also a way to have a variable number of arguments passed to a macro, using ellipses (<code>...</code>) after the known, named arguments. When the macro is expanded, all of the extra arguments will be in a comma-separated list in the <code>__VA_ARGS__</code> macro, and can be replaced from there:</p>
+<div class="sourceCode" id="cb372"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb372-1"><a href="the-c-preprocessor.html#cb372-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb372-2"><a href="the-c-preprocessor.html#cb372-2"></a></span>
+<span id="cb372-3"><a href="the-c-preprocessor.html#cb372-3"></a><span class="co">// Combine the first two arguments to a single number,</span></span>
+<span id="cb372-4"><a href="the-c-preprocessor.html#cb372-4"></a><span class="co">// then have a commalist of the rest of them:</span></span>
+<span id="cb372-5"><a href="the-c-preprocessor.html#cb372-5"></a></span>
+<span id="cb372-6"><a href="the-c-preprocessor.html#cb372-6"></a><span class="pp">#define X</span><span class="op">(</span><span class="pp">a</span><span class="op">,</span><span class="pp"> b</span><span class="op">,</span><span class="pp"> </span><span class="op">...)</span><span class="pp"> </span><span class="op">(</span><span class="dv">10</span><span class="op">*(</span><span class="pp">a</span><span class="op">)</span><span class="pp"> </span><span class="op">+</span><span class="pp"> </span><span class="dv">20</span><span class="op">*(</span><span class="pp">b</span><span class="op">)),</span><span class="pp"> __VA_ARGS__</span></span>
+<span id="cb372-7"><a href="the-c-preprocessor.html#cb372-7"></a></span>
+<span id="cb372-8"><a href="the-c-preprocessor.html#cb372-8"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb372-9"><a href="the-c-preprocessor.html#cb372-9"></a><span class="op">{</span></span>
+<span id="cb372-10"><a href="the-c-preprocessor.html#cb372-10"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d</span><span class="st"> </span><span class="sc">%f</span><span class="st"> </span><span class="sc">%s</span><span class="st"> </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> X<span class="op">(</span><span class="dv">5</span><span class="op">,</span> <span class="dv">4</span><span class="op">,</span> <span class="fl">3.14</span><span class="op">,</span> <span class="st">&quot;Hi!&quot;</span><span class="op">,</span> <span class="dv">12</span><span class="op">));</span></span>
+<span id="cb372-11"><a href="the-c-preprocessor.html#cb372-11"></a><span class="op">}</span></span></code></pre></div>
+<p>The substitution that takes place on line 10 would be:</p>
+<div class="sourceCode" id="cb373" data-startfrom="10"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c" style="counter-reset: source-line 9;"><span id="cb373-10"><a href="the-c-preprocessor.html#cb373-10"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d</span><span class="st"> </span><span class="sc">%f</span><span class="st"> </span><span class="sc">%s</span><span class="st"> </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> <span class="op">(</span><span class="dv">10</span><span class="op">*(</span><span class="dv">5</span><span class="op">)</span> <span class="op">+</span> <span class="dv">20</span><span class="op">*(</span><span class="dv">4</span><span class="op">)),</span> <span class="fl">3.14</span><span class="op">,</span> <span class="st">&quot;Hi!&quot;</span><span class="op">,</span> <span class="dv">12</span><span class="op">);</span></span></code></pre></div>
+<p>for output:</p>
+<div class="sourceCode" id="cb374"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb374-1"><a href="the-c-preprocessor.html#cb374-1" aria-hidden="true" tabindex="-1"></a>130 3.140000 Hi! 12</span></code></pre></div>
+<p>You can also “stringify” <code>__VA_ARGS__</code> by putting a <code>#</code> in front of it:</p>
+<div class="sourceCode" id="cb375"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb375-1"><a href="the-c-preprocessor.html#cb375-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#define X</span><span class="op">(...)</span><span class="pp"> </span><span class="op">#</span><span class="pp">__VA_ARGS__</span></span>
+<span id="cb375-2"><a href="the-c-preprocessor.html#cb375-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb375-3"><a href="the-c-preprocessor.html#cb375-3" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> X<span class="op">(</span><span class="dv">1</span><span class="op">,</span><span class="dv">2</span><span class="op">,</span><span class="dv">3</span><span class="op">));</span>  <span class="co">// Prints &quot;1, 2, 3&quot;</span></span></code></pre></div>
+<p> </p>
+<h3 data-number="19.5.4" id="stringification"><span class="header-section-number">19.5.4</span> Stringification</h3>
+<p></p>
+<p>Already mentioned, just above, you can turn any argument into a string by preceding it with a <code>#</code> in the replacement text.</p>
+<p>For example, we could print anything as a string with this macro and <code>printf()</code>:</p>
+<div class="sourceCode" id="cb376"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb376-1"><a href="the-c-preprocessor.html#cb376-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#define STR</span><span class="op">(</span><span class="pp">x</span><span class="op">)</span><span class="pp"> </span><span class="op">#</span><span class="pp">x</span></span>
+<span id="cb376-2"><a href="the-c-preprocessor.html#cb376-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb376-3"><a href="the-c-preprocessor.html#cb376-3" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> STR<span class="op">(</span><span class="fl">3.14159</span><span class="op">));</span></span></code></pre></div>
+<p>In that case, the substitution leads to:</p>
+<div class="sourceCode" id="cb377"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb377-1"><a href="the-c-preprocessor.html#cb377-1" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> <span class="st">&quot;3.14159&quot;</span><span class="op">);</span></span></code></pre></div>
+<p>Let’s see if we can use this to greater effect so that we can pass any <code>int</code> variable name into a macro, and have it print out it’s name and value.</p>
+<div class="sourceCode" id="cb378"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb378-1"><a href="the-c-preprocessor.html#cb378-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb378-2"><a href="the-c-preprocessor.html#cb378-2"></a></span>
+<span id="cb378-3"><a href="the-c-preprocessor.html#cb378-3"></a><span class="pp">#define PRINT_INT_VAL</span><span class="op">(</span><span class="pp">x</span><span class="op">)</span><span class="pp"> printf</span><span class="op">(</span><span class="st">&quot;</span><span class="sc">%s</span><span class="st"> = </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span><span class="pp"> </span><span class="op">#</span><span class="pp">x</span><span class="op">,</span><span class="pp"> x</span><span class="op">)</span></span>
+<span id="cb378-4"><a href="the-c-preprocessor.html#cb378-4"></a></span>
+<span id="cb378-5"><a href="the-c-preprocessor.html#cb378-5"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb378-6"><a href="the-c-preprocessor.html#cb378-6"></a><span class="op">{</span></span>
+<span id="cb378-7"><a href="the-c-preprocessor.html#cb378-7"></a>    <span class="dt">int</span> a <span class="op">=</span> <span class="dv">5</span><span class="op">;</span></span>
+<span id="cb378-8"><a href="the-c-preprocessor.html#cb378-8"></a></span>
+<span id="cb378-9"><a href="the-c-preprocessor.html#cb378-9"></a>    PRINT_INT_VAL<span class="op">(</span>a<span class="op">);</span>  <span class="co">// prints &quot;a = 5&quot;</span></span>
+<span id="cb378-10"><a href="the-c-preprocessor.html#cb378-10"></a><span class="op">}</span></span></code></pre></div>
+<p>On line 9, we get the following macro replacement:</p>
+<div class="sourceCode" id="cb379" data-startfrom="9"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c" style="counter-reset: source-line 8;"><span id="cb379-9"><a href="the-c-preprocessor.html#cb379-9"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%s</span><span class="st"> = </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> <span class="st">&quot;a&quot;</span><span class="op">,</span> <span class="dv">5</span><span class="op">);</span></span></code></pre></div>
+<p></p>
+<h3 data-number="19.5.5" id="concatenation"><span class="header-section-number">19.5.5</span> Concatenation</h3>
+<p></p>
+<p>We can concatenate two arguments together with <code>##</code>, as well. Fun times!</p>
+<div class="sourceCode" id="cb380"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb380-1"><a href="the-c-preprocessor.html#cb380-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#define CAT</span><span class="op">(</span><span class="pp">a</span><span class="op">,</span><span class="pp"> b</span><span class="op">)</span><span class="pp"> a </span><span class="op">##</span><span class="pp"> b</span></span>
+<span id="cb380-2"><a href="the-c-preprocessor.html#cb380-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb380-3"><a href="the-c-preprocessor.html#cb380-3" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%f\n</span><span class="st">&quot;</span><span class="op">,</span> CAT<span class="op">(</span><span class="fl">3.14</span><span class="op">,</span> <span class="dv">1592</span><span class="op">));</span>   <span class="co">// 3.141592</span></span></code></pre></div>
+<p></p>
+<h2 data-number="19.6" id="multiline-macros"><span class="header-section-number">19.6</span> Multiline Macros</h2>
+<p></p>
+<p>It’s possible to continue a macro to multiple lines if you escape the newline with a backslash (<code>\</code>).</p>
+<p>Let’s write a multiline macro that prints numbers from <code>0</code> to the product of the two arguments passed in.</p>
+<p></p>
+<div class="sourceCode" id="cb381"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb381-1"><a href="the-c-preprocessor.html#cb381-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb381-2"><a href="the-c-preprocessor.html#cb381-2"></a></span>
+<span id="cb381-3"><a href="the-c-preprocessor.html#cb381-3"></a><span class="pp">#define PRINT_NUMS_TO_PRODUCT</span><span class="op">(</span><span class="pp">a</span><span class="op">,</span><span class="pp"> b</span><span class="op">)</span><span class="pp"> </span><span class="cf">do</span><span class="pp"> </span><span class="op">{</span><span class="pp"> </span><span class="op">\</span></span>
+<span id="cb381-4"><a href="the-c-preprocessor.html#cb381-4"></a><span class="pp">    </span><span class="dt">int</span><span class="pp"> product </span><span class="op">=</span><span class="pp"> </span><span class="op">(</span><span class="pp">a</span><span class="op">)</span><span class="pp"> </span><span class="op">*</span><span class="pp"> </span><span class="op">(</span><span class="pp">b</span><span class="op">);</span><span class="pp"> </span><span class="op">\</span></span>
+<span id="cb381-5"><a href="the-c-preprocessor.html#cb381-5"></a><span class="pp">    </span><span class="cf">for</span><span class="pp"> </span><span class="op">(</span><span class="dt">int</span><span class="pp"> i </span><span class="op">=</span><span class="pp"> </span><span class="dv">0</span><span class="op">;</span><span class="pp"> i </span><span class="op">&lt;</span><span class="pp"> product</span><span class="op">;</span><span class="pp"> i</span><span class="op">++)</span><span class="pp"> </span><span class="op">{</span><span class="pp"> </span><span class="op">\</span></span>
+<span id="cb381-6"><a href="the-c-preprocessor.html#cb381-6"></a><span class="pp">        printf</span><span class="op">(</span><span class="st">&quot;</span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span><span class="pp"> i</span><span class="op">);</span><span class="pp"> </span><span class="op">\</span></span>
+<span id="cb381-7"><a href="the-c-preprocessor.html#cb381-7"></a><span class="pp">    </span><span class="op">}</span><span class="pp"> </span><span class="op">\</span></span>
+<span id="cb381-8"><a href="the-c-preprocessor.html#cb381-8"></a><span class="op">}</span><span class="pp"> </span><span class="cf">while</span><span class="op">(</span><span class="dv">0</span><span class="op">)</span></span>
+<span id="cb381-9"><a href="the-c-preprocessor.html#cb381-9"></a></span>
+<span id="cb381-10"><a href="the-c-preprocessor.html#cb381-10"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb381-11"><a href="the-c-preprocessor.html#cb381-11"></a><span class="op">{</span></span>
+<span id="cb381-12"><a href="the-c-preprocessor.html#cb381-12"></a>    PRINT_NUMS_TO_PRODUCT<span class="op">(</span><span class="dv">2</span><span class="op">,</span> <span class="dv">4</span><span class="op">);</span>  <span class="co">// Outputs numbers from 0 to 7</span></span>
+<span id="cb381-13"><a href="the-c-preprocessor.html#cb381-13"></a><span class="op">}</span></span></code></pre></div>
+<p>A couple things to note there:</p>
+<ul>
+<li>Escapes at the end of every line except the last one to indicate that the macro continues.</li>
+<li>The whole thing is wrapped in a <code>do</code>-<code>while(0)</code> loop with squirrley braces.</li>
+</ul>
+<p>The latter point might be a little weird, but it’s all about absorbing the trailing <code>;</code> the coder drops after the macro.</p>
+<p>At first I thought that just using squirrely braces would be enough, but there’s a case where it fails if the coder puts a semicolon after the macro. Here’s that case:</p>
+<div class="sourceCode" id="cb382"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb382-1"><a href="the-c-preprocessor.html#cb382-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb382-2"><a href="the-c-preprocessor.html#cb382-2"></a></span>
+<span id="cb382-3"><a href="the-c-preprocessor.html#cb382-3"></a><span class="pp">#define FOO</span><span class="op">(</span><span class="pp">x</span><span class="op">)</span><span class="pp"> </span><span class="op">{</span><span class="pp"> </span><span class="op">(</span><span class="pp">x</span><span class="op">)++;</span><span class="pp"> </span><span class="op">}</span></span>
+<span id="cb382-4"><a href="the-c-preprocessor.html#cb382-4"></a></span>
+<span id="cb382-5"><a href="the-c-preprocessor.html#cb382-5"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb382-6"><a href="the-c-preprocessor.html#cb382-6"></a><span class="op">{</span></span>
+<span id="cb382-7"><a href="the-c-preprocessor.html#cb382-7"></a>    <span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb382-8"><a href="the-c-preprocessor.html#cb382-8"></a></span>
+<span id="cb382-9"><a href="the-c-preprocessor.html#cb382-9"></a>    <span class="cf">if</span> <span class="op">(</span>i <span class="op">==</span> <span class="dv">0</span><span class="op">)</span></span>
+<span id="cb382-10"><a href="the-c-preprocessor.html#cb382-10"></a>        FOO<span class="op">(</span>i<span class="op">);</span></span>
+<span id="cb382-11"><a href="the-c-preprocessor.html#cb382-11"></a>    <span class="cf">else</span></span>
+<span id="cb382-12"><a href="the-c-preprocessor.html#cb382-12"></a>        printf<span class="op">(</span><span class="st">&quot;:-(</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb382-13"><a href="the-c-preprocessor.html#cb382-13"></a></span>
+<span id="cb382-14"><a href="the-c-preprocessor.html#cb382-14"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> i<span class="op">);</span></span>
+<span id="cb382-15"><a href="the-c-preprocessor.html#cb382-15"></a><span class="op">}</span></span></code></pre></div>
+<p>Looks simple enough, but it won’t build without a syntax error:</p>
+<div class="sourceCode" id="cb383"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb383-1"><a href="the-c-preprocessor.html#cb383-1" aria-hidden="true" tabindex="-1"></a>foo.c:11:5: error: ‘else’ without a previous ‘if’  </span></code></pre></div>
+<p>Do you see it?</p>
+<p>Let’s look at the expansion:</p>
+<div class="sourceCode" id="cb384"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb384-1"><a href="the-c-preprocessor.html#cb384-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb384-2"><a href="the-c-preprocessor.html#cb384-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>i <span class="op">==</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb384-3"><a href="the-c-preprocessor.html#cb384-3" aria-hidden="true" tabindex="-1"></a>        <span class="op">(</span>i<span class="op">)++;</span></span>
+<span id="cb384-4"><a href="the-c-preprocessor.html#cb384-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">};</span>             <span class="co">// &lt;-- Trouble with a capital-T!</span></span>
+<span id="cb384-5"><a href="the-c-preprocessor.html#cb384-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb384-6"><a href="the-c-preprocessor.html#cb384-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span></span>
+<span id="cb384-7"><a href="the-c-preprocessor.html#cb384-7" aria-hidden="true" tabindex="-1"></a>        printf<span class="op">(</span><span class="st">&quot;:-(</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span></code></pre></div>
+<p>The <code>;</code> puts an end to the <code>if</code> statement, so the <code>else</code> is just floating out there illegally<a href="footnotes.html#fn131" class="footnote-ref" id="fnref131" role="doc-noteref"><sup>131</sup></a>.</p>
+<p>So wrap that multiline macro with a <code>do</code>-<code>while(0)</code>.</p>
+<p> </p>
+<h2 data-number="19.7" id="my-assert"><span class="header-section-number">19.7</span> Example: An Assert Macro</h2>
+<p>Adding asserts to your code is a good way to catch conditions that you think shouldn’t happen. C provides <code>assert()</code> functionality. It checks a condition, and if it’s false, the program bombs out telling you the file and line number on which the assertion failed.</p>
+<p>But this is wanting.</p>
+<ol type="1">
+<li>First of all, you can’t specify an additional message with the assert.</li>
+<li>Secondly, there’s no easy on-off switch for all the asserts.</li>
+</ol>
+<p>We can address the first with macros.</p>
+<p>Basically, when I have this code:</p>
+<div class="sourceCode" id="cb385"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb385-1"><a href="the-c-preprocessor.html#cb385-1" aria-hidden="true" tabindex="-1"></a>ASSERT<span class="op">(</span>x <span class="op">&lt;</span> <span class="dv">20</span><span class="op">,</span> <span class="st">&quot;x must be under 20&quot;</span><span class="op">);</span></span></code></pre></div>
+<p>I want something like this to happen (assuming the <code>ASSERT()</code> is on line 220 of <code>foo.c</code>):</p>
+<div class="sourceCode" id="cb386"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb386-1"><a href="the-c-preprocessor.html#cb386-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(!(</span>x <span class="op">&lt;</span> <span class="dv">20</span><span class="op">))</span> <span class="op">{</span></span>
+<span id="cb386-2"><a href="the-c-preprocessor.html#cb386-2" aria-hidden="true" tabindex="-1"></a>    fprintf<span class="op">(</span>stderr<span class="op">,</span> <span class="st">&quot;foo.c:220: assertion x &lt; 20 failed: &quot;</span><span class="op">);</span></span>
+<span id="cb386-3"><a href="the-c-preprocessor.html#cb386-3" aria-hidden="true" tabindex="-1"></a>    fprintf<span class="op">(</span>stderr<span class="op">,</span> <span class="st">&quot;x must be under 20</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb386-4"><a href="the-c-preprocessor.html#cb386-4" aria-hidden="true" tabindex="-1"></a>    exit<span class="op">(</span><span class="dv">1</span><span class="op">);</span></span>
+<span id="cb386-5"><a href="the-c-preprocessor.html#cb386-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>We can get the filename out of the <code>__FILE__</code> macro, and the line number from <code>__LINE__</code>. The message is already a string, but <code>x &lt; 20</code> is not, so we’ll have to stringify it with <code>#</code>. We can make a multiline macro by using backslash escapes at the end of the line.</p>
+<div class="sourceCode" id="cb387"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb387-1"><a href="the-c-preprocessor.html#cb387-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#define ASSERT</span><span class="op">(</span><span class="pp">c</span><span class="op">,</span><span class="pp"> m</span><span class="op">)</span><span class="pp"> </span><span class="op">\</span></span>
+<span id="cb387-2"><a href="the-c-preprocessor.html#cb387-2" aria-hidden="true" tabindex="-1"></a><span class="cf">do</span><span class="pp"> </span><span class="op">{</span><span class="pp"> </span><span class="op">\</span></span>
+<span id="cb387-3"><a href="the-c-preprocessor.html#cb387-3" aria-hidden="true" tabindex="-1"></a><span class="pp">    </span><span class="cf">if</span><span class="pp"> </span><span class="op">(!(</span><span class="pp">c</span><span class="op">))</span><span class="pp"> </span><span class="op">{</span><span class="pp"> </span><span class="op">\</span></span>
+<span id="cb387-4"><a href="the-c-preprocessor.html#cb387-4" aria-hidden="true" tabindex="-1"></a><span class="pp">        fprintf</span><span class="op">(</span><span class="pp">stderr</span><span class="op">,</span><span class="pp"> __FILE__ </span><span class="st">&quot;:</span><span class="sc">%d</span><span class="st">: assertion </span><span class="sc">%s</span><span class="st"> failed: </span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span><span class="pp"> </span><span class="op">\</span></span>
+<span id="cb387-5"><a href="the-c-preprocessor.html#cb387-5" aria-hidden="true" tabindex="-1"></a><span class="pp">                        __LINE__</span><span class="op">,</span><span class="pp"> </span><span class="op">#</span><span class="pp">c</span><span class="op">,</span><span class="pp"> m</span><span class="op">);</span><span class="pp"> </span><span class="op">\</span></span>
+<span id="cb387-6"><a href="the-c-preprocessor.html#cb387-6" aria-hidden="true" tabindex="-1"></a><span class="pp">        exit</span><span class="op">(</span><span class="dv">1</span><span class="op">);</span><span class="pp"> </span><span class="op">\</span></span>
+<span id="cb387-7"><a href="the-c-preprocessor.html#cb387-7" aria-hidden="true" tabindex="-1"></a><span class="pp">    </span><span class="op">}</span><span class="pp"> </span><span class="op">\</span></span>
+<span id="cb387-8"><a href="the-c-preprocessor.html#cb387-8" aria-hidden="true" tabindex="-1"></a><span class="op">}</span><span class="pp"> </span><span class="cf">while</span><span class="op">(</span><span class="dv">0</span><span class="op">)</span></span></code></pre></div>
+<p>(It looks a little weird with <code>__FILE__</code> out front like that, but remember it is a string literal, and string literals next to each other are automagically concatenated. <code>__LINE__</code> on the other hand, it’s just an <code>int</code>.)</p>
+<p>And that works! If I run this:</p>
+<div class="sourceCode" id="cb388"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb388-1"><a href="the-c-preprocessor.html#cb388-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> x <span class="op">=</span> <span class="dv">30</span><span class="op">;</span></span>
+<span id="cb388-2"><a href="the-c-preprocessor.html#cb388-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb388-3"><a href="the-c-preprocessor.html#cb388-3" aria-hidden="true" tabindex="-1"></a>ASSERT<span class="op">(</span>x <span class="op">&lt;</span> <span class="dv">20</span><span class="op">,</span> <span class="st">&quot;x must be under 20&quot;</span><span class="op">);</span></span></code></pre></div>
+<p>I get this output:</p>
+<pre><code>foo.c:23: assertion x &lt; 20 failed: x must be under 20</code></pre>
+<p>Very nice!</p>
+<p>The only thing left is a way to turn it on and off, and we could do that with conditional compilation.</p>
+<p>Here’s the complete example:</p>
+<div class="sourceCode" id="cb390"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb390-1"><a href="the-c-preprocessor.html#cb390-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb390-2"><a href="the-c-preprocessor.html#cb390-2"></a><span class="pp">#include </span><span class="im">&lt;stdlib.h&gt;</span></span>
+<span id="cb390-3"><a href="the-c-preprocessor.html#cb390-3"></a></span>
+<span id="cb390-4"><a href="the-c-preprocessor.html#cb390-4"></a><span class="pp">#define ASSERT_ENABLED </span><span class="dv">1</span></span>
+<span id="cb390-5"><a href="the-c-preprocessor.html#cb390-5"></a></span>
+<span id="cb390-6"><a href="the-c-preprocessor.html#cb390-6"></a><span class="pp">#if ASSERT_ENABLED</span></span>
+<span id="cb390-7"><a href="the-c-preprocessor.html#cb390-7"></a><span class="pp">#define ASSERT</span><span class="op">(</span><span class="pp">c</span><span class="op">,</span><span class="pp"> m</span><span class="op">)</span><span class="pp"> </span><span class="op">\</span></span>
+<span id="cb390-8"><a href="the-c-preprocessor.html#cb390-8"></a><span class="cf">do</span><span class="pp"> </span><span class="op">{</span><span class="pp"> </span><span class="op">\</span></span>
+<span id="cb390-9"><a href="the-c-preprocessor.html#cb390-9"></a><span class="pp">    </span><span class="cf">if</span><span class="pp"> </span><span class="op">(!(</span><span class="pp">c</span><span class="op">))</span><span class="pp"> </span><span class="op">{</span><span class="pp"> </span><span class="op">\</span></span>
+<span id="cb390-10"><a href="the-c-preprocessor.html#cb390-10"></a><span class="pp">        fprintf</span><span class="op">(</span><span class="pp">stderr</span><span class="op">,</span><span class="pp"> __FILE__ </span><span class="st">&quot;:</span><span class="sc">%d</span><span class="st">: assertion </span><span class="sc">%s</span><span class="st"> failed: </span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span><span class="pp"> </span><span class="op">\</span></span>
+<span id="cb390-11"><a href="the-c-preprocessor.html#cb390-11"></a><span class="pp">                        __LINE__</span><span class="op">,</span><span class="pp"> </span><span class="op">#</span><span class="pp">c</span><span class="op">,</span><span class="pp"> m</span><span class="op">);</span><span class="pp"> </span><span class="op">\</span></span>
+<span id="cb390-12"><a href="the-c-preprocessor.html#cb390-12"></a><span class="pp">        exit</span><span class="op">(</span><span class="dv">1</span><span class="op">);</span><span class="pp"> </span><span class="op">\</span></span>
+<span id="cb390-13"><a href="the-c-preprocessor.html#cb390-13"></a><span class="pp">    </span><span class="op">}</span><span class="pp"> </span><span class="op">\</span></span>
+<span id="cb390-14"><a href="the-c-preprocessor.html#cb390-14"></a><span class="op">}</span><span class="pp"> </span><span class="cf">while</span><span class="op">(</span><span class="dv">0</span><span class="op">)</span></span>
+<span id="cb390-15"><a href="the-c-preprocessor.html#cb390-15"></a><span class="pp">#else</span></span>
+<span id="cb390-16"><a href="the-c-preprocessor.html#cb390-16"></a><span class="pp">#define ASSERT</span><span class="op">(</span><span class="pp">c</span><span class="op">,</span><span class="pp"> m</span><span class="op">)</span><span class="pp">  </span><span class="co">// Empty macro if not enabled</span></span>
+<span id="cb390-17"><a href="the-c-preprocessor.html#cb390-17"></a><span class="pp">#endif</span></span>
+<span id="cb390-18"><a href="the-c-preprocessor.html#cb390-18"></a></span>
+<span id="cb390-19"><a href="the-c-preprocessor.html#cb390-19"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb390-20"><a href="the-c-preprocessor.html#cb390-20"></a><span class="op">{</span></span>
+<span id="cb390-21"><a href="the-c-preprocessor.html#cb390-21"></a>    <span class="dt">int</span> x <span class="op">=</span> <span class="dv">30</span><span class="op">;</span></span>
+<span id="cb390-22"><a href="the-c-preprocessor.html#cb390-22"></a></span>
+<span id="cb390-23"><a href="the-c-preprocessor.html#cb390-23"></a>    ASSERT<span class="op">(</span>x <span class="op">&lt;</span> <span class="dv">20</span><span class="op">,</span> <span class="st">&quot;x must be under 20&quot;</span><span class="op">);</span></span>
+<span id="cb390-24"><a href="the-c-preprocessor.html#cb390-24"></a><span class="op">}</span></span></code></pre></div>
+<p>This has the output:</p>
+<div class="sourceCode" id="cb391"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb391-1"><a href="the-c-preprocessor.html#cb391-1" aria-hidden="true" tabindex="-1"></a>foo.c:23: assertion x &lt; 20 failed: x must be under 20</span></code></pre></div>
+<h2 data-number="19.8" id="the-error-directive"><span class="header-section-number">19.8</span> The <code>#error</code> Directive</h2>
+<p></p>
+<p>This directive causes the compiler to error out as soon as it sees it.</p>
+<p>Commonly, this is used inside a conditional to prevent compilation unless some prerequisites are met:</p>
+<div class="sourceCode" id="cb392"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb392-1"><a href="the-c-preprocessor.html#cb392-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#ifndef __STDC_IEC_559__</span></span>
+<span id="cb392-2"><a href="the-c-preprocessor.html#cb392-2" aria-hidden="true" tabindex="-1"></a>    <span class="pp">#error I really need IEEE-754 floating point to compile. Sorry!</span></span>
+<span id="cb392-3"><a href="the-c-preprocessor.html#cb392-3" aria-hidden="true" tabindex="-1"></a><span class="pp">#endif</span></span></code></pre></div>
+<p> </p>
+<p>Some compilers have a non-standard complementary <code>#warning</code> directive that will output a warning but not stop compilation, but this is not in the C11 spec.</p>
+<p></p>
+<h2 data-number="19.9" id="pragma"><span class="header-section-number">19.9</span> The <code>#pragma</code> Directive</h2>
+<p></p>
+<p>This is one funky directive, short for “pragmatic”. You can use it to do… well, anything your compiler supports you doing with it.</p>
+<p>Basically the only time you’re going to add this to your code is if some documentation tells you to do so.</p>
+<h3 data-number="19.9.1" id="non-standard-pragmas"><span class="header-section-number">19.9.1</span> Non-Standard Pragmas</h3>
+<p></p>
+<p>Here’s one non-standard example of using <code>#pragma</code> to cause the compiler to execute a <code>for</code> loop in parallel with multiple threads (if the compiler supports the <a href="https://www.openmp.org/">OpenMP</a><a href="footnotes.html#fn132" class="footnote-ref" id="fnref132" role="doc-noteref"><sup>132</sup></a> extension):</p>
+<div class="sourceCode" id="cb393"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb393-1"><a href="the-c-preprocessor.html#cb393-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#pragma omp parallel for</span></span>
+<span id="cb393-2"><a href="the-c-preprocessor.html#cb393-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> <span class="dv">10</span><span class="op">;</span> i<span class="op">++)</span> <span class="op">{</span> <span class="op">...</span> <span class="op">}</span></span></code></pre></div>
+<p>There are all kinds of <code>#pragma</code> directives documented across all four corners of the globe.</p>
+<p>All unrecognized <code>#pragma</code>s are ignored by the compiler.</p>
+<p></p>
+<h3 data-number="19.9.2" id="standard-pragmas"><span class="header-section-number">19.9.2</span> Standard Pragmas</h3>
+<p>There are also a few standard ones, and these start with <code>STDC</code>, and follow the same form:</p>
+<div class="sourceCode" id="cb394"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb394-1"><a href="the-c-preprocessor.html#cb394-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#pragma STDC pragma_name on-off</span></span></code></pre></div>
+<p>The <code>on-off</code> portion can be either <code>ON</code>, <code>OFF</code>, or <code>DEFAULT</code>.</p>
+<p>And the <code>pragma_name</code> can be one of these:</p>
+<p> </p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Pragma Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>FP_CONTRACT</code></td>
+<td>Allow floating point expressions to be contracted into a single operation to avoid rounding errors that might occur from multiple operations.</td>
+</tr>
+<tr class="even">
+<td><code>FENV_ACCESS</code></td>
+<td>Set to <code>ON</code> if you plan to access the floating point status flags. If <code>OFF</code>, the compiler might perform optimizations that cause the values in the flags to be inconsistent or invalid.</td>
+</tr>
+<tr class="odd">
+<td><code>CX_LIMITED_RANGE</code></td>
+<td>Set to <code>ON</code> to allow the compiler to skip overflow checks when performing complex arithmetic. Defaults to <code>OFF</code>.</td>
+</tr>
+</tbody>
+</table>
+<p>For example:</p>
+<div class="sourceCode" id="cb395"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb395-1"><a href="the-c-preprocessor.html#cb395-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#pragma STDC FP_CONTRACT OFF</span></span>
+<span id="cb395-2"><a href="the-c-preprocessor.html#cb395-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#pragma STDC CX_LIMITED_RANGE ON</span></span></code></pre></div>
+<p></p>
+<p>As for <code>CX_LIMITED_RANGE</code>, the spec points out:</p>
+<blockquote>
+<p>The purpose of the pragma is to allow the implementation to use the formulas:</p>
+<p><span class="math inline">\((x+iy)\times(u+iv) = (xu-yv)+i(yu+xv)\)</span></p>
+<p><span class="math inline">\((x+iy)/(u+iv) = [(xu+yv)+i(yu-xv)]/(u^2+v^2)\)</span></p>
+<p><span class="math inline">\(|x+iy|=\sqrt{x^2+y^2}\)</span></p>
+<p>where the programmer can determine they are safe.</p>
+</blockquote>
+<p></p>
+<h3 data-number="19.9.3" id="pragma-operator"><span class="header-section-number">19.9.3</span> <code>_Pragma</code> Operator</h3>
+<p></p>
+<p>This is another way to declare a pragma that you could use in a macro.</p>
+<p>These are equivalent:</p>
+<div class="sourceCode" id="cb396"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb396-1"><a href="the-c-preprocessor.html#cb396-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#pragma &quot;Unnecessary&quot; quotes</span></span>
+<span id="cb396-2"><a href="the-c-preprocessor.html#cb396-2" aria-hidden="true" tabindex="-1"></a>_Pragma<span class="op">(</span><span class="st">&quot;</span><span class="sc">\&quot;</span><span class="st">Unnecessary</span><span class="sc">\&quot;</span><span class="st"> quotes&quot;</span><span class="op">)</span></span></code></pre></div>
+<p></p>
+<p>This can be used in a macro, if need be:</p>
+<div class="sourceCode" id="cb397"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb397-1"><a href="the-c-preprocessor.html#cb397-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#define PRAGMA</span><span class="op">(</span><span class="pp">x</span><span class="op">)</span><span class="pp"> _Pragma</span><span class="op">(#</span><span class="pp">x</span><span class="op">)</span></span></code></pre></div>
+<p> </p>
+<h2 data-number="19.10" id="the-line-directive"><span class="header-section-number">19.10</span> The <code>#line</code> Directive</h2>
+<p> </p>
+<p>This allows you to override the values for <code>__LINE__</code> and <code>__FILE__</code>. If you want.</p>
+<p>I’ve never wanted to do this, but in K&amp;R2, they write:</p>
+<blockquote>
+<p>For the benefit of other preprocessors that generate C programs […]</p>
+</blockquote>
+<p>So maybe there’s that.</p>
+<p>To override the line number to, say 300:</p>
+<div class="sourceCode" id="cb398"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb398-1"><a href="the-c-preprocessor.html#cb398-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#line 300</span></span></code></pre></div>
+<p>and <code>__LINE__</code> will keep counting up from there.</p>
+<p></p>
+<p>To override the line number and the filename:</p>
+<div class="sourceCode" id="cb399"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb399-1"><a href="the-c-preprocessor.html#cb399-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#line 300 &quot;newfilename&quot;</span></span></code></pre></div>
+<p></p>
+<h2 data-number="19.11" id="the-null-directive"><span class="header-section-number">19.11</span> The Null Directive</h2>
+<p></p>
+<p>A <code>#</code> on a line by itself is ignored by the preprocessor. Now, to be entirely honest, I don’t know what the use case is for this.</p>
+<p>I’ve seen examples like this:</p>
+<div class="sourceCode" id="cb400"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb400-1"><a href="the-c-preprocessor.html#cb400-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#ifdef FOO</span></span>
+<span id="cb400-2"><a href="the-c-preprocessor.html#cb400-2" aria-hidden="true" tabindex="-1"></a>    <span class="er">#</span></span>
+<span id="cb400-3"><a href="the-c-preprocessor.html#cb400-3" aria-hidden="true" tabindex="-1"></a><span class="pp">#else</span></span>
+<span id="cb400-4"><a href="the-c-preprocessor.html#cb400-4" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;Something&quot;</span><span class="op">);</span></span>
+<span id="cb400-5"><a href="the-c-preprocessor.html#cb400-5" aria-hidden="true" tabindex="-1"></a><span class="pp">#endif</span></span></code></pre></div>
+<p>which is just cosmetic; the line with the solitary <code>#</code> can be deleted with no ill effect.</p>
+<p>Or maybe for cosmetic consistency, like this:</p>
+<div class="sourceCode" id="cb401"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb401-1"><a href="the-c-preprocessor.html#cb401-1" aria-hidden="true" tabindex="-1"></a><span class="er">#</span></span>
+<span id="cb401-2"><a href="the-c-preprocessor.html#cb401-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#ifdef FOO</span></span>
+<span id="cb401-3"><a href="the-c-preprocessor.html#cb401-3" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> <span class="dv">2</span><span class="op">;</span></span>
+<span id="cb401-4"><a href="the-c-preprocessor.html#cb401-4" aria-hidden="true" tabindex="-1"></a><span class="pp">#endif</span></span>
+<span id="cb401-5"><a href="the-c-preprocessor.html#cb401-5" aria-hidden="true" tabindex="-1"></a><span class="er">#</span></span>
+<span id="cb401-6"><a href="the-c-preprocessor.html#cb401-6" aria-hidden="true" tabindex="-1"></a><span class="pp">#if BAR == 17</span></span>
+<span id="cb401-7"><a href="the-c-preprocessor.html#cb401-7" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> <span class="dv">12</span><span class="op">;</span></span>
+<span id="cb401-8"><a href="the-c-preprocessor.html#cb401-8" aria-hidden="true" tabindex="-1"></a><span class="pp">#endif</span></span>
+<span id="cb401-9"><a href="the-c-preprocessor.html#cb401-9" aria-hidden="true" tabindex="-1"></a><span class="er">#</span></span></code></pre></div>
+<p>But, with respect to cosmetics, that’s just ugly.</p>
+<p>Another post mentions elimination of comments—that in GCC, a comment after a <code>#</code> will not be seen by the compiler. Which I don’t doubt, but the specification doesn’t seem to say this is standard behavior.</p>
+<p>My searches for rationale aren’t bearing much fruit. So I’m going to just say this is some good ol’ fashioned C esoterica.</p>
+<p> </p>
+<!-- Beej's guide to C
+
+# vim: ts=4:sw=4:nosi:et:tw=72
+-->
+<hr><div style="text-align:center"><span><a href="the-outside-environment.html">Prev</a> | </span><a href="index.html">Contents</a><span> | <a href="structs-ii-more-fun-with-structs.html">Next</a></span></div></body>
+</html>

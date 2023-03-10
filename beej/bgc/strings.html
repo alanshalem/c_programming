@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Beej's Guide to C Programming</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Mono&display=swap" rel="stylesheet"> 
+
+  <!-- BG custom styling -->
+  <style type="text/css">
+  /* Fix for line numbers not visible */
+  pre.numberSource code > span {
+      left: -1em;
+  }
+  pre.numberSource {
+      margin-left: initial;
+  }
+
+  /* Put some space after the section numbers */
+  span.toc-section-number::after {
+      content: "\a0\a0\a0";  /* non-breaking whitespace */
+  }
+
+  /* Hide underlines on code number links */
+  pre > code.sourceCode > span > a:first-child::before {
+      text-decoration: none;
+  }
+
+  /* Color the source blocks */
+  div.sourceCode {
+      background-color: #f0f0f0;
+  }
+
+  /* Fix iOS big text rendering issue */
+  pre > code.sourceCode > span {
+      display: initial;
+  }
+
+
+  /* Color the inline code */
+  code:not(.sourceCode) {
+      background: #f0f0f0;
+      padding-left: 0.2em;
+      padding-right: 0.2em;
+      border-radius: 0.2em;
+  }
+
+  /* Keep code tags from wrapping in tables */
+  tbody code {
+      white-space: nowrap;
+  }
+
+  td {
+      vertical-align: top;
+  }
+
+  body {
+      font-size: 12pt;
+      max-width: 43em;
+  }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<div style="text-align:center"><span><a href="arrays.html">Prev</a> | </span><a href="index.html">Contents</a><span> | <a href="structs.html">Next</a></span></div><hr>
+<h1 data-number="7" id="strings"><span class="header-section-number">7</span> Strings</h1>
+<p>Finally! Strings! What could be simpler?</p>
+<p>Well, turns out strings aren’t actually strings in C. That’s right! They’re pointers! Of course they are!</p>
+<p>Much like arrays, strings in C <em>barely exist</em>.</p>
+<p>But let’s check it out—it’s not really such a big deal.</p>
+<h2 data-number="7.1" id="string-literals"><span class="header-section-number">7.1</span> String Literals</h2>
+<p>Before we start, let’s talk about string literals in C. These are sequences of characters in <em>double</em> quotes (<code>"</code>). (Single quotes enclose characters, and are a different animal entirely.)</p>
+<p>Examples:</p>
+<div class="sourceCode" id="cb111"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb111-1"><a href="strings.html#cb111-1" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;Hello, world!</span><span class="sc">\n</span><span class="st">&quot;</span></span>
+<span id="cb111-2"><a href="strings.html#cb111-2" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;This is a test.&quot;</span></span>
+<span id="cb111-3"><a href="strings.html#cb111-3" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;When asked if this string had quotes in it, she replied, </span><span class="sc">\&quot;</span><span class="st">It does.</span><span class="sc">\&quot;</span><span class="st">&quot;</span></span></code></pre></div>
+<p>The first one has a newline at the end—quite a common thing to see.</p>
+<p>The last one has quotes embedded within it, but you see each is preceded by (we say “escaped by”) a backslash (<code>\</code>) indicating that a literal quote belongs in the string at this point. This is how the C compiler can tell the difference between printing a double quote and the double quote at the end of the string.</p>
+<h2 data-number="7.2" id="string-variables"><span class="header-section-number">7.2</span> String Variables</h2>
+<p>Now that we know how to make a string literal, let’s assign it to a variable so we can do something with it.</p>
+<div class="sourceCode" id="cb112"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb112-1"><a href="strings.html#cb112-1" aria-hidden="true" tabindex="-1"></a><span class="dt">char</span> <span class="op">*</span>s <span class="op">=</span> <span class="st">&quot;Hello, world!&quot;</span><span class="op">;</span></span></code></pre></div>
+<p>Check out that type: pointer to a <code>char</code>. The string variable <code>s</code> is actually a pointer to the first character in that string, namely the <code>H</code>.</p>
+<p>And we can print it with the <code>%s</code> (for “string”) format specifier:</p>
+<div class="sourceCode" id="cb113"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb113-1"><a href="strings.html#cb113-1" aria-hidden="true" tabindex="-1"></a><span class="dt">char</span> <span class="op">*</span>s <span class="op">=</span> <span class="st">&quot;Hello, world!&quot;</span><span class="op">;</span></span>
+<span id="cb113-2"><a href="strings.html#cb113-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb113-3"><a href="strings.html#cb113-3" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> s<span class="op">);</span>  <span class="co">// &quot;Hello, world!&quot;</span></span></code></pre></div>
+<p></p>
+<h2 data-number="7.3" id="string-variables-as-arrays"><span class="header-section-number">7.3</span> String Variables as Arrays</h2>
+<p> Another option is this, nearly equivalent to the above <code>char*</code> usage:</p>
+<div class="sourceCode" id="cb114"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb114-1"><a href="strings.html#cb114-1" aria-hidden="true" tabindex="-1"></a><span class="dt">char</span> s<span class="op">[</span><span class="dv">14</span><span class="op">]</span> <span class="op">=</span> <span class="st">&quot;Hello, world!&quot;</span><span class="op">;</span></span>
+<span id="cb114-2"><a href="strings.html#cb114-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb114-3"><a href="strings.html#cb114-3" aria-hidden="true" tabindex="-1"></a><span class="co">// or, if we were properly lazy and have the compiler</span></span>
+<span id="cb114-4"><a href="strings.html#cb114-4" aria-hidden="true" tabindex="-1"></a><span class="co">// figure the length for us:</span></span>
+<span id="cb114-5"><a href="strings.html#cb114-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb114-6"><a href="strings.html#cb114-6" aria-hidden="true" tabindex="-1"></a><span class="dt">char</span> s<span class="op">[]</span> <span class="op">=</span> <span class="st">&quot;Hello, world!&quot;</span><span class="op">;</span></span></code></pre></div>
+<p>This means you can use array notation to access characters in a string. Let’s do exactly that to print all the characters in a string on the same line:</p>
+<div class="sourceCode" id="cb115"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb115-1"><a href="strings.html#cb115-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb115-2"><a href="strings.html#cb115-2"></a></span>
+<span id="cb115-3"><a href="strings.html#cb115-3"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb115-4"><a href="strings.html#cb115-4"></a><span class="op">{</span></span>
+<span id="cb115-5"><a href="strings.html#cb115-5"></a>    <span class="dt">char</span> s<span class="op">[]</span> <span class="op">=</span> <span class="st">&quot;Hello, world!&quot;</span><span class="op">;</span></span>
+<span id="cb115-6"><a href="strings.html#cb115-6"></a></span>
+<span id="cb115-7"><a href="strings.html#cb115-7"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> <span class="dv">13</span><span class="op">;</span> i<span class="op">++)</span></span>
+<span id="cb115-8"><a href="strings.html#cb115-8"></a>        printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%c\n</span><span class="st">&quot;</span><span class="op">,</span> s<span class="op">[</span>i<span class="op">]);</span></span>
+<span id="cb115-9"><a href="strings.html#cb115-9"></a><span class="op">}</span></span></code></pre></div>
+<p>Note that we’re using the format specifier <code>%c</code> to print a single character.</p>
+<p>Also, check this out. The program will still work fine if we change the definition of <code>s</code> to be a <code>char*</code> type:</p>
+<div class="sourceCode" id="cb116"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb116-1"><a href="strings.html#cb116-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb116-2"><a href="strings.html#cb116-2"></a></span>
+<span id="cb116-3"><a href="strings.html#cb116-3"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb116-4"><a href="strings.html#cb116-4"></a><span class="op">{</span></span>
+<span id="cb116-5"><a href="strings.html#cb116-5"></a>    <span class="dt">char</span> <span class="op">*</span>s <span class="op">=</span> <span class="st">&quot;Hello, world!&quot;</span><span class="op">;</span>   <span class="co">// char* here</span></span>
+<span id="cb116-6"><a href="strings.html#cb116-6"></a></span>
+<span id="cb116-7"><a href="strings.html#cb116-7"></a>    <span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> <span class="dv">13</span><span class="op">;</span> i<span class="op">++)</span></span>
+<span id="cb116-8"><a href="strings.html#cb116-8"></a>        printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%c\n</span><span class="st">&quot;</span><span class="op">,</span> s<span class="op">[</span>i<span class="op">]);</span>    <span class="co">// But still use arrays here...?</span></span>
+<span id="cb116-9"><a href="strings.html#cb116-9"></a><span class="op">}</span></span></code></pre></div>
+<p>And we still can use array notation to get the job done when printing it out! This is surprising, but is still only because we haven’t talked about array/pointer equivalence yet. But this is yet another hint that arrays and pointers are the same thing, deep down. </p>
+<h2 data-number="7.4" id="string-initializers"><span class="header-section-number">7.4</span> String Initializers</h2>
+<p> We’ve already seen some examples with initializing string variables with string literals:</p>
+<div class="sourceCode" id="cb117"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb117-1"><a href="strings.html#cb117-1" aria-hidden="true" tabindex="-1"></a><span class="dt">char</span> <span class="op">*</span>s <span class="op">=</span> <span class="st">&quot;Hello, world!&quot;</span><span class="op">;</span></span>
+<span id="cb117-2"><a href="strings.html#cb117-2" aria-hidden="true" tabindex="-1"></a><span class="dt">char</span> t<span class="op">[]</span> <span class="op">=</span> <span class="st">&quot;Hello, again!&quot;</span><span class="op">;</span></span></code></pre></div>
+<p>But these two are subtly different.</p>
+<p>This one is a pointer to a string literal (i.e. a pointer to the first character in a string):</p>
+<div class="sourceCode" id="cb118"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb118-1"><a href="strings.html#cb118-1" aria-hidden="true" tabindex="-1"></a><span class="dt">char</span> <span class="op">*</span>s <span class="op">=</span> <span class="st">&quot;Hello, world!&quot;</span><span class="op">;</span></span></code></pre></div>
+<p>If you try to mutate that string with this:</p>
+<div class="sourceCode" id="cb119"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb119-1"><a href="strings.html#cb119-1" aria-hidden="true" tabindex="-1"></a><span class="dt">char</span> <span class="op">*</span>s <span class="op">=</span> <span class="st">&quot;Hello, world!&quot;</span><span class="op">;</span></span>
+<span id="cb119-2"><a href="strings.html#cb119-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb119-3"><a href="strings.html#cb119-3" aria-hidden="true" tabindex="-1"></a>s<span class="op">[</span><span class="dv">0</span><span class="op">]</span> <span class="op">=</span> <span class="ch">&#39;z&#39;</span><span class="op">;</span>  <span class="co">// BAD NEWS: tried to mutate a string literal!</span></span></code></pre></div>
+<p>The behavior is undefined. Probably, depending on your system, a crash will result.</p>
+<p>But declaring it as an array is different. This one is a mutable <em>copy</em> of the string that we can change at will:</p>
+<div class="sourceCode" id="cb120"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb120-1"><a href="strings.html#cb120-1" aria-hidden="true" tabindex="-1"></a><span class="dt">char</span> t<span class="op">[]</span> <span class="op">=</span> <span class="st">&quot;Hello, again!&quot;</span><span class="op">;</span>  <span class="co">// t is an array copy of the string </span></span>
+<span id="cb120-2"><a href="strings.html#cb120-2" aria-hidden="true" tabindex="-1"></a>t<span class="op">[</span><span class="dv">0</span><span class="op">]</span> <span class="op">=</span> <span class="ch">&#39;z&#39;</span><span class="op">;</span> <span class="co">//  No problem</span></span>
+<span id="cb120-3"><a href="strings.html#cb120-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb120-4"><a href="strings.html#cb120-4" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> t<span class="op">);</span>  <span class="co">// &quot;zello, again!&quot;</span></span></code></pre></div>
+<p>So remember: if you have a pointer to a string literal, don’t try to change it! And if you use a string in double quotes to initialize an array, that’s not actually a string literal. </p>
+<h2 data-number="7.5" id="getting-string-length"><span class="header-section-number">7.5</span> Getting String Length</h2>
+<p> You can’t, since C doesn’t track it for you. And when I say “can’t”, I actually mean “can”<a href="footnotes.html#fn62" class="footnote-ref" id="fnref62" role="doc-noteref"><sup>62</sup></a>. There’s a function in <code>&lt;string.h&gt;</code> called <code>strlen()</code> that can be used to compute the length of any string in bytes<a href="footnotes.html#fn63" class="footnote-ref" id="fnref63" role="doc-noteref"><sup>63</sup></a>.</p>
+<div class="sourceCode" id="cb121"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb121-1"><a href="strings.html#cb121-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb121-2"><a href="strings.html#cb121-2"></a><span class="pp">#include </span><span class="im">&lt;string.h&gt;</span></span>
+<span id="cb121-3"><a href="strings.html#cb121-3"></a></span>
+<span id="cb121-4"><a href="strings.html#cb121-4"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb121-5"><a href="strings.html#cb121-5"></a><span class="op">{</span></span>
+<span id="cb121-6"><a href="strings.html#cb121-6"></a>    <span class="dt">char</span> <span class="op">*</span>s <span class="op">=</span> <span class="st">&quot;Hello, world!&quot;</span><span class="op">;</span></span>
+<span id="cb121-7"><a href="strings.html#cb121-7"></a></span>
+<span id="cb121-8"><a href="strings.html#cb121-8"></a>    printf<span class="op">(</span><span class="st">&quot;The string is </span><span class="sc">%zu</span><span class="st"> bytes long.</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">,</span> strlen<span class="op">(</span>s<span class="op">));</span></span>
+<span id="cb121-9"><a href="strings.html#cb121-9"></a><span class="op">}</span></span></code></pre></div>
+<p>The <code>strlen()</code> function returns type <code>size_t</code>, which is an integer type so you can use it for integer math. We print <code>size_t</code> with <code>%zu</code>.</p>
+<p>The above program prints:</p>
+<div class="sourceCode" id="cb122"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb122-1"><a href="strings.html#cb122-1" aria-hidden="true" tabindex="-1"></a>The string is 13 bytes long.</span></code></pre></div>
+<p>Great! So it <em>is</em> possible to get the string length! </p>
+<p>But… if C doesn’t track the length of the string anywhere, how does it know how long the string is?</p>
+<h2 data-number="7.6" id="string-termination"><span class="header-section-number">7.6</span> String Termination</h2>
+<p> C does strings a little differently than many programming languages, and in fact differently than almost every modern programming language.</p>
+<p>When you’re making a new language, you have basically two options for storing a string in memory:</p>
+<ol type="1">
+<li><p>Store the bytes of the string along with a number indicating the length of the string.</p></li>
+<li><p>Store the bytes of the string, and mark the end of the string with a special byte called the <em>terminator</em>.</p></li>
+</ol>
+<p>If you want strings longer than 255 characters, option 1 requires at least two bytes to store the length. Whereas option 2 only requires one byte to terminate the string. So a bit of savings there.</p>
+<p>Of course, these days it seems ridiculous to worry about saving a byte (or 3—lots of languages will happily let you have strings that are 4 gigabytes in length). But back in the day, it was a bigger deal.</p>
+<p>So C took approach #2. In C, a “string” is defined by two basic characteristics:</p>
+<ul>
+<li>A pointer to the first character in the string.</li>
+<li>A zero-valued byte (or <code>NUL</code> character<a href="footnotes.html#fn64" class="footnote-ref" id="fnref64" role="doc-noteref"><sup>64</sup></a>) somewhere in memory after the pointer that indicates the end of the string.</li>
+</ul>
+<p>A <code>NUL</code> character can be written in C code as <code>\0</code>, though you don’t often have to do this.</p>
+<p>When you include a string in double quotes in your code, the <code>NUL</code> character is automatically, implicitly included.</p>
+<div class="sourceCode" id="cb123"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb123-1"><a href="strings.html#cb123-1" aria-hidden="true" tabindex="-1"></a><span class="dt">char</span> <span class="op">*</span>s <span class="op">=</span> <span class="st">&quot;Hello!&quot;</span><span class="op">;</span>  <span class="co">// Actually &quot;Hello!\0&quot; behind the scenes</span></span></code></pre></div>
+<p>So with this in mind, let’s write our own <code>strlen()</code> function that counts <code>char</code>s in a string until it finds a <code>NUL</code>.</p>
+<p>The procedure is to look down the string for a single <code>NUL</code> character, counting as we go<a href="footnotes.html#fn65" class="footnote-ref" id="fnref65" role="doc-noteref"><sup>65</sup></a>:</p>
+<div class="sourceCode" id="cb124"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb124-1"><a href="strings.html#cb124-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> my_strlen<span class="op">(</span><span class="dt">char</span> <span class="op">*</span>s<span class="op">)</span></span>
+<span id="cb124-2"><a href="strings.html#cb124-2" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb124-3"><a href="strings.html#cb124-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> count <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb124-4"><a href="strings.html#cb124-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb124-5"><a href="strings.html#cb124-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> <span class="op">(</span>s<span class="op">[</span>count<span class="op">]</span> <span class="op">!=</span> <span class="ch">&#39;</span><span class="sc">\0</span><span class="ch">&#39;</span><span class="op">)</span>  <span class="co">// Single quotes for single char</span></span>
+<span id="cb124-6"><a href="strings.html#cb124-6" aria-hidden="true" tabindex="-1"></a>        count<span class="op">++;</span></span>
+<span id="cb124-7"><a href="strings.html#cb124-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb124-8"><a href="strings.html#cb124-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> count<span class="op">;</span></span>
+<span id="cb124-9"><a href="strings.html#cb124-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>And that’s basically how the built-in <code>strlen()</code> gets the job done. </p>
+<h2 data-number="7.7" id="copying-a-string"><span class="header-section-number">7.7</span> Copying a String</h2>
+<p> You can’t copy a string through the assignment operator (<code>=</code>). All that does is make a copy of the pointer to the first character… so you end up with two pointers to the same string:</p>
+<div class="sourceCode" id="cb125"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb125-1"><a href="strings.html#cb125-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb125-2"><a href="strings.html#cb125-2"></a></span>
+<span id="cb125-3"><a href="strings.html#cb125-3"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb125-4"><a href="strings.html#cb125-4"></a><span class="op">{</span></span>
+<span id="cb125-5"><a href="strings.html#cb125-5"></a>    <span class="dt">char</span> s<span class="op">[]</span> <span class="op">=</span> <span class="st">&quot;Hello, world!&quot;</span><span class="op">;</span></span>
+<span id="cb125-6"><a href="strings.html#cb125-6"></a>    <span class="dt">char</span> <span class="op">*</span>t<span class="op">;</span></span>
+<span id="cb125-7"><a href="strings.html#cb125-7"></a></span>
+<span id="cb125-8"><a href="strings.html#cb125-8"></a>    <span class="co">// This makes a copy of the pointer, not a copy of the string!</span></span>
+<span id="cb125-9"><a href="strings.html#cb125-9"></a>    t <span class="op">=</span> s<span class="op">;</span></span>
+<span id="cb125-10"><a href="strings.html#cb125-10"></a></span>
+<span id="cb125-11"><a href="strings.html#cb125-11"></a>    <span class="co">// We modify t</span></span>
+<span id="cb125-12"><a href="strings.html#cb125-12"></a>    t<span class="op">[</span><span class="dv">0</span><span class="op">]</span> <span class="op">=</span> <span class="ch">&#39;z&#39;</span><span class="op">;</span></span>
+<span id="cb125-13"><a href="strings.html#cb125-13"></a></span>
+<span id="cb125-14"><a href="strings.html#cb125-14"></a>    <span class="co">// But printing s shows the modification!</span></span>
+<span id="cb125-15"><a href="strings.html#cb125-15"></a>    <span class="co">// Because t and s point to the same string!</span></span>
+<span id="cb125-16"><a href="strings.html#cb125-16"></a></span>
+<span id="cb125-17"><a href="strings.html#cb125-17"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> s<span class="op">);</span>  <span class="co">// &quot;zello, world!&quot;</span></span>
+<span id="cb125-18"><a href="strings.html#cb125-18"></a><span class="op">}</span></span></code></pre></div>
+<p>If you want to make a copy of a string, you have to copy it a byte at a time—but this is made easier with the <code>strcpy()</code> function<a href="footnotes.html#fn66" class="footnote-ref" id="fnref66" role="doc-noteref"><sup>66</sup></a>.</p>
+<p>Before you copy the string, make sure you have room to copy it into, i.e. the destination array that’s going to hold the characters needs to be at least as long as the string you’re copying.</p>
+<div class="sourceCode" id="cb126"><pre class="sourceCode numberSource c numberLines"><code class="sourceCode c"><span id="cb126-1"><a href="strings.html#cb126-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb126-2"><a href="strings.html#cb126-2"></a><span class="pp">#include </span><span class="im">&lt;string.h&gt;</span></span>
+<span id="cb126-3"><a href="strings.html#cb126-3"></a></span>
+<span id="cb126-4"><a href="strings.html#cb126-4"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">void</span><span class="op">)</span></span>
+<span id="cb126-5"><a href="strings.html#cb126-5"></a><span class="op">{</span></span>
+<span id="cb126-6"><a href="strings.html#cb126-6"></a>    <span class="dt">char</span> s<span class="op">[]</span> <span class="op">=</span> <span class="st">&quot;Hello, world!&quot;</span><span class="op">;</span></span>
+<span id="cb126-7"><a href="strings.html#cb126-7"></a>    <span class="dt">char</span> t<span class="op">[</span><span class="dv">100</span><span class="op">];</span>  <span class="co">// Each char is one byte, so plenty of room</span></span>
+<span id="cb126-8"><a href="strings.html#cb126-8"></a></span>
+<span id="cb126-9"><a href="strings.html#cb126-9"></a>    <span class="co">// This makes a copy of the string!</span></span>
+<span id="cb126-10"><a href="strings.html#cb126-10"></a>    strcpy<span class="op">(</span>t<span class="op">,</span> s<span class="op">);</span></span>
+<span id="cb126-11"><a href="strings.html#cb126-11"></a></span>
+<span id="cb126-12"><a href="strings.html#cb126-12"></a>    <span class="co">// We modify t</span></span>
+<span id="cb126-13"><a href="strings.html#cb126-13"></a>    t<span class="op">[</span><span class="dv">0</span><span class="op">]</span> <span class="op">=</span> <span class="ch">&#39;z&#39;</span><span class="op">;</span></span>
+<span id="cb126-14"><a href="strings.html#cb126-14"></a></span>
+<span id="cb126-15"><a href="strings.html#cb126-15"></a>    <span class="co">// And s remains unaffected because it&#39;s a different string</span></span>
+<span id="cb126-16"><a href="strings.html#cb126-16"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> s<span class="op">);</span>  <span class="co">// &quot;Hello, world!&quot;</span></span>
+<span id="cb126-17"><a href="strings.html#cb126-17"></a></span>
+<span id="cb126-18"><a href="strings.html#cb126-18"></a>    <span class="co">// But t has been changed</span></span>
+<span id="cb126-19"><a href="strings.html#cb126-19"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> t<span class="op">);</span>  <span class="co">// &quot;zello, world!&quot;</span></span>
+<span id="cb126-20"><a href="strings.html#cb126-20"></a><span class="op">}</span></span></code></pre></div>
+<p>Notice with <code>strcpy()</code>, the destination pointer is the first argument, and the source pointer is the second. A mnemonic I use to remember this is that it’s the order you would have put <code>t</code> and <code>s</code> if an assignment <code>=</code> worked for strings, with the source on the right and the destination on the left. </p>
+<!-- Beej's guide to C
+
+# vim: ts=4:sw=4:nosi:et:tw=72
+-->
+<hr><div style="text-align:center"><span><a href="arrays.html">Prev</a> | </span><a href="index.html">Contents</a><span> | <a href="structs.html">Next</a></span></div></body>
+</html>

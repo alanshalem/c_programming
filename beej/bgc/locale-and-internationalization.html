@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Beej's Guide to C Programming</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Mono&display=swap" rel="stylesheet"> 
+
+  <!-- BG custom styling -->
+  <style type="text/css">
+  /* Fix for line numbers not visible */
+  pre.numberSource code > span {
+      left: -1em;
+  }
+  pre.numberSource {
+      margin-left: initial;
+  }
+
+  /* Put some space after the section numbers */
+  span.toc-section-number::after {
+      content: "\a0\a0\a0";  /* non-breaking whitespace */
+  }
+
+  /* Hide underlines on code number links */
+  pre > code.sourceCode > span > a:first-child::before {
+      text-decoration: none;
+  }
+
+  /* Color the source blocks */
+  div.sourceCode {
+      background-color: #f0f0f0;
+  }
+
+  /* Fix iOS big text rendering issue */
+  pre > code.sourceCode > span {
+      display: initial;
+  }
+
+
+  /* Color the inline code */
+  code:not(.sourceCode) {
+      background: #f0f0f0;
+      padding-left: 0.2em;
+      padding-right: 0.2em;
+      border-radius: 0.2em;
+  }
+
+  /* Keep code tags from wrapping in tables */
+  tbody code {
+      white-space: nowrap;
+  }
+
+  td {
+      vertical-align: top;
+  }
+
+  body {
+      font-size: 12pt;
+      max-width: 43em;
+  }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<div style="text-align:center"><span><a href="variadic-functions.html">Prev</a> | </span><a href="index.html">Contents</a><span> | <a href="unicode-wide-characters-and-all-that.html">Next</a></span></div><hr>
+<h1 data-number="26" id="locale-and-internationalization"><span class="header-section-number">26</span> Locale and Internationalization</h1>
+<p></p>
+<p><em>Localization</em> is the process of making your app ready to work well in different locales (or countries).</p>
+<p>As you might know, not everyone uses the same character for decimal points or for thousands separators… or for currency.</p>
+<p>These locales have names, and you can select one to use. For example, a US locale might write a number like:</p>
+<p>100,000.00</p>
+<p>Whereas in Brazil, the same might be written with the commas and decimal points swapped:</p>
+<p>100.000,00</p>
+<p>Makes it easier to write your code so it ports to other nationalities with ease!</p>
+<p>Well, sort of. Turns out C only has one built-in locale, and it’s limited. The spec really leaves a lot of ambiguity here; it’s hard to be completely portable.</p>
+<p>But we’ll do our best!</p>
+<h2 data-number="26.1" id="setting-the-localization-quick-and-dirty"><span class="header-section-number">26.1</span> Setting the Localization, Quick and Dirty</h2>
+<p>For these calls, include <code>&lt;locale.h&gt;</code>.</p>
+<p>There is basically one thing you can portably do here in terms of declaring a specific locale. This is likely what you want to do if you’re going to do locale anything:</p>
+<p></p>
+<div class="sourceCode" id="cb514"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb514-1"><a href="locale-and-internationalization.html#cb514-1" aria-hidden="true" tabindex="-1"></a>setlocale<span class="op">(</span>LC_ALL<span class="op">,</span> <span class="st">&quot;&quot;</span><span class="op">);</span>  <span class="co">// Use this environment&#39;s locale for everything</span></span></code></pre></div>
+<p>You’ll want to call that so that the program gets initialized with your current locale.</p>
+<p>Getting into more details, there is one more thing you can do and stay portable:</p>
+<div class="sourceCode" id="cb515"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb515-1"><a href="locale-and-internationalization.html#cb515-1" aria-hidden="true" tabindex="-1"></a>setlocale<span class="op">(</span>LC_ALL<span class="op">,</span> <span class="st">&quot;C&quot;</span><span class="op">);</span>  <span class="co">// Use the default C locale</span></span></code></pre></div>
+<p>but that’s called by default every time your program starts, so there’s not much need to do it yourself.</p>
+<p>In that second string, you can specify any locale supported by your system. This is completely system-dependent, so it will vary. On my system, I can specify this:</p>
+<div class="sourceCode" id="cb516"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb516-1"><a href="locale-and-internationalization.html#cb516-1" aria-hidden="true" tabindex="-1"></a>setlocale<span class="op">(</span>LC_ALL<span class="op">,</span> <span class="st">&quot;en_US.UTF-8&quot;</span><span class="op">);</span>  <span class="co">// Non-portable!</span></span></code></pre></div>
+<p>And that’ll work. But it’s only portable to systems which have that exact same name for that exact same locale, and you can’t guarantee it.</p>
+<p>By passing in an empty string (<code>""</code>) for the second argument, you’re telling C, “Hey, figure out what the current locale on this system is so I don’t have to tell you.”</p>
+<p></p>
+<h2 data-number="26.2" id="getting-the-monetary-locale-settings"><span class="header-section-number">26.2</span> Getting the Monetary Locale Settings</h2>
+<p></p>
+<p>Because moving green pieces of paper around promises to be the key to happiness<a href="footnotes.html#fn154" class="footnote-ref" id="fnref154" role="doc-noteref"><sup>154</sup></a>, let’s talk about monetary locale. When you’re writing portable code, you have to know what to type for cash, right? Whether that’s “$”, “€”, “¥”, or “£”.</p>
+<p></p>
+<p>How can you write that code without going insane? Luckily, once you call <code>setlocale(LC_ALL, "")</code>, you can just look these up with a call to <code>localeconv()</code>:</p>
+<div class="sourceCode" id="cb517"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb517-1"><a href="locale-and-internationalization.html#cb517-1" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> lconv <span class="op">*</span>x <span class="op">=</span> localeconv<span class="op">();</span></span></code></pre></div>
+<p>This function returns a pointer to a statically-allocated <code>struct lconv</code> that has all that juicy information you’re looking for.</p>
+<p>Here are the fields of <code>struct lconv</code> and their meanings.</p>
+<p>First, some conventions. An <code>_p_</code> means “positive”, and <code>_n_</code> means “negative”, and <code>int_</code> means “international”. Though a lot of these are type <code>char</code> or <code>char*</code>, most (or the strings they point to) are actually treated as integers<a href="footnotes.html#fn155" class="footnote-ref" id="fnref155" role="doc-noteref"><sup>155</sup></a>.</p>
+<p>Before we go further, know that <code>CHAR_MAX</code> (from <code>&lt;limits.h&gt;</code>) is the maximum value that can be held in a <code>char</code>. And that many of the following <code>char</code> values use that to indicate the value isn’t available in the given locale.</p>
+<table>
+<colgroup>
+<col style="width: 31%" />
+<col style="width: 68%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>char *mon_decimal_point</code></td>
+<td>Decimal pointer character for money, e.g. <code>"."</code>.</td>
+</tr>
+<tr class="even">
+<td><code>char *mon_thousands_sep</code></td>
+<td>Thousands separator character for money, e.g. <code>","</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>char *mon_grouping</code></td>
+<td>Grouping description for money (see below).</td>
+</tr>
+<tr class="even">
+<td><code>char *positive_sign</code></td>
+<td>Positive sign for money, e.g. <code>"+"</code> or <code>""</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>char *negative_sign</code></td>
+<td>Negative sign for money, e.g. <code>"-"</code>.</td>
+</tr>
+<tr class="even">
+<td><code>char *currency_symbol</code></td>
+<td>Currency symbol, e.g. <code>"$"</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>char frac_digits</code></td>
+<td>When printing monetary amounts, how many digits to print past the decimal point, e.g. <code>2</code>.</td>
+</tr>
+<tr class="even">
+<td><code>char p_cs_precedes</code></td>
+<td><code>1</code> if the <code>currency_symbol</code> comes before the value for a non-negative monetary amount, <code>0</code> if after.</td>
+</tr>
+<tr class="odd">
+<td><code>char n_cs_precedes</code></td>
+<td><code>1</code> if the <code>currency_symbol</code> comes before the value for a negative monetary amount, <code>0</code> if after.</td>
+</tr>
+<tr class="even">
+<td><code>char p_sep_by_space</code></td>
+<td>Determines the separation of the <code>currency symbol</code> from the value for non-negative amounts (see below).</td>
+</tr>
+<tr class="odd">
+<td><code>char n_sep_by_space</code></td>
+<td>Determines the separation of the <code>currency symbol</code> from the value for negative amounts (see below).</td>
+</tr>
+<tr class="even">
+<td><code>char p_sign_posn</code></td>
+<td>Determines the <code>positive_sign</code> position for non-negative values.</td>
+</tr>
+<tr class="odd">
+<td><code>char p_sign_posn</code></td>
+<td>Determines the <code>positive_sign</code> position for negative values.</td>
+</tr>
+<tr class="even">
+<td><code>char *int_curr_symbol</code></td>
+<td>International currency symbol, e.g. <code>"USD "</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>char int_frac_digits</code></td>
+<td>International value for <code>frac_digits</code>.</td>
+</tr>
+<tr class="even">
+<td><code>char int_p_cs_precedes</code></td>
+<td>International value for <code>p_cs_precedes</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>char int_n_cs_precedes</code></td>
+<td>International value for <code>n_cs_precedes</code>.</td>
+</tr>
+<tr class="even">
+<td><code>char int_p_sep_by_space</code></td>
+<td>International value for <code>p_sep_by_space</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>char int_n_sep_by_space</code></td>
+<td>International value for <code>n_sep_by_space</code>.</td>
+</tr>
+<tr class="even">
+<td><code>char int_p_sign_posn</code></td>
+<td>International value for <code>p_sign_posn</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>char int_n_sign_posn</code></td>
+<td>International value for <code>n_sign_posn</code>.</td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<h3 data-number="26.2.1" id="monetary-digit-grouping"><span class="header-section-number">26.2.1</span> Monetary Digit Grouping</h3>
+<p></p>
+<p>OK, this is a trippy one. <code>mon_grouping</code> is a <code>char*</code>, so you might be thinking it’s a string. But in this case, no, it’s really an array of <code>char</code>s. It should always end either with a <code>0</code> or <code>CHAR_MAX</code>.</p>
+<p>These values describe how to group sets of numbers in currency to the <em>left</em> of the decimal (the whole number part).</p>
+<p>For example, we might have:</p>
+<div class="sourceCode" id="cb518"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb518-1"><a href="locale-and-internationalization.html#cb518-1" aria-hidden="true" tabindex="-1"></a>  2   1   0</span>
+<span id="cb518-2"><a href="locale-and-internationalization.html#cb518-2" aria-hidden="true" tabindex="-1"></a> --- --- ---</span>
+<span id="cb518-3"><a href="locale-and-internationalization.html#cb518-3" aria-hidden="true" tabindex="-1"></a>$100,000,000.00</span></code></pre></div>
+<p>These are groups of three. Group 0 (just left of the decimal) has 3 digits. Group 1 (next group to the left) has 3 digits, and the last one also has 3.</p>
+<p>So we could describe these groups, from the right (the decimal) to the left with a bunch of integer values representing the group sizes:</p>
+<div class="sourceCode" id="cb519"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb519-1"><a href="locale-and-internationalization.html#cb519-1" aria-hidden="true" tabindex="-1"></a>3 3 3</span></code></pre></div>
+<p>And that would work for values up to $100,000,000.</p>
+<p>But what if we had more? We could keep adding <code>3</code>s…</p>
+<div class="sourceCode" id="cb520"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb520-1"><a href="locale-and-internationalization.html#cb520-1" aria-hidden="true" tabindex="-1"></a>3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3</span></code></pre></div>
+<p>but that’s crazy. Luckily, we can specify <code>0</code> to indicate that the previous group size repeats:</p>
+<div class="sourceCode" id="cb521"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb521-1"><a href="locale-and-internationalization.html#cb521-1" aria-hidden="true" tabindex="-1"></a>3 0</span></code></pre></div>
+<p>Which means to repeat every 3. That would handle $100, $1,000, $10,000, $10,000,000, $100,000,000,000, and so on.</p>
+<p>You can go legitimately crazy with these to indicate some weird groupings.</p>
+<p>For example:</p>
+<div class="sourceCode" id="cb522"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb522-1"><a href="locale-and-internationalization.html#cb522-1" aria-hidden="true" tabindex="-1"></a>4 3 2 1 0</span></code></pre></div>
+<p>would indicate:</p>
+<div class="sourceCode" id="cb523"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb523-1"><a href="locale-and-internationalization.html#cb523-1" aria-hidden="true" tabindex="-1"></a>$1,0,0,0,0,00,000,0000.00</span></code></pre></div>
+<p>One more value that can occur is <code>CHAR_MAX</code>. This indicates that no more grouping should occur, and can appear anywhere in the array, including the first value.</p>
+<div class="sourceCode" id="cb524"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb524-1"><a href="locale-and-internationalization.html#cb524-1" aria-hidden="true" tabindex="-1"></a>3 2 CHAR_MAX</span></code></pre></div>
+<p>would indicate:</p>
+<div class="sourceCode" id="cb525"><pre class="sourceCode default"><code class="sourceCode default"><span id="cb525-1"><a href="locale-and-internationalization.html#cb525-1" aria-hidden="true" tabindex="-1"></a>100000000,00,000.00</span></code></pre></div>
+<p>for example.</p>
+<p>And simply having <code>CHAR_MAX</code> in the first array position would tell you there was to be no grouping at all.</p>
+<p></p>
+<h3 data-number="26.2.2" id="separators-and-sign-position"><span class="header-section-number">26.2.2</span> Separators and Sign Position</h3>
+<p></p>
+<p>All the <code>sep_by_space</code> variants deal with spacing around the currency sign. Valid values are:</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 75%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Value</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><code>0</code></td>
+<td>No space between currency symbol and value.</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><code>1</code></td>
+<td>Separate the currency symbol (and sign, if any) from the value with a space.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><code>2</code></td>
+<td>Separate the sign symbol from the currency symbol (if adjacent) with a space, otherwise separate the sign symbol from the value with a space.</td>
+</tr>
+</tbody>
+</table>
+<p>The <code>sign_posn</code> variants are determined by the following values:</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Value</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><code>0</code></td>
+<td>Put parens around the value and the currency symbol.</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><code>1</code></td>
+<td>Put the sign string in front of the currency symbol and value.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><code>2</code></td>
+<td>Put the sign string after the currency symbol and value.</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><code>3</code></td>
+<td>Put the sign string directly in front of the currency symbol.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><code>4</code></td>
+<td>Put the sign string directly behind the currency symbol.</td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<h3 data-number="26.2.3" id="example-values"><span class="header-section-number">26.2.3</span> Example Values</h3>
+<p>When I get the values on my system, this is what I see (grouping string displayed as individual byte values):</p>
+<div class="sourceCode" id="cb526"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb526-1"><a href="locale-and-internationalization.html#cb526-1" aria-hidden="true" tabindex="-1"></a>mon_decimal_point  <span class="op">=</span> <span class="st">&quot;.&quot;</span></span>
+<span id="cb526-2"><a href="locale-and-internationalization.html#cb526-2" aria-hidden="true" tabindex="-1"></a>mon_thousands_sep  <span class="op">=</span> <span class="st">&quot;,&quot;</span></span>
+<span id="cb526-3"><a href="locale-and-internationalization.html#cb526-3" aria-hidden="true" tabindex="-1"></a>mon_grouping       <span class="op">=</span> <span class="dv">3</span> <span class="dv">3</span> <span class="dv">0</span></span>
+<span id="cb526-4"><a href="locale-and-internationalization.html#cb526-4" aria-hidden="true" tabindex="-1"></a>positive_sign      <span class="op">=</span> <span class="st">&quot;&quot;</span></span>
+<span id="cb526-5"><a href="locale-and-internationalization.html#cb526-5" aria-hidden="true" tabindex="-1"></a>negative_sign      <span class="op">=</span> <span class="st">&quot;-&quot;</span></span>
+<span id="cb526-6"><a href="locale-and-internationalization.html#cb526-6" aria-hidden="true" tabindex="-1"></a>currency_symbol    <span class="op">=</span> <span class="st">&quot;$&quot;</span></span>
+<span id="cb526-7"><a href="locale-and-internationalization.html#cb526-7" aria-hidden="true" tabindex="-1"></a>frac_digits        <span class="op">=</span> <span class="dv">2</span></span>
+<span id="cb526-8"><a href="locale-and-internationalization.html#cb526-8" aria-hidden="true" tabindex="-1"></a>p_cs_precedes      <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb526-9"><a href="locale-and-internationalization.html#cb526-9" aria-hidden="true" tabindex="-1"></a>n_cs_precedes      <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb526-10"><a href="locale-and-internationalization.html#cb526-10" aria-hidden="true" tabindex="-1"></a>p_sep_by_space     <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb526-11"><a href="locale-and-internationalization.html#cb526-11" aria-hidden="true" tabindex="-1"></a>n_sep_by_space     <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb526-12"><a href="locale-and-internationalization.html#cb526-12" aria-hidden="true" tabindex="-1"></a>p_sign_posn        <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb526-13"><a href="locale-and-internationalization.html#cb526-13" aria-hidden="true" tabindex="-1"></a>n_sign_posn        <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb526-14"><a href="locale-and-internationalization.html#cb526-14" aria-hidden="true" tabindex="-1"></a>int_curr_symbol    <span class="op">=</span> <span class="st">&quot;USD &quot;</span></span>
+<span id="cb526-15"><a href="locale-and-internationalization.html#cb526-15" aria-hidden="true" tabindex="-1"></a>int_frac_digits    <span class="op">=</span> <span class="dv">2</span></span>
+<span id="cb526-16"><a href="locale-and-internationalization.html#cb526-16" aria-hidden="true" tabindex="-1"></a>int_p_cs_precedes  <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb526-17"><a href="locale-and-internationalization.html#cb526-17" aria-hidden="true" tabindex="-1"></a>int_n_cs_precedes  <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb526-18"><a href="locale-and-internationalization.html#cb526-18" aria-hidden="true" tabindex="-1"></a>int_p_sep_by_space <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb526-19"><a href="locale-and-internationalization.html#cb526-19" aria-hidden="true" tabindex="-1"></a>int_n_sep_by_space <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb526-20"><a href="locale-and-internationalization.html#cb526-20" aria-hidden="true" tabindex="-1"></a>int_p_sign_posn    <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb526-21"><a href="locale-and-internationalization.html#cb526-21" aria-hidden="true" tabindex="-1"></a>int_n_sign_posn    <span class="op">=</span> <span class="dv">1</span></span></code></pre></div>
+<h2 data-number="26.3" id="localization-specifics"><span class="header-section-number">26.3</span> Localization Specifics</h2>
+<p>Notice how we passed the macro <code>LC_ALL</code> to <code>setlocale()</code> earlier… this hints that there might be some variant that allows you to be more precise about which <em>parts</em> of the locale you’re setting.</p>
+<p>Let’s take a look at the values you can see for these:</p>
+<table>
+<colgroup>
+<col style="width: 22%" />
+<col style="width: 77%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Macro</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>LC_ALL</code></td>
+<td>Set all of the following to the given locale.</td>
+</tr>
+<tr class="even">
+<td><code>LC_COLLATE</code></td>
+<td>Controls the behavior of the <code>strcoll()</code> and <code>strxfrm()</code> functions.</td>
+</tr>
+<tr class="odd">
+<td><code>LC_CTYPE</code></td>
+<td>Controls the behavior of the character-handling functions<a href="footnotes.html#fn156" class="footnote-ref" id="fnref156" role="doc-noteref"><sup>156</sup></a>.</td>
+</tr>
+<tr class="even">
+<td><code>LC_MONETARY</code></td>
+<td>Controls the values returned by <code>localeconv()</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>LC_NUMERIC</code></td>
+<td>Controls the decimal point for the <code>printf()</code> family of functions.</td>
+</tr>
+<tr class="even">
+<td><code>LC_TIME</code></td>
+<td>Controls time formatting of the <code>strftime()</code> and <code>wcsftime()</code> time and date printing functions.</td>
+</tr>
+</tbody>
+</table>
+<p>It’s pretty common to see <code>LC_ALL</code> being set, but, hey, at least you have options.</p>
+<p>Also I should point out that <code>LC_CTYPE</code> is one of the biggies because it ties into wide characters, a significant can of worms that we’ll talk about later.</p>
+<p></p>
+<!-- Beej's guide to C
+
+# vim: ts=4:sw=4:nosi:et:tw=72
+-->
+<hr><div style="text-align:center"><span><a href="variadic-functions.html">Prev</a> | </span><a href="index.html">Contents</a><span> | <a href="unicode-wide-characters-and-all-that.html">Next</a></span></div></body>
+</html>
