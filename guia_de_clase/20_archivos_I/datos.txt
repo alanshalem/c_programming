@@ -1,0 +1,1 @@
+Este es un ejemplo de texto que se escribe en un archivo.
